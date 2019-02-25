@@ -18,16 +18,28 @@ import net.minecraft.world.ExtendedBlockView;
 import alexiil.mc.mod.pipes.client.model.IWorldDependentModel;
 
 @Mixin(BlockModelRenderer.class)
-@Debug
+@Debug(print = true)
 public class BlockModelRendererMixin {
 
-    @ModifyArg(method = { "tesselate" }, at = @At(value = "INVOKE", target = "tesselateSmooth"))
+    @ModifyArg(
+        method = { "tesselate" },
+        at = @At(
+            value = "INVOKE",
+            target = "net/minecraft/client/render/block/BlockModelRenderer.tesselateSmooth(Lnet/minecraft/world/ExtendedBlockView;"
+                + "Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;"
+                + "Lnet/minecraft/client/render/BufferBuilder;ZLjava/util/Random;J)Z"))
     public BakedModel tesselate_get_model_smooth(ExtendedBlockView view, BakedModel model, BlockState state,
         BlockPos pos, BufferBuilder builder, boolean b, Random r, long l) {
         return replaceModel(view, pos, state, model);
     }
 
-    @ModifyArg(method = { "tesselate" }, at = @At(value = "INVOKE", target = "tesselateFlat"))
+    @ModifyArg(
+        method = { "tesselate" },
+        at = @At(
+            value = "INVOKE",
+            target = "net/minecraft/client/render/block/BlockModelRenderer.tesselateFlat(Lnet/minecraft/world/ExtendedBlockView;"
+                + "Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;"
+                + "Lnet/minecraft/client/render/BufferBuilder;ZLjava/util/Random;J)Z"))
     public BakedModel tesselate_get_model_flat(ExtendedBlockView view, BakedModel model, BlockState state, BlockPos pos,
         BufferBuilder builder, boolean b, Random r, long l) {
         return replaceModel(view, pos, state, model);
