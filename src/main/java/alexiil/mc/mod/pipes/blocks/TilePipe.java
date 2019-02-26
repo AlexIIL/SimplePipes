@@ -41,7 +41,7 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.IItemExtractable;
 import alexiil.mc.lib.attributes.item.IItemInsertable;
 import alexiil.mc.lib.attributes.item.ItemInvUtil;
-import alexiil.mc.lib.attributes.item.filter.IStackFilter;
+import alexiil.mc.lib.attributes.item.filter.IItemFilter;
 import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable;
 import alexiil.mc.mod.pipes.util.DelayedList;
 import alexiil.mc.mod.pipes.util.TagUtil;
@@ -101,8 +101,8 @@ public abstract class TilePipe extends BlockEntity implements Tickable, BlockEnt
                 }
 
                 @Override
-                public IStackFilter getInsertionFilter() {
-                    return IStackFilter.ANY_STACK;
+                public IItemFilter getInsertionFilter() {
+                    return IItemFilter.ANY_STACK;
                 }
             };
         }
