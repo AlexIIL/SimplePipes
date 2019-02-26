@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ */
 package alexiil.mc.mod.pipes.blocks;
 
 import java.util.ArrayList;
@@ -212,7 +217,7 @@ public abstract class TilePipe extends BlockEntity implements Tickable, BlockEnt
     public final IItemInsertable getNeighbourInsertable(Direction dir, @Nullable BlockEntity entity,
         boolean entityIsKnownNull) {
 
-        return ItemInvUtil.getInsertable(getWorld(), getPos().offset(dir), dir.getOpposite());
+        return ItemInvUtil.getInsertable(getWorld(), getPos().offset(dir), dir);
     }
 
     protected PipeBlockModelState createModelState() {
