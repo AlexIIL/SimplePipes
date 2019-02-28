@@ -23,17 +23,26 @@ public class SimplePipeBlocks {
     public static final BlockPipeStone STONE_PIPE;
     public static final BlockPipeIron IRON_PIPE;
 
+    public static final BlockTriggerInvEmpty TRIGGER_ITEM_INV_EMPTY;
+    public static final BlockTriggerInvFull TRIGGER_ITEM_INV_FULL;
+
     public static final BlockEntityType<TilePipeWood> WOODEN_PIPE_TILE;
     public static final BlockEntityType<TilePipeStone> STONE_PIPE_TILE;
     public static final BlockEntityType<TilePipeIron> IRON_PIPE_TILE;
 
     static {
-        Block.Settings settings = FabricBlockSettings.of(Material.PART)//
+        Block.Settings pipeSettings = FabricBlockSettings.of(Material.PART)//
             .build();
 
-        WOODEN_PIPE = new BlockPipeWooden(settings);
-        STONE_PIPE = new BlockPipeStone(settings);
-        IRON_PIPE = new BlockPipeIron(settings);
+        WOODEN_PIPE = new BlockPipeWooden(pipeSettings);
+        STONE_PIPE = new BlockPipeStone(pipeSettings);
+        IRON_PIPE = new BlockPipeIron(pipeSettings);
+
+        Block.Settings triggerSettings = FabricBlockSettings.of(Material.STONE)//
+            .build();
+
+        TRIGGER_ITEM_INV_EMPTY = new BlockTriggerInvEmpty(triggerSettings);
+        TRIGGER_ITEM_INV_FULL = new BlockTriggerInvFull(triggerSettings);
 
         WOODEN_PIPE_TILE = create("simple_pipes:pipe_wooden", BlockEntityType.Builder.create(TilePipeWood::new));
         STONE_PIPE_TILE = create("simple_pipes:pipe_stone", BlockEntityType.Builder.create(TilePipeStone::new));
@@ -51,6 +60,9 @@ public class SimplePipeBlocks {
         registerBlock(WOODEN_PIPE, "pipe_wooden");
         registerBlock(STONE_PIPE, "pipe_stone");
         registerBlock(IRON_PIPE, "pipe_iron");
+
+        registerBlock(TRIGGER_ITEM_INV_EMPTY, "trigger_item_inv_empty");
+        registerBlock(TRIGGER_ITEM_INV_FULL, "trigger_item_inv_full");
 
         registerTile(WOODEN_PIPE_TILE, "pipe_wooden");
         registerTile(STONE_PIPE_TILE, "pipe_stone");

@@ -15,6 +15,8 @@ import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable;
 
 public class TilePipeWood extends TilePipeSided {
 
+    private boolean lastRecv = true;
+
     public TilePipeWood() {
         super(SimplePipeBlocks.WOODEN_PIPE_TILE, SimplePipeBlocks.WOODEN_PIPE);
     }
@@ -26,7 +28,10 @@ public class TilePipeWood extends TilePipeSided {
 
     @Override
     protected boolean canFaceDirection(Direction dir) {
-        return getNeighbourPipe(dir) == null && getNeighbourExtractable(dir) != EmptyItemExtractable.NULL_EXTRACTABLE;
+        if (getNeighbourPipe(dir) != null) {
+            return false;
+        }
+        return getNeighbourExtractable(dir) != EmptyItemExtractable.NULL;
     }
 
     @Override
@@ -40,17 +45,22 @@ public class TilePipeWood extends TilePipeSided {
             return;
         }
 
-        if (world.getReceivedRedstonePower(getPos()) > 0) {
-            IItemExtractable extractable = getNeighbourExtractable(dir);
-            if (extractable == null) {
-                return;
+        if (world.isReceivingRedstonePower(getPos())) {
+            if (!lastRecv) {
+                lastRecv = true;
+                tryExtract(dir);
             }
+        } else {
+            lastRecv = false;
+        }
+    }
 
-            ItemStack stack = extractable.attemptAnyExtraction(1, Simulation.ACTION);
+    private void tryExtract(Direction dir) {
+        IItemExtractable extractable = getNeighbourExtractable(dir);
+        ItemStack stack = extractable.attemptAnyExtraction(1, Simulation.ACTION);
 
-            if (!stack.isEmpty()) {
-                insertItemsForce(stack, dir, null, EXTRACT_SPEED);
-            }
+        if (!stack.isEmpty()) {
+            insertItemsForce(stack, dir, null, EXTRACT_SPEED);
         }
     }
 }

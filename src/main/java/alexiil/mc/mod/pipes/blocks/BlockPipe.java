@@ -15,10 +15,12 @@ import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.VerticalEntityPosition;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateFactory.Builder;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.FluidTags;
@@ -32,8 +34,7 @@ import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.Attribute;
 import alexiil.mc.lib.attributes.IAttributeBlock;
-import alexiil.mc.lib.attributes.item.IItemExtractable;
-import alexiil.mc.lib.attributes.item.IItemInsertable;
+import alexiil.mc.lib.attributes.item.ItemAttributes;
 import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable;
 import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable;
 
@@ -109,7 +110,17 @@ public abstract class BlockPipe extends Block implements BlockEntityProvider, IA
         if (be instanceof TilePipe) {
             TilePipe pipe = (TilePipe) be;
             pipe.setWorld(world);
-            pipe.onNeighbourChange(neighbourBlock, neighbourPos);
+            pipe.onNeighbourChange();
+        }
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity entity, ItemStack stack) {
+        super.onPlaced(world, pos, state, entity, stack);
+        BlockEntity be = world.getBlockEntity(pos);
+        if (be instanceof TilePipe) {
+            TilePipe pipe = (TilePipe) be;
+            pipe.onNeighbourChange();
         }
     }
 
@@ -118,7 +129,7 @@ public abstract class BlockPipe extends Block implements BlockEntityProvider, IA
         List<T> resultingList, Direction searchDirection) {
         BlockEntity be = world.getBlockEntity(pos);
         if (this instanceof BlockPipeWooden) {
-            if (attribute == IItemInsertable.ATTRIBUTE_INSERTABLE) {
+            if (attribute == ItemAttributes.INSERTABLE) {
                 if (be instanceof TilePipe) {
                     int id = searchDirection.getOpposite().getId();
                     resultingList.add(attribute.cast(((TilePipe) be).insertables[id]));
@@ -127,7 +138,7 @@ public abstract class BlockPipe extends Block implements BlockEntityProvider, IA
                 }
             }
         } else {
-            if (attribute == IItemExtractable.ATTRIBUTE_EXTRACTABLE) {
+            if (attribute == ItemAttributes.EXTRACTABLE) {
                 resultingList.add(attribute.cast(EmptyItemExtractable.SUPPLIER));
             }
         }

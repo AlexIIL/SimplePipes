@@ -17,7 +17,6 @@ import com.google.common.collect.ImmutableList;
 
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.network.packet.BlockEntityUpdateS2CPacket;
@@ -29,7 +28,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.BooleanBiFunction;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Tickable;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3d;
@@ -167,7 +165,7 @@ public abstract class TilePipe extends BlockEntity implements Tickable, BlockEnt
         return SHAPES[connections & 0b111111];
     }
 
-    protected void onNeighbourChange(Block neighbourBlock, BlockPos neighbourPos) {
+    protected void onNeighbourChange() {
         for (Direction dir : Direction.values()) {
             BlockEntity oTile = world.getBlockEntity(getPos().offset(dir));
             if (oTile instanceof TilePipe || canConnect(dir, oTile) || (this instanceof TilePipeSided
@@ -180,7 +178,7 @@ public abstract class TilePipe extends BlockEntity implements Tickable, BlockEnt
     }
 
     protected boolean canConnect(Direction dir, @Nullable BlockEntity oTile) {
-        return getNeighbourInsertable(dir, oTile, true) != RejectingItemInsertable.NULL_INSERTABLE;
+        return getNeighbourInsertable(dir, oTile, true) != RejectingItemInsertable.NULL;
     }
 
     @Nullable
@@ -205,7 +203,7 @@ public abstract class TilePipe extends BlockEntity implements Tickable, BlockEnt
     public final IItemExtractable getNeighbourExtractable(Direction dir, @Nullable BlockEntity entity,
         boolean entityIsKnownNull) {
 
-        return ItemInvUtil.getExtractable(getWorld(), getPos().offset(dir), dir.getOpposite());
+        return ItemInvUtil.getExtractable(getWorld(), getPos().offset(dir), dir);
     }
 
     @Nonnull
