@@ -1,6 +1,7 @@
 package alexiil.mc.mod.pipes.blocks;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockPlacementEnvironment;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemPlacementContext;
@@ -13,7 +14,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public abstract class BlockTrigger extends Block {
+public abstract class BlockTrigger extends Block implements BlockEntityProvider {
     public static final DirectionProperty FACING = Properties.FACING;
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
@@ -26,16 +27,6 @@ public abstract class BlockTrigger extends Block {
     protected void appendProperties(Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
         builder.with(FACING, ACTIVE);
-    }
-
-    @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos thisPos, Block neighbourBlock,
-        BlockPos neighbourPos) {
-        boolean wasActive = state.get(ACTIVE);
-        boolean nowActive = isTriggerActive(world, thisPos, state.get(FACING));
-        if (wasActive != nowActive) {
-            world.setBlockState(thisPos, state.with(ACTIVE, nowActive));
-        }
     }
 
     @Override
@@ -61,11 +52,10 @@ public abstract class BlockTrigger extends Block {
         return 0;
     }
 
-    /** @param pos This position
-     * @param dir the direction to look in. */
-    protected abstract boolean isTriggerBlock(World world, BlockPos pos, Direction dir);
+    @Override
+    public abstract TileTrigger createBlockEntity(BlockView view);
 
     /** @param pos This position
      * @param dir the direction to look in. */
-    protected abstract boolean isTriggerActive(World world, BlockPos pos, Direction dir);
+    protected abstract boolean isTriggerBlock(World world, BlockPos pos, Direction dir);
 }

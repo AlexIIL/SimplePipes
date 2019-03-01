@@ -5,6 +5,8 @@
  */
 package alexiil.mc.mod.pipes.blocks;
 
+import java.util.function.Supplier;
+
 import com.mojang.datafixers.types.Type;
 
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
@@ -30,6 +32,9 @@ public class SimplePipeBlocks {
     public static final BlockEntityType<TilePipeStone> STONE_PIPE_TILE;
     public static final BlockEntityType<TilePipeIron> IRON_PIPE_TILE;
 
+    public static final BlockEntityType<TileTriggerInvEmpty> TRIGGER_ITEM_INV_EMPTY_TILE;
+    public static final BlockEntityType<TileTriggerInvFull> TRIGGER_ITEM_INV_FULL_TILE;
+
     static {
         Block.Settings pipeSettings = FabricBlockSettings.of(Material.PART)//
             .build();
@@ -44,16 +49,19 @@ public class SimplePipeBlocks {
         TRIGGER_ITEM_INV_EMPTY = new BlockTriggerInvEmpty(triggerSettings);
         TRIGGER_ITEM_INV_FULL = new BlockTriggerInvFull(triggerSettings);
 
-        WOODEN_PIPE_TILE = create("simple_pipes:pipe_wooden", BlockEntityType.Builder.create(TilePipeWood::new));
-        STONE_PIPE_TILE = create("simple_pipes:pipe_stone", BlockEntityType.Builder.create(TilePipeStone::new));
-        IRON_PIPE_TILE = create("simple_pipes:pipe_iron", BlockEntityType.Builder.create(TilePipeIron::new));
+        WOODEN_PIPE_TILE = create(TilePipeWood::new);
+        STONE_PIPE_TILE = create(TilePipeStone::new);
+        IRON_PIPE_TILE = create(TilePipeIron::new);
+
+        TRIGGER_ITEM_INV_EMPTY_TILE = create(TileTriggerInvEmpty::new);
+        TRIGGER_ITEM_INV_FULL_TILE = create(TileTriggerInvFull::new);
     }
 
-    private static <T extends BlockEntity> BlockEntityType<T> create(String name, BlockEntityType.Builder<T> builder) {
+    private static <T extends BlockEntity> BlockEntityType<T> create(Supplier<T> supplier) {
         Type<?> choiceType = null;
         // Schemas.getFixer().getSchema(DataFixUtils.makeKey(SharedConstants.getGameVersion().getWorldVersion()))
         // .getChoiceType(TypeReferences.BLOCK_ENTITY, name);
-        return builder.build(choiceType);
+        return BlockEntityType.Builder.create(supplier).build(choiceType);
     }
 
     public static void load() {
@@ -67,6 +75,9 @@ public class SimplePipeBlocks {
         registerTile(WOODEN_PIPE_TILE, "pipe_wooden");
         registerTile(STONE_PIPE_TILE, "pipe_stone");
         registerTile(IRON_PIPE_TILE, "pipe_iron");
+
+        registerTile(TRIGGER_ITEM_INV_EMPTY_TILE, "trigger_item_inv_empty");
+        registerTile(TRIGGER_ITEM_INV_FULL_TILE, "trigger_item_inv_full");
     }
 
     private static void registerBlock(Block block, String name) {
