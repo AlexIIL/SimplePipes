@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "simple_pipes:trigger_item_inv_empty",
+    "simple_pipes:trigger_item_inv_full",
+    "simple_pipes:trigger_item_inv_space",
+    "simple_pipes:trigger_item_inv_contains"
+  ]
+}

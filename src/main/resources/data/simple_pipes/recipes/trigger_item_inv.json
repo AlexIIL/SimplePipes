@@ -1,0 +1,17 @@
+{
+    "type": "crafting_shaped",
+    "result": {
+        "item": "simple_pipes:trigger_item_inv_empty",
+        "count": 6
+    },
+    "pattern": [
+        "SOS",
+        "SCS",
+        "SOS"
+    ],
+    "key": {
+        "C": { "item": "minecraft:chest" },
+        "O": { "item": "minecraft:observer" },
+        "S": { "item": "minecraft:cobblestone" }
+    }
+}

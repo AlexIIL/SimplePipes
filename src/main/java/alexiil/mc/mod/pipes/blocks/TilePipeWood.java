@@ -5,7 +5,6 @@
  */
 package alexiil.mc.mod.pipes.blocks;
 
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 
@@ -22,7 +21,7 @@ public class TilePipeWood extends TilePipeSided {
     }
 
     @Override
-    protected boolean canConnect(Direction dir, BlockEntity oTile) {
+    protected boolean canConnect(Direction dir) {
         return false;
     }
 

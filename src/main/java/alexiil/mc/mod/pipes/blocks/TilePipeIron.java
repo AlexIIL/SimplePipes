@@ -8,7 +8,6 @@ package alexiil.mc.mod.pipes.blocks;
 import java.util.EnumSet;
 import java.util.List;
 
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.Direction;
 
 public class TilePipeIron extends TilePipeSided {
@@ -18,7 +17,7 @@ public class TilePipeIron extends TilePipeSided {
     }
 
     @Override
-    protected boolean canConnect(Direction dir, BlockEntity oTile) {
+    protected boolean canConnect(Direction dir) {
         return false;
     }
 

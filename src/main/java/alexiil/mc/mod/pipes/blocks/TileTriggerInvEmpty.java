@@ -3,8 +3,7 @@ package alexiil.mc.mod.pipes.blocks;
 import net.minecraft.util.math.Direction;
 
 import alexiil.mc.lib.attributes.item.IItemInvStats;
-import alexiil.mc.lib.attributes.item.ItemInvUtil;
-import alexiil.mc.lib.attributes.item.filter.IItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.impl.EmptyItemInvStats;
 
 public class TileTriggerInvEmpty extends TileTrigger {
@@ -13,11 +12,11 @@ public class TileTriggerInvEmpty extends TileTrigger {
     }
 
     @Override
-    protected boolean isTriggerActive(Direction dir) {
-        IItemInvStats invStats = ItemInvUtil.getItemInvStats(world, getPos().offset(dir));
+    protected EnumTriggerState getTriggerState(Direction dir) {
+        IItemInvStats invStats = getNeighbourStats(dir);
         if (invStats == EmptyItemInvStats.INSTANCE) {
-            return false;
+            return EnumTriggerState.NO_TARGET;
         }
-        return invStats.getStatistics(IItemFilter.ANY_STACK).amount == 0;
+        return EnumTriggerState.of(invStats.getStatistics(ConstantItemFilter.ANYTHING).amount == 0);
     }
 }

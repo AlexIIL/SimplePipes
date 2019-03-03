@@ -1,12 +1,14 @@
 package alexiil.mc.mod.pipes.blocks;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
 
-public abstract class TileTrigger extends BlockEntity implements Tickable {
+import alexiil.mc.lib.attributes.item.IItemInvStats;
+import alexiil.mc.lib.attributes.item.ItemAttributes;
+
+public abstract class TileTrigger extends TileBase implements Tickable {
 
     public TileTrigger(BlockEntityType<?> type) {
         super(type);
@@ -19,13 +21,17 @@ public abstract class TileTrigger extends BlockEntity implements Tickable {
         }
         BlockState state = world.getBlockState(getPos());
         if (state.getBlock() instanceof BlockTrigger) {
-            boolean wasActive = state.get(BlockTrigger.ACTIVE);
-            boolean nowActive = isTriggerActive(state.get(BlockTrigger.FACING));
-            if (wasActive != nowActive) {
-                world.setBlockState(getPos(), state.with(BlockTrigger.ACTIVE, nowActive));
+            EnumTriggerState previousState = state.get(BlockTrigger.STATE);
+            EnumTriggerState newState = getTriggerState(state.get(BlockTrigger.FACING));
+            if (previousState != newState) {
+                world.setBlockState(getPos(), state.with(BlockTrigger.STATE, newState));
             }
         }
     }
 
-    protected abstract boolean isTriggerActive(Direction dir);
+    protected abstract EnumTriggerState getTriggerState(Direction dir);
+
+    public IItemInvStats getNeighbourStats(Direction dir) {
+        return getNeighbourAttribute(ItemAttributes.INV_STATS, dir);
+    }
 }

@@ -27,6 +27,8 @@ public class SimplePipeBlocks {
 
     public static final BlockTriggerInvEmpty TRIGGER_ITEM_INV_EMPTY;
     public static final BlockTriggerInvFull TRIGGER_ITEM_INV_FULL;
+    public static final BlockTriggerInvSpace TRIGGER_ITEM_INV_SPACE;
+    public static final BlockTriggerInvContains TRIGGER_ITEM_INV_CONTAINS;
 
     public static final BlockEntityType<TilePipeWood> WOODEN_PIPE_TILE;
     public static final BlockEntityType<TilePipeStone> STONE_PIPE_TILE;
@@ -34,9 +36,12 @@ public class SimplePipeBlocks {
 
     public static final BlockEntityType<TileTriggerInvEmpty> TRIGGER_ITEM_INV_EMPTY_TILE;
     public static final BlockEntityType<TileTriggerInvFull> TRIGGER_ITEM_INV_FULL_TILE;
+    public static final BlockEntityType<TileTriggerInvSpace> TRIGGER_ITEM_INV_SPACE_TILE;
+    public static final BlockEntityType<TileTriggerInvContains> TRIGGER_ITEM_INV_CONTAINS_TILE;
 
     static {
         Block.Settings pipeSettings = FabricBlockSettings.of(Material.PART)//
+            .strength(0.5f, 1f)//
             .build();
 
         WOODEN_PIPE = new BlockPipeWooden(pipeSettings);
@@ -44,10 +49,13 @@ public class SimplePipeBlocks {
         IRON_PIPE = new BlockPipeIron(pipeSettings);
 
         Block.Settings triggerSettings = FabricBlockSettings.of(Material.STONE)//
+            .strength(1.5F, 6.0F)//
             .build();
 
         TRIGGER_ITEM_INV_EMPTY = new BlockTriggerInvEmpty(triggerSettings);
         TRIGGER_ITEM_INV_FULL = new BlockTriggerInvFull(triggerSettings);
+        TRIGGER_ITEM_INV_SPACE = new BlockTriggerInvSpace(triggerSettings);
+        TRIGGER_ITEM_INV_CONTAINS = new BlockTriggerInvContains(triggerSettings);
 
         WOODEN_PIPE_TILE = create(TilePipeWood::new);
         STONE_PIPE_TILE = create(TilePipeStone::new);
@@ -55,6 +63,8 @@ public class SimplePipeBlocks {
 
         TRIGGER_ITEM_INV_EMPTY_TILE = create(TileTriggerInvEmpty::new);
         TRIGGER_ITEM_INV_FULL_TILE = create(TileTriggerInvFull::new);
+        TRIGGER_ITEM_INV_SPACE_TILE = create(TileTriggerInvSpace::new);
+        TRIGGER_ITEM_INV_CONTAINS_TILE = create(TileTriggerInvContains::new);
     }
 
     private static <T extends BlockEntity> BlockEntityType<T> create(Supplier<T> supplier) {
@@ -71,6 +81,8 @@ public class SimplePipeBlocks {
 
         registerBlock(TRIGGER_ITEM_INV_EMPTY, "trigger_item_inv_empty");
         registerBlock(TRIGGER_ITEM_INV_FULL, "trigger_item_inv_full");
+        registerBlock(TRIGGER_ITEM_INV_SPACE, "trigger_item_inv_space");
+        registerBlock(TRIGGER_ITEM_INV_CONTAINS, "trigger_item_inv_contains");
 
         registerTile(WOODEN_PIPE_TILE, "pipe_wooden");
         registerTile(STONE_PIPE_TILE, "pipe_stone");
@@ -78,6 +90,8 @@ public class SimplePipeBlocks {
 
         registerTile(TRIGGER_ITEM_INV_EMPTY_TILE, "trigger_item_inv_empty");
         registerTile(TRIGGER_ITEM_INV_FULL_TILE, "trigger_item_inv_full");
+        registerTile(TRIGGER_ITEM_INV_SPACE_TILE, "trigger_item_inv_space");
+        registerTile(TRIGGER_ITEM_INV_CONTAINS_TILE, "trigger_item_inv_contains");
     }
 
     private static void registerBlock(Block block, String name) {

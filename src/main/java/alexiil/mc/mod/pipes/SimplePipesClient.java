@@ -16,6 +16,7 @@ import net.minecraft.util.Identifier;
 import alexiil.mc.mod.pipes.blocks.TilePipe;
 import alexiil.mc.mod.pipes.client.model.SimplePipeModels;
 import alexiil.mc.mod.pipes.client.render.PipeBlockEntityRenderer;
+import alexiil.mc.mod.pipes.client.screen.SimplePipeScreens;
 
 public class SimplePipesClient implements ClientModInitializer {
 
@@ -25,6 +26,7 @@ public class SimplePipesClient implements ClientModInitializer {
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(SimplePipeModels::createResourceProvider);
         ClientSpriteRegistryCallback.registerBlockAtlas(this::registerSprites);
         BlockEntityRendererRegistry.INSTANCE.register(TilePipe.class, new PipeBlockEntityRenderer());
+        SimplePipeScreens.load();
     }
 
     private void registerSprites(SpriteAtlasTexture atlasTexture, ClientSpriteRegistryCallback.Registry registry) {

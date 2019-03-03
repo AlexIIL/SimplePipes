@@ -6,27 +6,31 @@ import net.minecraft.block.BlockPlacementEnvironment;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory.Builder;
-import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public abstract class BlockTrigger extends Block implements BlockEntityProvider {
+import alexiil.mc.lib.attributes.SearchParamDirectional;
+import alexiil.mc.lib.attributes.item.IItemInvStats;
+import alexiil.mc.lib.attributes.item.ItemAttributes;
+
+public abstract class BlockTrigger extends BlockBase implements BlockEntityProvider {
     public static final DirectionProperty FACING = Properties.FACING;
-    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
+    public static final EnumProperty<EnumTriggerState> STATE = EnumProperty.create("state", EnumTriggerState.class);
 
     public BlockTrigger(Block.Settings settings) {
         super(settings);
-        setDefaultState(getDefaultState().with(ACTIVE, false));
+        setDefaultState(getDefaultState().with(STATE, EnumTriggerState.NO_TARGET));
     }
 
     @Override
     protected void appendProperties(Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.with(FACING, ACTIVE);
+        builder.with(FACING, STATE);
     }
 
     @Override
@@ -47,7 +51,7 @@ public abstract class BlockTrigger extends Block implements BlockEntityProvider 
     @Override
     public int getWeakRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction from) {
         if (from == state.get(FACING)) {
-            return state.get(ACTIVE) ? 15 : 0;
+            return state.get(STATE) == EnumTriggerState.ON ? 15 : 0;
         }
         return 0;
     }
@@ -58,4 +62,8 @@ public abstract class BlockTrigger extends Block implements BlockEntityProvider 
     /** @param pos This position
      * @param dir the direction to look in. */
     protected abstract boolean isTriggerBlock(World world, BlockPos pos, Direction dir);
+
+    static IItemInvStats getNeighbourItemInvStats(World world, BlockPos pos, Direction dir) {
+        return ItemAttributes.INV_STATS.get(world, pos.offset(dir), SearchParamDirectional.of(dir));
+    }
 }

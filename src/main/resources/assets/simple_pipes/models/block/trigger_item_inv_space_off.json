@@ -1,0 +1,8 @@
+{
+    "parent": "simple_pipes:block/trigger",
+    "textures": {
+        "redstone": "simple_pipes:block/trigger_all_redstone_off",
+        "target": "simple_pipes:block/trigger_all_found_target",
+        "side": "simple_pipes:block/trigger_item_inv_space_off"
+    }
+}

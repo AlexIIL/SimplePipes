@@ -5,8 +5,6 @@
  */
 package alexiil.mc.mod.pipes.blocks;
 
-import java.util.List;
-
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
@@ -24,23 +22,56 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateFactory.Builder;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.FluidTags;
+import net.minecraft.util.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-import alexiil.mc.lib.attributes.Attribute;
+import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.IAttributeBlock;
 import alexiil.mc.lib.attributes.item.ItemAttributes;
 import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable;
 import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable;
 
-public abstract class BlockPipe extends Block implements BlockEntityProvider, IAttributeBlock, Waterloggable {
+public abstract class BlockPipe extends BlockBase implements BlockEntityProvider, IAttributeBlock, Waterloggable {
 
-    public static final VoxelShape DEFAULT_PIPE_SHAPE = VoxelShapes.cube(0.25, 0.25, 0.25, 0.75, 0.75, 0.75);
+    public static final VoxelShape CENTER_SHAPE;
+    private static final VoxelShape[] FACE_SHAPES;
+    private static final VoxelShape[] FACE_CENTER_SHAPES;
+    private static final VoxelShape[] SHAPES;
+
+    static {
+        CENTER_SHAPE = VoxelShapes.cube(0.25, 0.25, 0.25, 0.75, 0.75, 0.75);
+        FACE_SHAPES = new VoxelShape[6];
+        FACE_CENTER_SHAPES = new VoxelShape[6];
+        for (Direction dir : Direction.values()) {
+            double x = 0.5 + dir.getOffsetX() * 0.375;
+            double y = 0.5 + dir.getOffsetY() * 0.375;
+            double z = 0.5 + dir.getOffsetZ() * 0.375;
+            double rx = dir.getAxis() == Axis.X ? 0.125 : 0.25;
+            double ry = dir.getAxis() == Axis.Y ? 0.125 : 0.25;
+            double rz = dir.getAxis() == Axis.Z ? 0.125 : 0.25;
+            VoxelShape faceShape = VoxelShapes.cube(x - rx, y - ry, z - rz, x + rx, y + ry, z + rz);
+            FACE_SHAPES[dir.ordinal()] = faceShape;
+            FACE_CENTER_SHAPES[dir.ordinal()] = VoxelShapes.union(faceShape, CENTER_SHAPE);
+        }
+
+        SHAPES = new VoxelShape[2 * 2 * 2 * 2 * 2 * 2];
+        for (int c = 0; c < 0b111_111; c++) {
+            VoxelShape shape = CENTER_SHAPE;
+            for (Direction dir : Direction.values()) {
+                if ((c & (1 << dir.ordinal())) != 0) {
+                    shape = VoxelShapes.combine(shape, FACE_SHAPES[dir.ordinal()], BooleanBiFunction.OR);
+                }
+            }
+            SHAPES[c] = shape.simplify();
+        }
+    }
 
     public BlockPipe(Settings settings) {
         super(settings);
@@ -94,13 +125,14 @@ public abstract class BlockPipe extends Block implements BlockEntityProvider, IA
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos,
         VerticalEntityPosition entityPos) {
         BlockEntity be = view.getBlockEntity(pos);
-
         if (be instanceof TilePipe) {
             TilePipe pipe = (TilePipe) be;
-            return pipe.getOutlineShape(entityPos);
+            if (pipe.connections == 0) {
+                return CENTER_SHAPE;
+            }
+            return SHAPES[pipe.connections & 0b111111];
         }
-
-        return DEFAULT_PIPE_SHAPE;
+        return CENTER_SHAPE;
     }
 
     @Override
@@ -125,22 +157,33 @@ public abstract class BlockPipe extends Block implements BlockEntityProvider, IA
     }
 
     @Override
-    public <T> void addAllAttributesFromDirection(World world, BlockPos pos, BlockState state, Attribute<T> attribute,
-        List<T> resultingList, Direction searchDirection) {
+    public <T> void addAllAttributes(World world, BlockPos pos, BlockState state, AttributeList<T> to) {
+
+        Direction searchDirection = to.getSearchDirection();
+        if (searchDirection == null) {
+            // Pipes only work with physical connections
+            return;
+        }
+        if (to.attribute != ItemAttributes.EXTRACTABLE || to.attribute != ItemAttributes.INSERTABLE) {
+            return;
+        }
         BlockEntity be = world.getBlockEntity(pos);
+        if (!(be instanceof TilePipe)) {
+            return;
+        }
+        Direction pipeSide = searchDirection.getOpposite();
+        TilePipe pipe = (TilePipe) be;
+        VoxelShape pipeShape = pipe.isConnected(pipeSide) ? FACE_CENTER_SHAPES[pipeSide.ordinal()] : CENTER_SHAPE;
+
         if (this instanceof BlockPipeWooden) {
-            if (attribute == ItemAttributes.INSERTABLE) {
-                if (be instanceof TilePipe) {
-                    int id = searchDirection.getOpposite().getId();
-                    resultingList.add(attribute.cast(((TilePipe) be).insertables[id]));
-                } else {
-                    resultingList.add(attribute.cast(RejectingItemInsertable.EXTRACTOR));
-                }
+            if (to.attribute == ItemAttributes.INSERTABLE) {
+                int id = searchDirection.getOpposite().getId();
+                to.offer(pipe.insertables[id], pipeShape);
+            } else {
+                to.offer(RejectingItemInsertable.EXTRACTOR, pipeShape);
             }
         } else {
-            if (attribute == ItemAttributes.EXTRACTABLE) {
-                resultingList.add(attribute.cast(EmptyItemExtractable.SUPPLIER));
-            }
+            to.offer(EmptyItemExtractable.SUPPLIER, pipeShape);
         }
     }
 }

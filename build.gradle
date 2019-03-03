@@ -21,16 +21,16 @@ configurations {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:19w08b"
-    mappings "net.fabricmc:yarn:19w08b.6"
+    minecraft "com.mojang:minecraft:19w09a"
+    mappings "net.fabricmc:yarn:19w09a.2"
     modCompile "net.fabricmc:fabric-loader:0.3.7.109"
 
     //Fabric api
-    modCompile "net.fabricmc:fabric:0.2.3.107"
+    modCompile "net.fabricmc:fabric:0.2.3.108"
     compile "com.google.code.findbugs:jsr305:3.0.1"
 
-    modCompile "alexiil.mc:libblockattributes:0.1.4"
-    nest "alexiil.mc:libblockattributes:0.1.4"
+    modCompile "alexiil.mc:libblockattributes:0.1.7"
+    nest "alexiil.mc:libblockattributes:0.1.7"
 }
 
 processResources {

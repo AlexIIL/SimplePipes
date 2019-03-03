@@ -21,6 +21,8 @@ public class SimplePipeItems {
 
     public static final BlockItem TRIGGER_ITEM_INV_EMPTY;
     public static final BlockItem TRIGGER_ITEM_INV_FULL;
+    public static final BlockItem TRIGGER_ITEM_INV_SPACE;
+    public static final BlockItem TRIGGER_ITEM_INV_CONTAINS;
 
     static {
         Item.Settings pipes = new Item.Settings();
@@ -35,6 +37,8 @@ public class SimplePipeItems {
 
         TRIGGER_ITEM_INV_EMPTY = new BlockItem(SimplePipeBlocks.TRIGGER_ITEM_INV_EMPTY, triggers);
         TRIGGER_ITEM_INV_FULL = new BlockItem(SimplePipeBlocks.TRIGGER_ITEM_INV_FULL, triggers);
+        TRIGGER_ITEM_INV_SPACE = new BlockItem(SimplePipeBlocks.TRIGGER_ITEM_INV_SPACE, triggers);
+        TRIGGER_ITEM_INV_CONTAINS = new BlockItem(SimplePipeBlocks.TRIGGER_ITEM_INV_CONTAINS, triggers);
     }
 
     public static void load() {
@@ -44,6 +48,8 @@ public class SimplePipeItems {
 
         registerItem(TRIGGER_ITEM_INV_EMPTY, "trigger_item_inv_empty");
         registerItem(TRIGGER_ITEM_INV_FULL, "trigger_item_inv_full");
+        registerItem(TRIGGER_ITEM_INV_SPACE, "trigger_item_inv_space");
+        registerItem(TRIGGER_ITEM_INV_CONTAINS, "trigger_item_inv_contains");
     }
 
     private static void registerItem(Item item, String name) {

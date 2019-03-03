@@ -1,0 +1,12 @@
+{
+    "type": "crafting_shaped",
+    "result": {
+        "item": "simple_pipes:pipe_wooden",
+        "count": 8
+    },
+    "pattern": [ "WGW" ],
+    "key": {
+        "W": { "tag": "minecraft:planks" },
+        "G": { "item": "minecraft:glass" }
+    }
+}

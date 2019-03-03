@@ -1,0 +1,24 @@
+{
+    "variants": {
+        "facing=down,state=no_target": {"model": "simple_pipes:block/trigger_item_inv_contains_no_target" },
+        "facing=up,state=no_target": {"model": "simple_pipes:block/trigger_item_inv_contains_no_target", "x": 180 },
+        "facing=east,state=no_target": {"model": "simple_pipes:block/trigger_item_inv_contains_no_target", "x": 90, "y": 90 },
+        "facing=west,state=no_target": {"model": "simple_pipes:block/trigger_item_inv_contains_no_target", "x": 90, "y": 270 },
+        "facing=north,state=no_target": {"model": "simple_pipes:block/trigger_item_inv_contains_no_target", "x": 90 },
+        "facing=south,state=no_target": {"model": "simple_pipes:block/trigger_item_inv_contains_no_target", "x": 90, "y": 180 },
+
+        "facing=down,state=off": { "model": "simple_pipes:block/trigger_item_inv_contains_off" },
+        "facing=up,state=off": { "model": "simple_pipes:block/trigger_item_inv_contains_off", "x": 180 },
+        "facing=east,state=off": { "model": "simple_pipes:block/trigger_item_inv_contains_off", "x": 90, "y": 90},
+        "facing=west,state=off": { "model": "simple_pipes:block/trigger_item_inv_contains_off", "x": 90, "y": 270 },
+        "facing=north,state=off": { "model": "simple_pipes:block/trigger_item_inv_contains_off", "x": 90 },
+        "facing=south,state=off": { "model": "simple_pipes:block/trigger_item_inv_contains_off", "x": 90, "y": 180 },
+
+        "facing=down,state=on": { "model": "simple_pipes:block/trigger_item_inv_contains_on" },
+        "facing=up,state=on": { "model": "simple_pipes:block/trigger_item_inv_contains_on", "x": 180 },
+        "facing=east,state=on": { "model": "simple_pipes:block/trigger_item_inv_contains_on", "x": 90, "y": 90 },
+        "facing=west,state=on": { "model": "simple_pipes:block/trigger_item_inv_contains_on", "x": 90, "y": 270 },
+        "facing=north,state=on": { "model": "simple_pipes:block/trigger_item_inv_contains_on", "x": 90 },
+        "facing=south,state=on": { "model": "simple_pipes:block/trigger_item_inv_contains_on", "x": 90, "y": 180 }
+    }
+}

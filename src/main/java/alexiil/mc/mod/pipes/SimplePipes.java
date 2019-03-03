@@ -8,6 +8,7 @@ package alexiil.mc.mod.pipes;
 import net.fabricmc.api.ModInitializer;
 
 import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
+import alexiil.mc.mod.pipes.container.SimplePipeContainers;
 import alexiil.mc.mod.pipes.items.SimplePipeItems;
 
 public class SimplePipes implements ModInitializer {
@@ -18,5 +19,6 @@ public class SimplePipes implements ModInitializer {
     public void onInitialize() {
         SimplePipeBlocks.load();
         SimplePipeItems.load();
+        SimplePipeContainers.load();
     }
 }

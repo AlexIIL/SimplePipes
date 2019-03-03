@@ -21,66 +21,33 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.network.packet.BlockEntityUpdateS2CPacket;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.VerticalEntityPosition;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.BooleanBiFunction;
+import net.minecraft.util.DefaultedList;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.IItemExtractable;
 import alexiil.mc.lib.attributes.item.IItemInsertable;
-import alexiil.mc.lib.attributes.item.ItemInvUtil;
+import alexiil.mc.lib.attributes.item.ItemAttributes;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.IItemFilter;
 import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable;
 import alexiil.mc.mod.pipes.util.DelayedList;
 import alexiil.mc.mod.pipes.util.TagUtil;
 
-public abstract class TilePipe extends BlockEntity implements Tickable, BlockEntityClientSerializable {
+public abstract class TilePipe extends TileBase implements Tickable, BlockEntityClientSerializable {
 
     protected static final double EXTRACT_SPEED = 0.08;
 
-    private static final VoxelShape[] FACE_SHAPES;
-    private static final VoxelShape[] SHAPES;
-
-    static {
-        FACE_SHAPES = new VoxelShape[6];
-        for (Direction dir : Direction.values()) {
-            double x = 0.5 + dir.getOffsetX() * 0.375;
-            double y = 0.5 + dir.getOffsetY() * 0.375;
-            double z = 0.5 + dir.getOffsetZ() * 0.375;
-            double rx = dir.getAxis() == Axis.X ? 0.125 : 0.25;
-            double ry = dir.getAxis() == Axis.Y ? 0.125 : 0.25;
-            double rz = dir.getAxis() == Axis.Z ? 0.125 : 0.25;
-            FACE_SHAPES[dir.ordinal()] = VoxelShapes.cube(x - rx, y - ry, z - rz, x + rx, y + ry, z + rz);
-        }
-
-        SHAPES = new VoxelShape[2 * 2 * 2 * 2 * 2 * 2];
-        final VoxelShape base = BlockPipe.DEFAULT_PIPE_SHAPE;
-        for (int c = 0; c < 0b111_111; c++) {
-            VoxelShape shape = base;
-
-            for (Direction dir : Direction.values()) {
-                if ((c & (1 << dir.ordinal())) != 0) {
-                    shape = VoxelShapes.combine(shape, FACE_SHAPES[dir.ordinal()], BooleanBiFunction.OR);
-                }
-            }
-
-            SHAPES[c] = shape.simplify();
-        }
-    }
-
     public final BlockPipe pipeBlock;
     public volatile PipeBlockModelState blockModelState;
-    private byte connections;
+    byte connections;
     final IItemInsertable[] insertables;
 
     private final DelayedList<TravellingItem> items = new DelayedList<>();
@@ -100,7 +67,7 @@ public abstract class TilePipe extends BlockEntity implements Tickable, BlockEnt
 
                 @Override
                 public IItemFilter getInsertionFilter() {
-                    return IItemFilter.ANY_STACK;
+                    return ConstantItemFilter.ANYTHING;
                 }
             };
         }
@@ -158,17 +125,10 @@ public abstract class TilePipe extends BlockEntity implements Tickable, BlockEnt
         return tag;
     }
 
-    public VoxelShape getOutlineShape(VerticalEntityPosition entityPos) {
-        if (connections == 0) {
-            return BlockPipe.DEFAULT_PIPE_SHAPE;
-        }
-        return SHAPES[connections & 0b111111];
-    }
-
     protected void onNeighbourChange() {
         for (Direction dir : Direction.values()) {
             BlockEntity oTile = world.getBlockEntity(getPos().offset(dir));
-            if (oTile instanceof TilePipe || canConnect(dir, oTile) || (this instanceof TilePipeSided
+            if (oTile instanceof TilePipe || canConnect(dir) || (this instanceof TilePipeSided
                 && ((TilePipeSided) this).currentDirection() == dir && ((TilePipeSided) this).canFaceDirection(dir))) {
                 connect(dir);
             } else {
@@ -177,8 +137,8 @@ public abstract class TilePipe extends BlockEntity implements Tickable, BlockEnt
         }
     }
 
-    protected boolean canConnect(Direction dir, @Nullable BlockEntity oTile) {
-        return getNeighbourInsertable(dir, oTile, true) != RejectingItemInsertable.NULL;
+    protected boolean canConnect(Direction dir) {
+        return getNeighbourInsertable(dir) != RejectingItemInsertable.NULL;
     }
 
     @Nullable
@@ -196,26 +156,12 @@ public abstract class TilePipe extends BlockEntity implements Tickable, BlockEnt
 
     @Nonnull
     public final IItemExtractable getNeighbourExtractable(Direction dir) {
-        return getNeighbourExtractable(dir, null, false);
-    }
-
-    @Nonnull
-    public final IItemExtractable getNeighbourExtractable(Direction dir, @Nullable BlockEntity entity,
-        boolean entityIsKnownNull) {
-
-        return ItemInvUtil.getExtractable(getWorld(), getPos().offset(dir), dir);
+        return getNeighbourAttribute(ItemAttributes.EXTRACTABLE, dir);
     }
 
     @Nonnull
     public final IItemInsertable getNeighbourInsertable(Direction dir) {
-        return getNeighbourInsertable(dir, null, false);
-    }
-
-    @Nonnull
-    public final IItemInsertable getNeighbourInsertable(Direction dir, @Nullable BlockEntity entity,
-        boolean entityIsKnownNull) {
-
-        return ItemInvUtil.getInsertable(getWorld(), getPos().offset(dir), dir);
+        return getNeighbourAttribute(ItemAttributes.INSERTABLE, dir);
     }
 
     protected PipeBlockModelState createModelState() {
@@ -550,6 +496,20 @@ public abstract class TilePipe extends BlockEntity implements Tickable, BlockEnt
             }
         }
         return null;
+    }
+
+    @Override
+    public DefaultedList<ItemStack> removeItemsForDrop() {
+        DefaultedList<ItemStack> all = super.removeItemsForDrop();
+        for (List<TravellingItem> list : this.items.getAllElements()) {
+            for (TravellingItem travel : list) {
+                if (!travel.isPhantom) {
+                    all.add(travel.stack);
+                }
+            }
+        }
+        this.items.clear();
+        return all;
     }
 
     public List<TravellingItem> getAllItemsForRender() {
