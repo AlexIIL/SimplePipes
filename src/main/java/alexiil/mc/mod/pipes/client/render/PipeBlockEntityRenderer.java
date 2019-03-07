@@ -21,6 +21,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import alexiil.mc.mod.pipes.blocks.PipeFlow;
+import alexiil.mc.mod.pipes.blocks.PipeFlowItem;
 import alexiil.mc.mod.pipes.blocks.TilePipe;
 import alexiil.mc.mod.pipes.blocks.TravellingItem;
 
@@ -34,33 +36,39 @@ public class PipeBlockEntityRenderer extends BlockEntityRenderer<TilePipe> {
         long now = world.getTime();
         int lightc = world.getLightLevel(pipe.getPos(), 0);
 
-        List<TravellingItem> toRender = pipe.getAllItemsForRender();
+        PipeFlow flow = pipe.flow;
 
-        for (TravellingItem item : toRender) {
-            Vec3d pos = item.getRenderPosition(BlockPos.ORIGIN, now, partialTicks, pipe);
+        if (flow instanceof PipeFlowItem) {
+            List<TravellingItem> toRender = ((PipeFlowItem) flow).getAllItemsForRender();
 
-            ItemStack stack = item.stack;
-            if (stack != null && !stack.isEmpty()) {
-                renderItemStack(x + pos.x, y + pos.y, z + pos.z, //
-                    stack, lightc, item.getRenderDirection(now, partialTicks));
+            for (TravellingItem item : toRender) {
+                Vec3d pos = item.getRenderPosition(BlockPos.ORIGIN, now, partialTicks, pipe);
+
+                ItemStack stack = item.stack;
+                if (stack != null && !stack.isEmpty()) {
+                    renderItemStack(x + pos.x, y + pos.y, z + pos.z, //
+                        stack, lightc, item.getRenderDirection(now, partialTicks));
+                }
+                // if (item.colour != null) {
+                // bb.setTranslation(x + pos.x, y + pos.y, z + pos.z);
+                // int col = ColourUtil.getLightHex(item.colour);
+                // int r = (col >> 16) & 0xFF;
+                // int g = (col >> 8) & 0xFF;
+                // int b = col & 0xFF;
+                // for (MutableQuad q : COLOURED_QUADS) {
+                // MutableQuad q2 = new MutableQuad(q);
+                // q2.lighti(lightc);
+                // q2.multColouri(r, g, b, 255);
+                // q2.render(bb);
+                // }
+                // bb.setTranslation(0, 0, 0);
+                // }
             }
-            // if (item.colour != null) {
-            // bb.setTranslation(x + pos.x, y + pos.y, z + pos.z);
-            // int col = ColourUtil.getLightHex(item.colour);
-            // int r = (col >> 16) & 0xFF;
-            // int g = (col >> 8) & 0xFF;
-            // int b = col & 0xFF;
-            // for (MutableQuad q : COLOURED_QUADS) {
-            // MutableQuad q2 = new MutableQuad(q);
-            // q2.lighti(lightc);
-            // q2.multColouri(r, g, b, 255);
-            // q2.render(bb);
-            // }
-            // bb.setTranslation(0, 0, 0);
-            // }
-        }
 
-        endItemBatch();
+            endItemBatch();
+        } else {
+
+        }
     }
 
     private static void renderItemStack(double x, double y, double z, ItemStack stack, int lightc,
@@ -70,14 +78,45 @@ public class PipeBlockEntityRenderer extends BlockEntityRenderer<TilePipe> {
         // inBatch = true;
         MinecraftClient.getInstance().getTextureManager().bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEX);
         GL11.glPushMatrix();
-        GL11.glTranslated(x, y - 0.2, z);
-        // GL11.glScaled(0.3, 0.3, 0.3);
-        GuiLighting.disable();
+        GL11.glTranslated(x, y, z);
+        GL11.glScaled(0.5, 0.5, 0.5);
+        if (renderDirection != null && renderDirection != Direction.SOUTH) {
+            switch (renderDirection) {
+                case SOUTH: {
+                    break;
+                }
+                case NORTH: {
+                    GL11.glRotated(180.0f, 0, 1, 0);
+                    break;
+                }
+                case EAST: {
+                    GL11.glRotated(90.0f, 0, 1, 0);
+                    break;
+                }
+                case WEST: {
+                    GL11.glRotated(270.0f, 0, 1, 0);
+                    break;
+                }
+                case UP: {
+                    GL11.glRotated(270.0f, 1, 0, 0);
+                    break;
+                }
+                case DOWN: {
+                    GL11.glRotated(90.0f, 1, 0, 0);
+                    break;
+                }
+                default: {
+                    throw new IllegalStateException("Unknown Direction " + renderDirection);
+                }
+            }
+        }
+        GuiLighting.enable();
         // }
         // OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightc % (float) 0x1_00_00,
         // lightc / (float) 0x1_00_00);
         BakedModel model = MinecraftClient.getInstance().getItemRenderer().getModel(stack, null, null);
-        model.getTransformation().applyGl(ModelTransformation.Type.GROUND);
+        model.getTransformation().applyGl(ModelTransformation.Type.FIXED);
+        // model.getTransformation().applyGl(ModelTransformation.Type.GROUND);
         MinecraftClient.getInstance().getItemRenderer().renderItemAndGlow(stack, model);
 
         GL11.glPopMatrix();

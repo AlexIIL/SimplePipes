@@ -5,10 +5,8 @@
  */
 package alexiil.mc.mod.pipes.blocks;
 
-public class TilePipeStone extends TilePipe {
-
-    public TilePipeStone() {
-        super(SimplePipeBlocks.STONE_PIPE_TILE, SimplePipeBlocks.STONE_PIPE);
+public class TilePipeItemStone extends TilePipe {
+    public TilePipeItemStone() {
+        super(SimplePipeBlocks.STONE_PIPE_ITEM_TILE, SimplePipeBlocks.STONE_PIPE_ITEMS, PipeFlowItem::new);
     }
-
 }

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "simple_pipes:pipe_iron"
+          "name": "simple_pipes:pipe_wooden_item"
         }
       ],
       "conditions": [

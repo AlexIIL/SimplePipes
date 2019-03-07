@@ -21,7 +21,7 @@ public class SimplePipeModels {
 
     public static ModelResourceProvider createResourceProvider(ResourceManager manager) {
         return (Identifier resourceId, ModelProviderContext context) -> {
-            if ("curved_rails".equals(resourceId.getNamespace())) {
+            if (SimplePipes.MODID.equals(resourceId.getNamespace())) {
                 System.out.println("resource: " + resourceId);
             }
             return null;
@@ -49,12 +49,12 @@ public class SimplePipeModels {
 
                 switch (resourceId.getPath()) {
 
-                    case "pipe_wooden":
-                        return new PipeBlockModel(SimplePipeBlocks.WOODEN_PIPE);
-                    case "pipe_stone":
-                        return new PipeBlockModel(SimplePipeBlocks.STONE_PIPE);
-                    case "pipe_iron":
-                        return new PipeBlockModel(SimplePipeBlocks.IRON_PIPE);
+                    case "pipe_wooden_item":
+                        return new PipeBlockModel(SimplePipeBlocks.WOODEN_PIPE_ITEMS);
+                    case "pipe_stone_item":
+                        return new PipeBlockModel(SimplePipeBlocks.STONE_PIPE_ITEMS);
+                    case "pipe_iron_item":
+                        return new PipeBlockModel(SimplePipeBlocks.IRON_PIPE_ITEMS);
 
                     default:
                         System.out.println(resourceId);

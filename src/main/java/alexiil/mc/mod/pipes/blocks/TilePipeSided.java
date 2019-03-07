@@ -8,6 +8,7 @@ package alexiil.mc.mod.pipes.blocks;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
@@ -20,8 +21,8 @@ public abstract class TilePipeSided extends TilePipe {
 
     private Direction currentDirection = null;
 
-    public TilePipeSided(BlockEntityType<?> type, BlockPipe pipeBlock) {
-        super(type, pipeBlock);
+    public TilePipeSided(BlockEntityType<?> type, BlockPipe pipeBlock, Function<TilePipe, PipeFlow> flowConstructor) {
+        super(type, pipeBlock, flowConstructor);
     }
 
     @Override
@@ -52,7 +53,7 @@ public abstract class TilePipeSided extends TilePipe {
     @Override
     public void fromClientTag(CompoundTag tag) {
         super.fromClientTag(tag);
-        if (!tag.getBoolean("is_item")) {
+        if (!tag.getBoolean("f")) {
             byte b = tag.getByte("dir");
             if (b >= 0 && b < 6) {
                 currentDirection = Direction.byId(b);

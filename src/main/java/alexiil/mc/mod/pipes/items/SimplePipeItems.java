@@ -15,9 +15,11 @@ import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
 
 public class SimplePipeItems {
 
-    public static final BlockItem WOODEN_PIPE;
-    public static final BlockItem STONE_PIPE;
-    public static final BlockItem IRON_PIPE;
+    public static final BlockItem WOODEN_PIPE_ITEMS;
+    public static final BlockItem STONE_PIPE_ITEMS;
+    public static final BlockItem IRON_PIPE_ITEMS;
+
+    public static final BlockItem TANK;
 
     public static final BlockItem TRIGGER_ITEM_INV_EMPTY;
     public static final BlockItem TRIGGER_ITEM_INV_FULL;
@@ -28,12 +30,14 @@ public class SimplePipeItems {
         Item.Settings pipes = new Item.Settings();
         pipes.itemGroup(ItemGroup.TRANSPORTATION);
 
-        WOODEN_PIPE = new BlockItem(SimplePipeBlocks.WOODEN_PIPE, pipes);
-        STONE_PIPE = new BlockItem(SimplePipeBlocks.STONE_PIPE, pipes);
-        IRON_PIPE = new BlockItem(SimplePipeBlocks.IRON_PIPE, pipes);
+        WOODEN_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.WOODEN_PIPE_ITEMS, pipes);
+        STONE_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.STONE_PIPE_ITEMS, pipes);
+        IRON_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.IRON_PIPE_ITEMS, pipes);
 
         Item.Settings triggers = new Item.Settings();
         triggers.itemGroup(ItemGroup.REDSTONE);
+
+        TANK = new BlockItem(SimplePipeBlocks.TANK, triggers);
 
         TRIGGER_ITEM_INV_EMPTY = new BlockItem(SimplePipeBlocks.TRIGGER_ITEM_INV_EMPTY, triggers);
         TRIGGER_ITEM_INV_FULL = new BlockItem(SimplePipeBlocks.TRIGGER_ITEM_INV_FULL, triggers);
@@ -42,9 +46,11 @@ public class SimplePipeItems {
     }
 
     public static void load() {
-        registerItem(WOODEN_PIPE, "pipe_wooden");
-        registerItem(STONE_PIPE, "pipe_stone");
-        registerItem(IRON_PIPE, "pipe_iron");
+        registerItem(WOODEN_PIPE_ITEMS, "pipe_wooden_item");
+        registerItem(STONE_PIPE_ITEMS, "pipe_stone_item");
+        registerItem(IRON_PIPE_ITEMS, "pipe_iron_item");
+
+        registerItem(TANK, "tank");
 
         registerItem(TRIGGER_ITEM_INV_EMPTY, "trigger_item_inv_empty");
         registerItem(TRIGGER_ITEM_INV_FULL, "trigger_item_inv_full");

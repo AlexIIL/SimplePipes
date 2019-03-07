@@ -1,0 +1,23 @@
+{
+    "parent": "block/block",
+    "elements": [
+        {
+            "from": [2, 0, 2],
+            "to": [14, 16, 14],
+            "faces": {
+                "down": {"texture": "#down", "cullface": "down"},
+                "up": {"texture": "#up", "cullface": "up"},
+                "north": {"texture": "#side"},
+                "south": {"texture": "#side"},
+                "west": {"texture": "#side"},
+                "east": {"texture": "#side"}
+            }
+        }
+    ],
+    "textures": {
+        "particle": "simple_pipes:blocks/tank/side",
+        "up": "simple_pipes:blocks/tank/end",
+        "down": "simple_pipes:blocks/tank/end",
+        "side": "simple_pipes:blocks/tank/side"
+    }
+}

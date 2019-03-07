@@ -7,14 +7,14 @@ package alexiil.mc.mod.pipes.blocks;
 
 import net.minecraft.world.BlockView;
 
-public class BlockPipeStone extends BlockPipe {
+public class BlockPipeItemWooden extends BlockPipeSided {
 
-    public BlockPipeStone(Settings settings) {
+    public BlockPipeItemWooden(Settings settings) {
         super(settings);
     }
 
     @Override
-    public TilePipe createBlockEntity(BlockView var1) {
-        return new TilePipeStone();
+    public TilePipeSided createBlockEntity(BlockView var1) {
+        return new TilePipeItemWood();
     }
 }

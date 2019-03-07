@@ -1,0 +1,7 @@
+{
+    "parent": "simple_pipes:block/tank",
+    "textures": {
+        "particle": "simple_pipes:blocks/tank/side_joined_below",
+        "side": "simple_pipes:blocks/tank/side_joined_below"
+    }
+}

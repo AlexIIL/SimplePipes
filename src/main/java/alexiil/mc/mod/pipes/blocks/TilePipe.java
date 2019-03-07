@@ -5,41 +5,26 @@
  */
 package alexiil.mc.mod.pipes.blocks;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
+import java.util.function.Function;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.google.common.collect.ImmutableList;
 
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.network.packet.BlockEntityUpdateS2CPacket;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.DefaultedList;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.IItemExtractable;
 import alexiil.mc.lib.attributes.item.IItemInsertable;
 import alexiil.mc.lib.attributes.item.ItemAttributes;
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.IItemFilter;
-import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable;
-import alexiil.mc.mod.pipes.util.DelayedList;
-import alexiil.mc.mod.pipes.util.TagUtil;
 
 public abstract class TilePipe extends TileBase implements Tickable, BlockEntityClientSerializable {
 
@@ -48,64 +33,35 @@ public abstract class TilePipe extends TileBase implements Tickable, BlockEntity
     public final BlockPipe pipeBlock;
     public volatile PipeBlockModelState blockModelState;
     byte connections;
-    final IItemInsertable[] insertables;
 
-    private final DelayedList<TravellingItem> items = new DelayedList<>();
+    public final PipeFlow flow;
 
-    public TilePipe(BlockEntityType<?> type, BlockPipe pipeBlock) {
+    public TilePipe(BlockEntityType<?> type, BlockPipe pipeBlock, Function<TilePipe, PipeFlow> flowConstructor) {
         super(type);
         this.pipeBlock = pipeBlock;
-        blockModelState = createModelState();
-        insertables = new IItemInsertable[6];
-        for (Direction dir : Direction.values()) {
-            insertables[dir.ordinal()] = new IItemInsertable() {
-                @Override
-                public ItemStack attemptInsertion(ItemStack stack, Simulation simulation) {
-
-                    return ItemStack.EMPTY;
-                }
-
-                @Override
-                public IItemFilter getInsertionFilter() {
-                    return ConstantItemFilter.ANYTHING;
-                }
-            };
-        }
+        this.blockModelState = createModelState();
+        this.flow = flowConstructor.apply(this);
     }
 
     @Override
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
         connections = tag.getByte("c");
-        System.out.println("from_tag()  " + getPos() + " " + connections);
+        flow.fromTag(tag.getCompound("flow"));
     }
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         tag = super.toTag(tag);
         tag.putByte("c", connections);
+        tag.put("flow", flow.toTag());
         return tag;
     }
 
     @Override
     public void fromClientTag(CompoundTag tag) {
-        if (tag.getBoolean("is_item")) {
-
-            // tag.put("item", item.stack.toTag(new CompoundTag()));
-            // tag.putBoolean("to_center", item.toCenter);
-            // tag.put("side", TagUtil.writeEnum(item.side));
-            // tag.put("colour", TagUtil.writeEnum(item.colour));
-            // tag.putShort("time", item.timeToDest > Short.MAX_VALUE ? Short.MAX_VALUE :(short) item.timeToDest);
-
-            TravellingItem item = new TravellingItem(ItemStack.fromTag(tag.getCompound("item")));
-            item.toCenter = tag.getBoolean("to_center");
-            item.side = TagUtil.readEnum(tag.getTag("side"), Direction.class);
-            item.colour = TagUtil.readEnum(tag.getTag("colour"), DyeColor.class);
-            item.timeToDest = Short.toUnsignedInt(tag.getShort("time"));
-            item.tickStarted = world.getTime() + 1;
-            item.tickFinished = item.tickStarted + item.timeToDest;
-            items.add(item.timeToDest + 1, item);
-
+        if (tag.getBoolean("f")) {
+            flow.fromClientTag(tag);
         } else {
             connections = tag.getByte("c");
             refreshModel();
@@ -114,13 +70,6 @@ public abstract class TilePipe extends TileBase implements Tickable, BlockEntity
 
     @Override
     public CompoundTag toClientTag(CompoundTag tag) {
-        tag.putByte("c", connections);
-        return tag;
-    }
-
-    @Override
-    public CompoundTag toInitialChunkDataTag() {
-        CompoundTag tag = super.toInitialChunkDataTag();
         tag.putByte("c", connections);
         return tag;
     }
@@ -137,8 +86,12 @@ public abstract class TilePipe extends TileBase implements Tickable, BlockEntity
         }
     }
 
+    public long getWorldTime() {
+        return world != null ? world.getTime() : 0;
+    }
+
     protected boolean canConnect(Direction dir) {
-        return getNeighbourInsertable(dir) != RejectingItemInsertable.NULL;
+        return flow.canConnect(dir);
     }
 
     @Nullable
@@ -197,9 +150,9 @@ public abstract class TilePipe extends TileBase implements Tickable, BlockEntity
         }
     }
 
-    private void sendPacket(ServerWorld w, BlockEntityUpdateS2CPacket packet) {
-        w.method_18766(player -> player.squaredDistanceTo(getPos()) < 24 * 24)
-            .forEach(player -> player.networkHandler.sendPacket(packet));
+    protected void sendFlowPacket(CompoundTag tag) {
+        tag.putBoolean("f", true);
+        sendPacket((ServerWorld) world, tag);
     }
 
     public static class PipeBlockModelState {
@@ -238,285 +191,13 @@ public abstract class TilePipe extends TileBase implements Tickable, BlockEntity
 
     @Override
     public void tick() {
-
-        List<TravellingItem> toTick = items.advance();
-        long currentTime = world.getTime();
-
-        for (TravellingItem item : toTick) {
-            if (item.tickFinished > currentTime) {
-                // Can happen if something ticks this tile multiple times in a single real tick
-                items.add((int) (item.tickFinished - currentTime), item);
-                continue;
-            }
-            if (item.isPhantom) {
-                continue;
-            }
-            if (world.isClient) {
-                // TODO: Client item advancing/intelligent stuffs
-
-                continue;
-            }
-            if (item.toCenter) {
-                onItemReachCenter(item);
-            } else {
-                onItemReachEnd(item);
-            }
-        }
-    }
-
-    void sendItemDataToClient(TravellingItem item) {
-        // TODO :p
-        // System.out.println(getPos() + " - " + item.stack + " - " + item.side);
-        CompoundTag tag = new CompoundTag();
-        tag.putString("id", BlockEntityType.getId(getType()).toString());
-        tag.putBoolean("is_item", true);
-
-        tag.put("item", item.stack.toTag(new CompoundTag()));
-        tag.putBoolean("to_center", item.toCenter);
-        tag.put("side", TagUtil.writeEnum(item.side));
-        tag.put("colour", TagUtil.writeEnum(item.colour));
-        tag.putShort("time", item.timeToDest > Short.MAX_VALUE ? Short.MAX_VALUE : (short) item.timeToDest);
-
-        sendPacket((ServerWorld) world, new BlockEntityUpdateS2CPacket(getPos(), 127, tag));
-    }
-
-    protected List<EnumSet<Direction>> getOrderForItem(TravellingItem item, EnumSet<Direction> validDirections) {
-        List<EnumSet<Direction>> list = new ArrayList<>();
-
-        if (!validDirections.isEmpty()) {
-            list.add(validDirections);
-        }
-
-        return list;
-    }
-
-    protected boolean canBounce() {
-        return false;
-    }
-
-    private void onItemReachCenter(TravellingItem item) {
-
-        if (item.stack.isEmpty()) {
-            return;
-        }
-
-        EnumSet<Direction> dirs = EnumSet.allOf(Direction.class);
-        dirs.remove(item.side);
-        dirs.removeAll(item.tried);
-        for (Direction dir : Direction.values()) {
-            if (!isConnected(dir) || getNeighbourInsertable(dir) == null) {
-                dirs.remove(dir);
-            }
-        }
-
-        List<EnumSet<Direction>> order = getOrderForItem(item, dirs);
-        if (order.isEmpty()) {
-            if (canBounce()) {
-                order = ImmutableList.of(EnumSet.of(item.side));
-            } else {
-                dropItem(item.stack, null, item.side.getOpposite(), item.speed);
-                return;
-            }
-        }
-
-        long now = world.getTime();
-        // Saves effort :p
-        final double newSpeed = 0.08;
-        //
-        // if (holder.fireEvent(modifySpeed)) {
-        // double target = modifySpeed.targetSpeed;
-        // double maxDelta = modifySpeed.maxSpeedChange;
-        // if (item.speed < target) {
-        // newSpeed = Math.min(target, item.speed + maxDelta);
-        // } else if (item.speed > target) {
-        // newSpeed = Math.max(target, item.speed - maxDelta);
-        // } else {
-        // newSpeed = item.speed;
-        // }
-        // } else {
-        // // Nothing affected the speed
-        // // so just fallback to a sensible default
-        // if (item.speed > 0.03) {
-        // newSpeed = Math.max(0.03, item.speed - PipeBehaviourStone.SPEED_DELTA);
-        // } else {
-        // newSpeed = item.speed;
-        // }
-        // }
-
-        List<Direction> destinations = new ArrayList<>();
-
-        for (EnumSet<Direction> set : order) {
-            List<Direction> shuffled = new ArrayList<>();
-            shuffled.addAll(set);
-            Collections.shuffle(shuffled);
-            destinations.addAll(shuffled);
-        }
-
-        if (destinations.size() == 0) {
-            dropItem(item.stack, null, item.side.getOpposite(), newSpeed);
-        } else {
-            TravellingItem newItem = new TravellingItem(item.stack);
-            newItem.tried.addAll(item.tried);
-            newItem.toCenter = false;
-            newItem.colour = item.colour;
-            newItem.side = destinations.get(0);
-            newItem.speed = newSpeed;
-            newItem.genTimings(now, getPipeLength(newItem.side));
-            items.add(newItem.timeToDest, newItem);
-            sendItemDataToClient(newItem);
-        }
-    }
-
-    private void onItemReachEnd(TravellingItem item) {
-        IItemInsertable ins = getNeighbourInsertable(item.side);
-        ItemStack excess = item.stack;
-        if (ins != null) {
-            Direction oppositeSide = item.side.getOpposite();
-            TilePipe oPipe = getNeighbourPipe(item.side);
-
-            if (oPipe != null) {
-                excess = oPipe.injectItem(excess, true, oppositeSide, item.colour, item.speed);
-            } else {
-                excess = ins.attemptInsertion(excess, Simulation.ACTION);
-            }
-        }
-        if (excess.isEmpty()) {
-            return;
-        }
-        item.tried.add(item.side);
-        item.toCenter = true;
-        item.stack = excess;
-        item.genTimings(world.getTime(), getPipeLength(item.side));
-        items.add(item.timeToDest, item);
-        sendItemDataToClient(item);
-    }
-
-    private void dropItem(ItemStack stack, Direction side, Direction motion, double speed) {
-        if (stack == null || stack.isEmpty()) {
-            return;
-        }
-
-        double x = pos.getX() + 0.5 + motion.getOffsetX() * 0.5;
-        double y = pos.getY() + 0.5 + motion.getOffsetY() * 0.5;
-        double z = pos.getZ() + 0.5 + motion.getOffsetZ() * 0.5;
-        speed += 0.01;
-        speed *= 2;
-        ItemEntity ent = new ItemEntity(world, x, y, z, stack);
-        ent.setVelocity(new Vec3d(motion.getVector()).multiply(speed));
-
-        world.spawnEntity(ent);
-    }
-
-    public boolean canInjectItems(Direction from) {
-        return isConnected(from);
-    }
-
-    public ItemStack injectItem(@Nonnull ItemStack stack, boolean doAdd, Direction from, DyeColor colour,
-        double speed) {
-        if (world.isClient) {
-            throw new IllegalStateException("Cannot inject items on the client side!");
-        }
-        if (!canInjectItems(from)) {
-            return stack;
-        }
-
-        if (speed < 0.01) {
-            speed = 0.01;
-        }
-
-        // Try insert
-
-        ItemStack toSplit = ItemStack.EMPTY;
-        ItemStack toInsert = stack;
-
-        if (doAdd) {
-            insertItemEvents(toInsert, colour, speed, from);
-        }
-
-        if (toSplit.isEmpty()) {
-            toSplit = ItemStack.EMPTY;
-        }
-
-        return toSplit;
-    }
-
-    public void insertItemsForce(@Nonnull ItemStack stack, Direction from, DyeColor colour, double speed) {
-        if (world.isClient) {
-            throw new IllegalStateException("Cannot inject items on the client side!");
-        }
-        if (stack.isEmpty()) {
-            return;
-        }
-        if (speed < 0.01) {
-            speed = 0.01;
-        }
-        long now = world.getTime();
-        TravellingItem item = new TravellingItem(stack);
-        item.side = from;
-        item.toCenter = true;
-        item.speed = speed;
-        item.colour = colour;
-        item.genTimings(now, 0);
-        item.tried.add(from);
-        addItemTryMerge(item);
-    }
-
-    /** Used internally to split up manual insertions from controlled extractions. */
-    private void insertItemEvents(@Nonnull ItemStack toInsert, DyeColor colour, double speed, Direction from) {
-        long now = world.getTime();
-
-        TravellingItem item = new TravellingItem(toInsert);
-        item.side = from;
-        item.toCenter = true;
-        item.speed = speed;
-        item.colour = colour;
-        item.stack = toInsert;
-        item.genTimings(now, getPipeLength(from));
-        item.tried.add(from);
-        addItemTryMerge(item);
-    }
-
-    private void addItemTryMerge(TravellingItem item) {
-        // for (List<TravellingItem> list : items.getAllElements()) {
-        // for (TravellingItem item2 : list) {
-        // if (item2.mergeWith(item)) {
-        // return;
-        // }
-        // }
-        // }
-        items.add(item.timeToDest, item);
-        sendItemDataToClient(item);
-    }
-
-    @Nullable
-    private static EnumSet<Direction> getFirstNonEmptySet(List<EnumSet<Direction>> possible) {
-        for (EnumSet<Direction> set : possible) {
-            if (set.size() > 0) {
-                return set;
-            }
-        }
-        return null;
+        flow.tick();
     }
 
     @Override
     public DefaultedList<ItemStack> removeItemsForDrop() {
         DefaultedList<ItemStack> all = super.removeItemsForDrop();
-        for (List<TravellingItem> list : this.items.getAllElements()) {
-            for (TravellingItem travel : list) {
-                if (!travel.isPhantom) {
-                    all.add(travel.stack);
-                }
-            }
-        }
-        this.items.clear();
-        return all;
-    }
-
-    public List<TravellingItem> getAllItemsForRender() {
-        List<TravellingItem> all = new ArrayList<>();
-        for (List<TravellingItem> innerList : items.getAllElements()) {
-            all.addAll(innerList);
-        }
+        flow.removeItemsForDrop(all);
         return all;
     }
 }

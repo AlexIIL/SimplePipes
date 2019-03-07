@@ -164,12 +164,12 @@ public class PipeBaseModelGenStandard {
     }
 
     public static Sprite getCenterSprite(BlockPipe block) {
-        if (block == SimplePipeBlocks.WOODEN_PIPE) {
-            return getPipeSprite("wooden_clear");
-        } else if (block == SimplePipeBlocks.STONE_PIPE) {
-            return getPipeSprite("stone");
-        } else if (block == SimplePipeBlocks.IRON_PIPE) {
-            return getPipeSprite("iron_clear");
+        if (block == SimplePipeBlocks.WOODEN_PIPE_ITEMS) {
+            return getPipeSprite("wooden_item_clear");
+        } else if (block == SimplePipeBlocks.STONE_PIPE_ITEMS) {
+            return getPipeSprite("stone_item");
+        } else if (block == SimplePipeBlocks.IRON_PIPE_ITEMS) {
+            return getPipeSprite("iron_item_clear");
         } else {
             return MissingSprite.getMissingSprite();
         }
@@ -181,10 +181,10 @@ public class PipeBaseModelGenStandard {
         if (key instanceof PipeBlockModelStateSided) {
             Direction mainDir = ((PipeBlockModelStateSided) key).mainSide;
             if (mainDir == face) {
-                if (block == SimplePipeBlocks.WOODEN_PIPE) {
-                    return getPipeSprite("wooden_filled");
-                } else if (block == SimplePipeBlocks.IRON_PIPE) {
-                    return getPipeSprite("iron_filled");
+                if (block == SimplePipeBlocks.WOODEN_PIPE_ITEMS) {
+                    return getPipeSprite("wooden_item_filled");
+                } else if (block == SimplePipeBlocks.IRON_PIPE_ITEMS) {
+                    return getPipeSprite("iron_item_filled");
                 }
             }
         }

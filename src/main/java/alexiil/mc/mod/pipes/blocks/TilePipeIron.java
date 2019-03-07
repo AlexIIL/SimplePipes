@@ -5,15 +5,15 @@
  */
 package alexiil.mc.mod.pipes.blocks;
 
-import java.util.EnumSet;
-import java.util.List;
+import java.util.function.Function;
 
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.Direction;
 
-public class TilePipeIron extends TilePipeSided {
+public abstract class TilePipeIron extends TilePipeSided {
 
-    public TilePipeIron() {
-        super(SimplePipeBlocks.IRON_PIPE_TILE, SimplePipeBlocks.IRON_PIPE);
+    public TilePipeIron(BlockEntityType<?> type, BlockPipe pipeBlock, Function<TilePipe, PipeFlow> flowConstructor) {
+        super(type, pipeBlock, flowConstructor);
     }
 
     @Override
@@ -24,19 +24,5 @@ public class TilePipeIron extends TilePipeSided {
     @Override
     protected boolean canFaceDirection(Direction dir) {
         return isConnected(dir);
-    }
-
-    @Override
-    protected List<EnumSet<Direction>> getOrderForItem(TravellingItem item, EnumSet<Direction> validDirections) {
-        List<EnumSet<Direction>> order = super.getOrderForItem(item, validDirections);
-        for (EnumSet<Direction> set : order) {
-            set.remove(currentDirection());
-        }
-        return order;
-    }
-
-    @Override
-    protected boolean canBounce() {
-        return true;
     }
 }

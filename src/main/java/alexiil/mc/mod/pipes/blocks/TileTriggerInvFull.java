@@ -6,7 +6,7 @@ import alexiil.mc.lib.attributes.item.IItemInvStats;
 import alexiil.mc.lib.attributes.item.IItemInvStats.ItemInvStatistic;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.impl.EmptyItemInvStats;
-import alexiil.mc.lib.attributes.util.LibBlockAttributes;
+import alexiil.mc.lib.attributes.misc.LibBlockAttributes;
 
 public class TileTriggerInvFull extends TileTrigger {
     public TileTriggerInvFull() {

@@ -1,12 +1,12 @@
 {
     "type": "crafting_shaped",
     "result": {
-        "item": "simple_pipes:pipe_stone",
+        "item": "simple_pipes:pipe_iron_item",
         "count": 8
     },
     "pattern": [ "WGW" ],
     "key": {
-        "W": { "item": "minecraft:stone" },
+        "W": { "item": "minecraft:iron_ingot" },
         "G": { "item": "minecraft:glass" }
     }
 }

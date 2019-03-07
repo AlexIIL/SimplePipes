@@ -34,6 +34,9 @@ import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.IAttributeBlock;
+import alexiil.mc.lib.attributes.fluid.FluidAttributes;
+import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
+import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
 import alexiil.mc.lib.attributes.item.ItemAttributes;
 import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable;
 import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable;
@@ -164,7 +167,8 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
             // Pipes only work with physical connections
             return;
         }
-        if (to.attribute != ItemAttributes.EXTRACTABLE || to.attribute != ItemAttributes.INSERTABLE) {
+        if (to.attribute != ItemAttributes.EXTRACTABLE || to.attribute != ItemAttributes.INSERTABLE
+            || to.attribute != FluidAttributes.EXTRACTABLE || to.attribute != FluidAttributes.INSERTABLE) {
             return;
         }
         BlockEntity be = world.getBlockEntity(pos);
@@ -175,15 +179,16 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
         TilePipe pipe = (TilePipe) be;
         VoxelShape pipeShape = pipe.isConnected(pipeSide) ? FACE_CENTER_SHAPES[pipeSide.ordinal()] : CENTER_SHAPE;
 
-        if (this instanceof BlockPipeWooden) {
-            if (to.attribute == ItemAttributes.INSERTABLE) {
-                int id = searchDirection.getOpposite().getId();
-                to.offer(pipe.insertables[id], pipeShape);
+        if (this instanceof BlockPipeItemWooden) {
+            if (to.attribute == ItemAttributes.INSERTABLE || to.attribute == FluidAttributes.INSERTABLE) {
+                to.offer(pipe.flow.getInsertable(searchDirection), pipeShape);
             } else {
                 to.offer(RejectingItemInsertable.EXTRACTOR, pipeShape);
+                to.offer(RejectingFluidInsertable.EXTRACTOR, pipeShape);
             }
         } else {
             to.offer(EmptyItemExtractable.SUPPLIER, pipeShape);
+            to.offer(EmptyFluidExtractable.SUPPLIER, pipeShape);
         }
     }
 }

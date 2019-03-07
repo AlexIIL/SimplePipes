@@ -1,7 +1,11 @@
 {
-    "block.simple_pipes.pipe_wooden": "Simple Wooden Item Pipe",
-    "block.simple_pipes.pipe_iron": "Simple Iron Item Pipe",
-    "block.simple_pipes.pipe_stone": "Simple Stone Item Pipe",
+    "block.simple_pipes.pipe_wooden_item": "Simple Wooden Item Pipe",
+    "block.simple_pipes.pipe_iron_item": "Simple Iron Item Pipe",
+    "block.simple_pipes.pipe_stone_item": "Simple Stone Item Pipe",
+
+    "block.simple_pipes.pipe_wooden_fluid": "Simple Wooden Fluid Pipe",
+    "block.simple_pipes.pipe_iron_fluid": "Simple Iron Fluid Pipe",
+    "block.simple_pipes.pipe_stone_fluid": "Simple Stone Fluid Pipe",
 
     "block.simple_pipes.trigger_item_inv_empty": "Item Inventory Empty Trigger",
     "block.simple_pipes.trigger_item_inv_full": "Item Inventory Full Trigger",

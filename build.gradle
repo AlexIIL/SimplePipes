@@ -29,8 +29,8 @@ dependencies {
     modCompile "net.fabricmc:fabric:0.2.3.108"
     compile "com.google.code.findbugs:jsr305:3.0.1"
 
-    modCompile "alexiil.mc:libblockattributes:0.1.8"
-    nest "alexiil.mc:libblockattributes:0.1.8"
+    modCompile "alexiil.mc:libblockattributes:0.1.13"
+    nest "alexiil.mc:libblockattributes:0.1.13"
 }
 
 processResources {

@@ -5,32 +5,24 @@
  */
 package alexiil.mc.mod.pipes.blocks;
 
-import net.minecraft.item.ItemStack;
+import java.util.function.Function;
+
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.Direction;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.IItemExtractable;
 import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable;
 
-public class TilePipeWood extends TilePipeSided {
+public abstract class TilePipeWood extends TilePipeSided {
 
     private boolean lastRecv = true;
 
-    public TilePipeWood() {
-        super(SimplePipeBlocks.WOODEN_PIPE_TILE, SimplePipeBlocks.WOODEN_PIPE);
+    public TilePipeWood(BlockEntityType<?> type, BlockPipe pipeBlock, Function<TilePipe, PipeFlow> flowConstructor) {
+        super(type, pipeBlock, flowConstructor);
     }
 
     @Override
     protected boolean canConnect(Direction dir) {
         return false;
-    }
-
-    @Override
-    protected boolean canFaceDirection(Direction dir) {
-        if (getNeighbourPipe(dir) != null) {
-            return false;
-        }
-        return getNeighbourExtractable(dir) != EmptyItemExtractable.NULL;
     }
 
     @Override
@@ -54,12 +46,5 @@ public class TilePipeWood extends TilePipeSided {
         }
     }
 
-    private void tryExtract(Direction dir) {
-        IItemExtractable extractable = getNeighbourExtractable(dir);
-        ItemStack stack = extractable.attemptAnyExtraction(1, Simulation.ACTION);
-
-        if (!stack.isEmpty()) {
-            insertItemsForce(stack, dir, null, EXTRACT_SPEED);
-        }
-    }
+    protected abstract void tryExtract(Direction dir);
 }
