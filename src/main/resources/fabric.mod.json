@@ -10,7 +10,7 @@
   ],
   "requires": {
     "fabric": "*",
-    "libblockattributes": "0.1.^7"
+    "libblockattributes": "0.2.^0"
   },
   "mixins": {
     "client": "simple_pipes.client.json",
