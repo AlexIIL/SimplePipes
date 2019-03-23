@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "simple_pipes:trigger_fluid_inv_empty",
+    "simple_pipes:trigger_fluid_inv_full",
+    "simple_pipes:trigger_fluid_inv_space",
+    "simple_pipes:trigger_fluid_inv_contains"
+  ]
+}

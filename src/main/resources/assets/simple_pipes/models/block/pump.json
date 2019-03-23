@@ -1,0 +1,8 @@
+{
+    "parent": "simple_pipes:block/trigger",
+    "textures": {
+        "redstone": "simple_pipes:block/pump_output",
+        "target": "simple_pipes:block/pump_input",
+        "side": "simple_pipes:block/pump_side"
+    }
+}

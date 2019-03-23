@@ -23,6 +23,14 @@ public abstract class PipeFlow {
 
     protected abstract void fromClientTag(CompoundTag tag);
 
+    protected void fromInitialClientTag(CompoundTag tag) {
+        // nothing by default
+    }
+
+    public void toInitialClientTag(CompoundTag tag) {
+        // nothing by default
+    }
+
     protected abstract boolean canConnect(Direction dir);
 
     protected abstract void tick();
@@ -30,4 +38,5 @@ public abstract class PipeFlow {
     public void removeItemsForDrop(DefaultedList<ItemStack> all) {}
 
     protected abstract Object getInsertable(Direction searchDirection);
+
 }

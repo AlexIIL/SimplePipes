@@ -15,6 +15,9 @@ public class ScreenTriggerItemInvContains extends ContainerScreen<ContainerTrigg
 
     public static final ContainerScreenFactory<ContainerTriggerInvContains> FACTORY = ScreenTriggerItemInvContains::new;
 
+    private static final Identifier TRIGGER_GUI =
+        new Identifier(SimplePipes.MODID, "textures/gui/trigger_item_inv.png");
+
     public ScreenTriggerItemInvContains(ContainerTriggerInvContains container) {
         super(container, container.player.inventory, SimplePipeBlocks.TRIGGER_ITEM_INV_CONTAINS.getTextComponent());
         height = 153;
@@ -30,7 +33,7 @@ public class ScreenTriggerItemInvContains extends ContainerScreen<ContainerTrigg
     @Override
     protected void drawBackground(float partialTicks, int mouseX, int mouseY) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        client.getTextureManager().bindTexture(new Identifier(SimplePipes.MODID, "textures/gui/trigger_item_inv.png"));
+        client.getTextureManager().bindTexture(TRIGGER_GUI);
         int int_3 = (this.screenWidth - this.width) / 2;
         int int_4 = (this.screenHeight - this.height) / 2;
         drawTexturedRect(int_3, int_4, 0, 0, this.width, this.height);

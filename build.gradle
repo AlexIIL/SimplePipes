@@ -29,8 +29,13 @@ dependencies {
     modCompile "net.fabricmc:fabric:0.2.3.108"
     compile "com.google.code.findbugs:jsr305:3.0.1"
 
-    modCompile "alexiil.mc:libblockattributes:0.1.13"
-    nest "alexiil.mc:libblockattributes:0.1.13"
+    // Silk API
+    // modCompile "io.github.prospector.silk:SilkAPI:1.2.3-38"
+
+    modCompile "alexiil.mc:libblockattributes:0.1.23"
+    nest "alexiil.mc:libblockattributes:0.1.23"
+
+    testCompile "junit:junit:4.12"
 }
 
 processResources {

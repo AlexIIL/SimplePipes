@@ -10,6 +10,6 @@
         "T T"
     ],
     "key": {
-        "T": { "tag": "simple_pipes:triggers" }
+        "T": { "tag": "simple_pipes:triggers_item" }
     }
 }

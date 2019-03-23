@@ -14,6 +14,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.mod.pipes.client.model.MutableVertex;
 import alexiil.mc.mod.pipes.util.VecUtil;
 
+@Deprecated
 public class TileFluidRenderer {
 
     // private static final EnumMap<FluidSpriteType, Map<String, Sprite>> fluidSprites =

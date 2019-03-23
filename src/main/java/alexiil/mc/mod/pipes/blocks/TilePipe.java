@@ -10,8 +10,6 @@ import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
@@ -22,11 +20,14 @@ import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
+import alexiil.mc.lib.attributes.fluid.FluidAttributes;
+import alexiil.mc.lib.attributes.fluid.IFluidExtractable;
+import alexiil.mc.lib.attributes.fluid.IFluidInsertable;
 import alexiil.mc.lib.attributes.item.IItemExtractable;
 import alexiil.mc.lib.attributes.item.IItemInsertable;
 import alexiil.mc.lib.attributes.item.ItemAttributes;
 
-public abstract class TilePipe extends TileBase implements Tickable, BlockEntityClientSerializable {
+public abstract class TilePipe extends TileBase implements Tickable {
 
     protected static final double EXTRACT_SPEED = 0.08;
 
@@ -64,6 +65,7 @@ public abstract class TilePipe extends TileBase implements Tickable, BlockEntity
             flow.fromClientTag(tag);
         } else {
             connections = tag.getByte("c");
+            flow.fromInitialClientTag(tag);
             refreshModel();
         }
     }
@@ -71,13 +73,16 @@ public abstract class TilePipe extends TileBase implements Tickable, BlockEntity
     @Override
     public CompoundTag toClientTag(CompoundTag tag) {
         tag.putByte("c", connections);
+        flow.toInitialClientTag(tag);
         return tag;
     }
 
     protected void onNeighbourChange() {
         for (Direction dir : Direction.values()) {
             BlockEntity oTile = world.getBlockEntity(getPos().offset(dir));
-            if (oTile instanceof TilePipe || canConnect(dir) || (this instanceof TilePipeSided
+            if (this instanceof TilePipeWood && oTile instanceof TilePipeWood) {
+                disconnect(dir);
+            } else if (oTile instanceof TilePipe || canConnect(dir) || (this instanceof TilePipeSided
                 && ((TilePipeSided) this).currentDirection() == dir && ((TilePipeSided) this).canFaceDirection(dir))) {
                 connect(dir);
             } else {
@@ -108,13 +113,23 @@ public abstract class TilePipe extends TileBase implements Tickable, BlockEntity
     }
 
     @Nonnull
-    public final IItemExtractable getNeighbourExtractable(Direction dir) {
+    public final IItemExtractable getItemExtractable(Direction dir) {
         return getNeighbourAttribute(ItemAttributes.EXTRACTABLE, dir);
     }
 
     @Nonnull
-    public final IItemInsertable getNeighbourInsertable(Direction dir) {
+    public final IItemInsertable getItemInsertable(Direction dir) {
         return getNeighbourAttribute(ItemAttributes.INSERTABLE, dir);
+    }
+
+    @Nonnull
+    public final IFluidExtractable getFluidExtractable(Direction dir) {
+        return getNeighbourAttribute(FluidAttributes.EXTRACTABLE, dir);
+    }
+
+    @Nonnull
+    public final IFluidInsertable getFluidInsertable(Direction dir) {
+        return getNeighbourAttribute(FluidAttributes.INSERTABLE, dir);
     }
 
     protected PipeBlockModelState createModelState() {

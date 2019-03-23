@@ -1,0 +1,15 @@
+{
+    "type": "crafting_shaped",
+    "result": {
+        "item": "simple_pipes:trigger_fluid_inv_contains",
+        "count": 4
+    },
+    "pattern": [
+        " T ",
+        "T T",
+        " T "
+    ],
+    "key": {
+        "T": { "tag": "simple_pipes:triggers_fluid" }
+    }
+}

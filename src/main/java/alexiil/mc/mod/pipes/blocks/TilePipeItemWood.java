@@ -18,12 +18,12 @@ public class TilePipeItemWood extends TilePipeWood {
         if (getNeighbourPipe(dir) != null) {
             return false;
         }
-        return getNeighbourExtractable(dir) != EmptyItemExtractable.NULL;
+        return getItemExtractable(dir) != EmptyItemExtractable.NULL;
     }
 
     @Override
     protected void tryExtract(Direction dir) {
-        IItemExtractable extractable = getNeighbourExtractable(dir);
+        IItemExtractable extractable = getItemExtractable(dir);
         ItemStack stack = extractable.attemptAnyExtraction(1, Simulation.ACTION);
 
         if (!stack.isEmpty()) {

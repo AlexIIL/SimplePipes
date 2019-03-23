@@ -1,6 +1,5 @@
 {
     "variants": {
-        "joined_below=false": {"model": "simple_pipes:block/tank"},
-        "joined_below=true": {"model": "simple_pipes:block/tank_joined_below"}
+        "": {"model": "simple_pipes:block/tank"}
     }
 }

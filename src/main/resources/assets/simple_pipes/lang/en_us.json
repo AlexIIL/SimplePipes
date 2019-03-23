@@ -1,14 +1,24 @@
 {
     "block.simple_pipes.pipe_wooden_item": "Simple Wooden Item Pipe",
     "block.simple_pipes.pipe_iron_item": "Simple Iron Item Pipe",
+    "block.simple_pipes.pipe_clay_item": "Simple Clay Item Pipe",
     "block.simple_pipes.pipe_stone_item": "Simple Stone Item Pipe",
 
     "block.simple_pipes.pipe_wooden_fluid": "Simple Wooden Fluid Pipe",
     "block.simple_pipes.pipe_iron_fluid": "Simple Iron Fluid Pipe",
+    "block.simple_pipes.pipe_clay_fluid": "Simple Clay Fluid Pipe",
     "block.simple_pipes.pipe_stone_fluid": "Simple Stone Fluid Pipe",
 
     "block.simple_pipes.trigger_item_inv_empty": "Item Inventory Empty Trigger",
     "block.simple_pipes.trigger_item_inv_full": "Item Inventory Full Trigger",
     "block.simple_pipes.trigger_item_inv_space": "Item Inventory Has Space Trigger",
-    "block.simple_pipes.trigger_item_inv_contains": "Item Inventory Contains Trigger"
+    "block.simple_pipes.trigger_item_inv_contains": "Item Inventory Contains Trigger",
+
+    "block.simple_pipes.trigger_fluid_inv_empty": "Fluid Inventory Empty Trigger",
+    "block.simple_pipes.trigger_fluid_inv_full": "Fluid Inventory Full Trigger",
+    "block.simple_pipes.trigger_fluid_inv_space": "Fluid Inventory Has Space Trigger",
+    "block.simple_pipes.trigger_fluid_inv_contains": "Fluid Inventory Contains Trigger",
+
+    "block.simple_pipes.tank": "Simple Fluid Tank",
+    "block.simple_pipes.pump": "Simple Fluid Pump"
 }

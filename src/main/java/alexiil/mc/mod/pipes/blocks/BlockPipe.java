@@ -160,7 +160,7 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
     }
 
     @Override
-    public <T> void addAllAttributes(World world, BlockPos pos, BlockState state, AttributeList<T> to) {
+    public void addAllAttributes(World world, BlockPos pos, BlockState state, AttributeList<?> to) {
 
         Direction searchDirection = to.getSearchDirection();
         if (searchDirection == null) {

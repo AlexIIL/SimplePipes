@@ -1,0 +1,14 @@
+{
+    "type": "crafting_shaped",
+    "result": {
+        "item": "simple_pipes:trigger_fluid_inv_empty",
+        "count": 2
+    },
+    "pattern": [
+        "T ",
+        " T"
+    ],
+    "key": {
+        "T": { "tag": "simple_pipes:triggers_fluid" }
+    }
+}

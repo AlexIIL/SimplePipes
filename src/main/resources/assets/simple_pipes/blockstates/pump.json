@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "facing=down": {"model": "simple_pipes:block/pump" },
+        "facing=up": {"model": "simple_pipes:block/pump", "x": 180 },
+        "facing=east": {"model": "simple_pipes:block/pump", "x": 90, "y": 90 },
+        "facing=west": {"model": "simple_pipes:block/pump", "x": 90, "y": 270 },
+        "facing=north": {"model": "simple_pipes:block/pump", "x": 90 },
+        "facing=south": {"model": "simple_pipes:block/pump", "x": 90, "y": 180 }
+    }
+}

@@ -53,8 +53,19 @@ public class SimplePipeModels {
                         return new PipeBlockModel(SimplePipeBlocks.WOODEN_PIPE_ITEMS);
                     case "pipe_stone_item":
                         return new PipeBlockModel(SimplePipeBlocks.STONE_PIPE_ITEMS);
+                    case "pipe_clay_item":
+                        return new PipeBlockModel(SimplePipeBlocks.CLAY_PIPE_ITEMS);
                     case "pipe_iron_item":
                         return new PipeBlockModel(SimplePipeBlocks.IRON_PIPE_ITEMS);
+
+                    case "pipe_wooden_fluid":
+                        return new PipeBlockModel(SimplePipeBlocks.WOODEN_PIPE_FLUIDS);
+                    case "pipe_stone_fluid":
+                        return new PipeBlockModel(SimplePipeBlocks.STONE_PIPE_FLUIDS);
+                    case "pipe_clay_fluid":
+                        return new PipeBlockModel(SimplePipeBlocks.CLAY_PIPE_FLUIDS);
+                    case "pipe_iron_fluid":
+                        return new PipeBlockModel(SimplePipeBlocks.IRON_PIPE_FLUIDS);
 
                     default:
                         System.out.println(resourceId);

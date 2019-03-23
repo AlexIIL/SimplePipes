@@ -1,5 +1,5 @@
 {
-  "id": "simple_item_pipe_test",
+  "id": "simple_pipes",
   "name": "SimpleItemPipeTest",
   "description": "A simple pipes mod for testing Lib Block Attributes implementations",
   "version": "$version",
@@ -13,8 +13,8 @@
     "libblockattributes": "0.1.^7"
   },
   "mixins": {
-    "client": "simple_item_pipe_test.client.json",
-    "common": "simple_item_pipe_test.common.json"
+    "client": "simple_pipes.client.json",
+    "common": "simple_pipes.common.json"
   },
   "authors": [ "AlexIIL" ]
 }

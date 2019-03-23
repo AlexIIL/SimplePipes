@@ -13,7 +13,7 @@ public class TileTriggerInvEmpty extends TileTrigger {
 
     @Override
     protected EnumTriggerState getTriggerState(Direction dir) {
-        IItemInvStats invStats = getNeighbourStats(dir);
+        IItemInvStats invStats = getNeighbourItemStats(dir);
         if (invStats == EmptyItemInvStats.INSTANCE) {
             return EnumTriggerState.NO_TARGET;
         }

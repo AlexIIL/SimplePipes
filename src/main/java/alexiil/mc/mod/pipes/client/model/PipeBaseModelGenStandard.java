@@ -169,7 +169,17 @@ public class PipeBaseModelGenStandard {
         } else if (block == SimplePipeBlocks.STONE_PIPE_ITEMS) {
             return getPipeSprite("stone_item");
         } else if (block == SimplePipeBlocks.IRON_PIPE_ITEMS) {
-            return getPipeSprite("iron_item_clear");
+            return getPipeSprite("iron_item_filled");
+        } else if (block == SimplePipeBlocks.CLAY_PIPE_ITEMS) {
+            return getPipeSprite("clay_item");
+        } else if (block == SimplePipeBlocks.WOODEN_PIPE_FLUIDS) {
+            return getPipeSprite("wooden_fluid_clear");
+        } else if (block == SimplePipeBlocks.STONE_PIPE_FLUIDS) {
+            return getPipeSprite("stone_fluid");
+        } else if (block == SimplePipeBlocks.IRON_PIPE_FLUIDS) {
+            return getPipeSprite("iron_fluid_filled");
+        } else if (block == SimplePipeBlocks.CLAY_PIPE_FLUIDS) {
+            return getPipeSprite("clay_fluid");
         } else {
             return MissingSprite.getMissingSprite();
         }
@@ -184,7 +194,11 @@ public class PipeBaseModelGenStandard {
                 if (block == SimplePipeBlocks.WOODEN_PIPE_ITEMS) {
                     return getPipeSprite("wooden_item_filled");
                 } else if (block == SimplePipeBlocks.IRON_PIPE_ITEMS) {
-                    return getPipeSprite("iron_item_filled");
+                    return getPipeSprite("iron_item_clear");
+                } else if (block == SimplePipeBlocks.WOODEN_PIPE_FLUIDS) {
+                    return getPipeSprite("wooden_fluid_filled");
+                } else if (block == SimplePipeBlocks.IRON_PIPE_FLUIDS) {
+                    return getPipeSprite("iron_fluid_clear");
                 }
             }
         }

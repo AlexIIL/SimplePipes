@@ -15,6 +15,8 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.SearchParamDirectional;
+import alexiil.mc.lib.attributes.fluid.FluidAttributes;
+import alexiil.mc.lib.attributes.fluid.IFluidInvStats;
 import alexiil.mc.lib.attributes.item.IItemInvStats;
 import alexiil.mc.lib.attributes.item.ItemAttributes;
 
@@ -57,6 +59,14 @@ public abstract class BlockTrigger extends BlockBase implements BlockEntityProvi
     }
 
     @Override
+    public int getStrongRedstonePower(BlockState state, BlockView view, BlockPos pos, Direction from) {
+        if (from == state.get(FACING)) {
+            return state.get(STATE) == EnumTriggerState.ON ? 15 : 0;
+        }
+        return 0;
+    }
+
+    @Override
     public abstract TileTrigger createBlockEntity(BlockView view);
 
     /** @param pos This position
@@ -65,5 +75,9 @@ public abstract class BlockTrigger extends BlockBase implements BlockEntityProvi
 
     static IItemInvStats getNeighbourItemInvStats(World world, BlockPos pos, Direction dir) {
         return ItemAttributes.INV_STATS.get(world, pos.offset(dir), SearchParamDirectional.of(dir));
+    }
+
+    static IFluidInvStats getNeighbourFluidInvStats(World world, BlockPos pos, Direction dir) {
+        return FluidAttributes.INV_STATS.get(world, pos.offset(dir), SearchParamDirectional.of(dir));
     }
 }

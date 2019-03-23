@@ -15,7 +15,7 @@ public class TileTriggerInvFull extends TileTrigger {
 
     @Override
     protected EnumTriggerState getTriggerState(Direction dir) {
-        IItemInvStats invStats = getNeighbourStats(dir);
+        IItemInvStats invStats = getNeighbourItemStats(dir);
         if (invStats == EmptyItemInvStats.INSTANCE) {
             return EnumTriggerState.NO_TARGET;
         }
@@ -23,7 +23,7 @@ public class TileTriggerInvFull extends TileTrigger {
         if (stats.spaceTotal == -1) {
             // Not good!
             LibBlockAttributes.LOGGER.warn("Found an IItemInvStats implementation that doesn't correctly "
-                + "calculate the 'ItemInvStatistic.spaceTotal' value from 'IItemFilter.ANY_STACK'!\n"
+                + "calculate the 'ItemInvStatistic.spaceTotal' value from 'ConstantItemFilter.ANYTHING'!\n"
                 + invStats.getClass() + " for block " + world.getBlockState(getPos()) + ", block entity = "
                 + world.getBlockEntity(getPos()));
         }

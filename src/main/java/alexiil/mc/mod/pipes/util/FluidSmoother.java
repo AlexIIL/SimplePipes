@@ -1,5 +1,7 @@
 package alexiil.mc.mod.pipes.util;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.World;
 
@@ -60,6 +62,7 @@ public class FluidSmoother {
         }
     }
 
+    @Nullable
     public FluidVolume getFluidForRender() {
         if (data instanceof _Client) {
             _Client client = (_Client) data;
@@ -71,6 +74,7 @@ public class FluidSmoother {
         return null;
     }
 
+    @Nullable
     public FluidStackInterp getFluidForRender(double partialTicks) {
         if (data instanceof _Client) {
             _Client client = (_Client) data;

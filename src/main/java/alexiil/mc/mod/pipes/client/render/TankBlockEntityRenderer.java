@@ -1,34 +1,29 @@
 package alexiil.mc.mod.pipes.client.render;
 
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+
+import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.GuiLighting;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 
+import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.mod.pipes.blocks.TileTank;
 import alexiil.mc.mod.pipes.util.FluidSmoother.FluidStackInterp;
 
 public class TankBlockEntityRenderer extends BlockEntityRenderer<TileTank> {
-    private static final Vec3d MIN = new Vec3d(0.13, 0.01, 0.13);
-    private static final Vec3d MAX = new Vec3d(0.86, 0.99, 0.86);
-    private static final Vec3d MIN_CONNECTED = new Vec3d(0.13, 0, 0.13);
-    private static final Vec3d MAX_CONNECTED = new Vec3d(0.86, 1 - 1e-5, 0.86);
-
     @Override
     public void render(TileTank tile, double x, double y, double z, float partialTicks, int destroyStage) {
         FluidStackInterp forRender = tile.getFluidForRender(partialTicks);
@@ -44,32 +39,23 @@ public class TankBlockEntityRenderer extends BlockEntityRenderer<TileTank> {
 
         // buffer setup
 
-        Tessellator tess = Tessellator.getInstance();
-        BufferBuilder bb = tess.getBufferBuilder();
-        bb.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR_UV_LMAP);
-        bb.setOffset(x, y, z);
-
-        boolean[] sideRender = { true, true, true, true, true, true };
-        boolean connectedUp = isFullyConnected(tile, Direction.UP, partialTicks);
-        boolean connectedDown = isFullyConnected(tile, Direction.DOWN, partialTicks);
-        sideRender[Direction.DOWN.ordinal()] = !connectedDown;
-        sideRender[Direction.UP.ordinal()] = !connectedUp;
-
-        Vec3d min = connectedDown ? MIN_CONNECTED : MIN;
-        Vec3d max = connectedUp ? MAX_CONNECTED : MAX;
         FluidVolume fluid = forRender.fluid;
         int blocklight = fluid.fluidKey == FluidKeys.LAVA ? 15 : 0;
-        int combinedLight = tile.getWorld().getLightLevel(tile.getPos(), blocklight);
+        int combinedLight = tile.getWorld().getLightmapIndex(tile.getPos(), blocklight);
+        GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, combinedLight & 0xFFFF, (combinedLight >> 16) & 0xFFFF);
 
-        TileFluidRenderer.vertex.lighti(combinedLight);
-        TileFluidRenderer.vertex.lighti(0xF0_F0);
+        List<FluidRenderFace> faces = new ArrayList<>();
 
-        TileFluidRenderer.renderFluid(FluidSpriteType.STILL, fluid, forRender.amount, tile.fluidInv.tankCapacity, min,
-            max, bb, sideRender);
+        double x0 = 0.126;
+        double y0 = 0.001;
+        double z0 = 0.126;
+        double x1 = 0.874;
+        double y1 = 0.001 + (12 / 16.0 - 0.002) * forRender.amount / tile.fluidInv.tankCapacity;
+        double z1 = 0.874;
 
-        // buffer finish
-        bb.setOffset(0, 0, 0);
-        tess.draw();
+        EnumSet<Direction> sides = EnumSet.allOf(Direction.class);
+        FluidRenderFace.appendCuboid(x0, y0, z0, x1, y1, z1, 16, sides, faces);
+        forRender.fluid.getRenderer().render(forRender.fluid, faces, x, y, z);
 
         // gl state finish
         GuiLighting.enable();

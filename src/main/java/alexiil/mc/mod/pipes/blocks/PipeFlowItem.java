@@ -38,10 +38,10 @@ public class PipeFlowItem extends PipeFlow {
 
         this.insertables = new IItemInsertable[6];
         for (Direction dir : Direction.values()) {
-            insertables[dir.ordinal()] = new IItemInsertable() {
+            insertables[dir.getOpposite().ordinal()] = new IItemInsertable() {
                 @Override
                 public ItemStack attemptInsertion(ItemStack stack, Simulation simulation) {
-                    return ItemStack.EMPTY;
+                    return stack;
                 }
 
                 @Override
@@ -83,12 +83,12 @@ public class PipeFlowItem extends PipeFlow {
 
     @Override
     protected Object getInsertable(Direction searchDirection) {
-        return insertables[searchDirection.getOpposite().getId()];
+        return insertables[searchDirection.getId()];
     }
 
     @Override
     protected boolean canConnect(Direction dir) {
-        return pipe.getNeighbourInsertable(dir) != RejectingItemInsertable.NULL;
+        return pipe.getItemInsertable(dir) != RejectingItemInsertable.NULL;
     }
 
     @Override
@@ -152,15 +152,28 @@ public class PipeFlowItem extends PipeFlow {
     protected List<EnumSet<Direction>> getOrderForItem(TravellingItem item, EnumSet<Direction> validDirections) {
         List<EnumSet<Direction>> list = new ArrayList<>();
 
-        if (!validDirections.isEmpty()) {
-            list.add(validDirections);
+        if (pipe instanceof TilePipeItemClay) {
+            EnumSet<Direction> invs = EnumSet.noneOf(Direction.class);
+            EnumSet<Direction> others = EnumSet.noneOf(Direction.class);
+            for (Direction dir : validDirections) {
+                if (pipe.getNeighbourPipe(dir) != null) {
+                    others.add(dir);
+                } else {
+                    invs.add(dir);
+                }
+            }
+            list.add(invs);
+            list.add(others);
+        } else {
+            if (!validDirections.isEmpty()) {
+                list.add(validDirections);
+            }
         }
-
         return list;
     }
 
     protected boolean canBounce() {
-        return false;
+        return pipe instanceof TilePipeItemIron;
     }
 
     private void onItemReachCenter(TravellingItem item) {
@@ -173,7 +186,7 @@ public class PipeFlowItem extends PipeFlow {
         dirs.remove(item.side);
         dirs.removeAll(item.tried);
         for (Direction dir : Direction.values()) {
-            if (!pipe.isConnected(dir) || pipe.getNeighbourInsertable(dir) == null) {
+            if (!pipe.isConnected(dir) || pipe.getItemInsertable(dir) == null) {
                 dirs.remove(dir);
             }
         }
@@ -237,7 +250,7 @@ public class PipeFlowItem extends PipeFlow {
     }
 
     private void onItemReachEnd(TravellingItem item) {
-        IItemInsertable ins = pipe.getNeighbourInsertable(item.side);
+        IItemInsertable ins = pipe.getItemInsertable(item.side);
         ItemStack excess = item.stack;
         if (ins != null) {
             Direction oppositeSide = item.side.getOpposite();
