@@ -2,6 +2,8 @@ plugins {
     id 'fabric-loom' version '0.2.0-SNAPSHOT'
 }
 
+apply plugin: 'maven-publish' // for uploading to a maven repo
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -31,8 +33,8 @@ dependencies {
     // Silk API
     // modCompile "io.github.prospector.silk:SilkAPI:1.2.3-38"
 
-    modCompile "alexiil.mc:libblockattributes:0.2.0"
-    nest "alexiil.mc:libblockattributes:0.2.0"
+    modCompile "alexiil.mc.lib:libblockattributes:0.2.0"
+    nest "alexiil.mc.lib:libblockattributes:0.2.0"
 
     // Misc
     compile "com.google.code.findbugs:jsr305:3.0.1"
@@ -74,3 +76,31 @@ task mainJar(type: Jar, dependsOn: classes) {
     from sourceSets.main
 }
 
+publishing {
+    repositories {
+        maven {
+            url System.getenv("MAVEN_DIR") ?: "$projectDir/build/maven"
+        }
+    }
+    publications {
+       publishRemapJar(MavenPublication) {
+            groupId "alexiil.mc.mod"
+            artifactId "simple_pipes"
+            version project.version
+
+            artifact (jar) {
+                builtBy remapJar
+            }
+        }
+        publishRemapSrcJar(MavenPublication) {
+            groupId "alexiil.mc.mod"
+            artifactId "simple_pipes"
+            version project.version
+
+            artifact (sourcesJar) {
+                classifier "sources"
+                builtBy remapSourcesJar
+            }
+        }
+    }
+}
