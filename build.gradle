@@ -21,13 +21,12 @@ configurations {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:19w09a"
-    mappings "net.fabricmc:yarn:19w09a.2"
+    minecraft "com.mojang:minecraft:19w12b"
+    mappings "net.fabricmc:yarn:19w12b.3"
     modCompile "net.fabricmc:fabric-loader:0.3.7.109"
 
     //Fabric api
-    modCompile "net.fabricmc:fabric:0.2.3.108"
-    compile "com.google.code.findbugs:jsr305:3.0.1"
+    modCompile "net.fabricmc:fabric:0.2.5.114"
 
     // Silk API
     // modCompile "io.github.prospector.silk:SilkAPI:1.2.3-38"
@@ -35,6 +34,8 @@ dependencies {
     modCompile "alexiil.mc:libblockattributes:0.1.23"
     nest "alexiil.mc:libblockattributes:0.1.23"
 
+    // Misc
+    compile "com.google.code.findbugs:jsr305:3.0.1"
     testCompile "junit:junit:4.12"
 }
 

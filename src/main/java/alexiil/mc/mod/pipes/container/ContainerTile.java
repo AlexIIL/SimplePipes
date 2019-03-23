@@ -4,6 +4,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class ContainerTile<T extends BlockEntity> extends Container {
@@ -23,7 +24,7 @@ public class ContainerTile<T extends BlockEntity> extends Container {
             return false;
         }
         World w = tile.getWorld();
-        return w != null && w.getBlockEntity(tile.getPos()) == tile && p.squaredDistanceTo(tile.getPos()) < 8 * 8;
+        return w != null && w.getBlockEntity(tile.getPos()) == tile && p.squaredDistanceTo(new Vec3d(tile.getPos())) < 8 * 8;
     }
 
     protected void addPlayerInventory(int startY) {

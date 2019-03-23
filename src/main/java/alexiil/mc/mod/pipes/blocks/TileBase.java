@@ -16,6 +16,7 @@ import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 
 import alexiil.mc.lib.attributes.AttributeCombinable;
 import alexiil.mc.lib.attributes.SearchParamDirectional;
@@ -41,7 +42,7 @@ public abstract class TileBase extends BlockEntity implements BlockEntityClientS
     }
 
     protected void sendPacket(ServerWorld w, BlockEntityUpdateS2CPacket packet) {
-        w.method_18766(player -> player.squaredDistanceTo(getPos()) < 24 * 24)
+        w.method_18766(player -> player.squaredDistanceTo(new Vec3d(getPos())) < 24 * 24)
             .forEach(player -> player.networkHandler.sendPacket(packet));
     }
 

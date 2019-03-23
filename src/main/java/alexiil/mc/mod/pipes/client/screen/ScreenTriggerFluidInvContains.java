@@ -25,9 +25,9 @@ public class ScreenTriggerFluidInvContains extends ContainerScreen<ContainerTrig
     }
 
     @Override
-    public void draw(int mouseX, int mouseY, float partialTicks) {
+    public void render(int mouseX, int mouseY, float partialTicks) {
         drawBackground();
-        super.draw(mouseX, mouseY, partialTicks);
+        super.render(mouseX, mouseY, partialTicks);
         drawMouseoverTooltip(mouseX, mouseY);
     }
 
@@ -42,7 +42,7 @@ public class ScreenTriggerFluidInvContains extends ContainerScreen<ContainerTrig
 
     @Override
     protected void drawForeground(int mouseX, int mouseY) {
-        fontRenderer.draw(name.getFormattedText(), 8.0F, 6.0F, 0x40_40_40);
+        fontRenderer.draw(title.getFormattedText(), 8.0F, 6.0F, 0x40_40_40);
         fontRenderer.draw(playerInventory.getDisplayName().getFormattedText(), 8.0F, height - 96 + 2, 0x40_40_40);
     }
 }
