@@ -21,9 +21,6 @@ public class SimplePipeModels {
 
     public static ModelResourceProvider createResourceProvider(ResourceManager manager) {
         return (Identifier resourceId, ModelProviderContext context) -> {
-            if (SimplePipes.MODID.equals(resourceId.getNamespace())) {
-                System.out.println("resource: " + resourceId);
-            }
             return null;
         };
     }
@@ -68,7 +65,6 @@ public class SimplePipeModels {
                         return new PipeBlockModel(SimplePipeBlocks.IRON_PIPE_FLUIDS);
 
                     default:
-                        System.out.println(resourceId);
                         return null;
                 }
             }
