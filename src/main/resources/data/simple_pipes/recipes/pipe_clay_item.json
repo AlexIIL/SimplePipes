@@ -1,0 +1,12 @@
+{
+    "type": "crafting_shaped",
+    "result": {
+        "item": "simple_pipes:pipe_clay_item",
+        "count": 8
+    },
+    "pattern": [ "WGW" ],
+    "key": {
+        "W": { "item": "minecraft:clay_ball" },
+        "G": { "item": "minecraft:glass" }
+    }
+}
