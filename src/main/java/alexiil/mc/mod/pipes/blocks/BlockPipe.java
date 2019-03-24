@@ -5,8 +5,6 @@
  */
 package alexiil.mc.mod.pipes.blocks;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockRenderLayer;
@@ -109,7 +107,6 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
     }
 
     @Override
-    @Nullable
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         FluidState fluidState_1 = ctx.getWorld().getFluidState(ctx.getBlockPos());
         return this.getDefaultState().with(Properties.WATERLOGGED,
