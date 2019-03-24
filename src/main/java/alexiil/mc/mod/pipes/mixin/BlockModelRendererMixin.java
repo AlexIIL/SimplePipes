@@ -7,7 +7,6 @@ package alexiil.mc.mod.pipes.mixin;
 
 import java.util.Random;
 
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,11 +22,11 @@ import net.minecraft.world.ExtendedBlockView;
 import alexiil.mc.mod.pipes.client.model.IWorldDependentModel;
 
 @Mixin(BlockModelRenderer.class)
-@Debug(print = true)
 public class BlockModelRendererMixin {
 
     @ModifyArg(
-        method = { "tesselate" },
+        method = {
+            "net/minecraft/client/render/block/BlockModelRenderer.tesselate(Lnet/minecraft/world/ExtendedBlockView;Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/client/render/BufferBuilder;ZLjava/util/Random;J)Z" },
         at = @At(
             value = "INVOKE",
             target = "net/minecraft/client/render/block/BlockModelRenderer.tesselateSmooth(Lnet/minecraft/world/ExtendedBlockView;"
@@ -39,7 +38,8 @@ public class BlockModelRendererMixin {
     }
 
     @ModifyArg(
-        method = { "tesselate" },
+        method = {
+            "net/minecraft/client/render/block/BlockModelRenderer.tesselate(Lnet/minecraft/world/ExtendedBlockView;Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/client/render/BufferBuilder;ZLjava/util/Random;J)Z" },
         at = @At(
             value = "INVOKE",
             target = "net/minecraft/client/render/block/BlockModelRenderer.tesselateFlat(Lnet/minecraft/world/ExtendedBlockView;"
