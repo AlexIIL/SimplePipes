@@ -7,11 +7,11 @@ import net.minecraft.sortme.ItemScatterer;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.math.Direction;
 
-import alexiil.mc.lib.attributes.item.IItemInvStats;
-import alexiil.mc.lib.attributes.item.IItemInvStats.ItemInvStatistic;
+import alexiil.mc.lib.attributes.item.ItemInvStats;
+import alexiil.mc.lib.attributes.item.ItemInvStats.ItemInvStatistic;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ExactItemStackFilter;
-import alexiil.mc.lib.attributes.item.filter.IItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.EmptyItemInvStats;
 
 public class TileTriggerInvSpace extends TileTrigger {
@@ -47,11 +47,11 @@ public class TileTriggerInvSpace extends TileTrigger {
 
     @Override
     protected EnumTriggerState getTriggerState(Direction dir) {
-        IItemInvStats invStats = getNeighbourItemStats(dir);
+        ItemInvStats invStats = getNeighbourItemStats(dir);
         if (invStats == EmptyItemInvStats.INSTANCE) {
             return EnumTriggerState.NO_TARGET;
         }
-        final IItemFilter filter;
+        final ItemFilter filter;
         ItemStack stack = filterInv.getInvStack(0);
         if (stack.isEmpty()) {
             filter = ConstantItemFilter.ANYTHING;

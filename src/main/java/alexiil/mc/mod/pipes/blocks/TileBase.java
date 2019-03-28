@@ -18,8 +18,8 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
-import alexiil.mc.lib.attributes.AttributeCombinable;
-import alexiil.mc.lib.attributes.SearchParamDirectional;
+import alexiil.mc.lib.attributes.CombinableAttribute;
+import alexiil.mc.lib.attributes.SearchOptions;
 
 public abstract class TileBase extends BlockEntity implements BlockEntityClientSerializable {
 
@@ -28,8 +28,8 @@ public abstract class TileBase extends BlockEntity implements BlockEntityClientS
     }
 
     @Nonnull
-    public <T> T getNeighbourAttribute(AttributeCombinable<T> attr, Direction dir) {
-        return attr.get(getWorld(), getPos().offset(dir), SearchParamDirectional.of(dir));
+    public <T> T getNeighbourAttribute(CombinableAttribute<T> attr, Direction dir) {
+        return attr.get(getWorld(), getPos().offset(dir), SearchOptions.inDirection(dir));
     }
 
     public DefaultedList<ItemStack> removeItemsForDrop() {

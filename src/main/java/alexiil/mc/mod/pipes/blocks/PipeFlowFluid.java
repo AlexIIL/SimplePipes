@@ -16,11 +16,12 @@ import net.minecraft.util.math.Direction;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
-import alexiil.mc.lib.attributes.fluid.IFluidExtractable;
-import alexiil.mc.lib.attributes.fluid.IFluidInsertable;
+import alexiil.mc.lib.attributes.fluid.FluidInsertable;
+import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.ExactFluidFilter;
-import alexiil.mc.lib.attributes.fluid.filter.IFluidFilter;
+import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
+import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
@@ -33,7 +34,7 @@ public class PipeFlowFluid extends PipeFlow {
     private final Map<Direction, SideSection> sideSections = new EnumMap<>(Direction.class);
     private final CenterSection centerSection = new CenterSection();
 
-    final IFluidInsertable[] insertables;
+    final FluidInsertable[] insertables;
     long lastTickTime;
 
     public PipeFlowFluid(TilePipe pipe) {
@@ -43,9 +44,9 @@ public class PipeFlowFluid extends PipeFlow {
             sideSections.put(dir, new SideSection(dir));
         }
 
-        this.insertables = new IFluidInsertable[6];
+        this.insertables = new FluidInsertable[6];
         for (Direction dir : Direction.values()) {
-            insertables[dir.getOpposite().ordinal()] = new IFluidInsertable() {
+            insertables[dir.getOpposite().ordinal()] = new FluidInsertable() {
 
                 @Override
                 public FluidVolume attemptInsertion(FluidVolume fluid, Simulation simulation) {
@@ -53,7 +54,7 @@ public class PipeFlowFluid extends PipeFlow {
                 }
 
                 @Override
-                public IFluidFilter getInsertionFilter() {
+                public FluidFilter getInsertionFilter() {
                     return ConstantFluidFilter.ANYTHING;
                 }
             };
@@ -128,13 +129,13 @@ public class PipeFlowFluid extends PipeFlow {
     }
 
     public void tryExtract(Direction dir) {
-        IFluidExtractable from = pipe.getFluidExtractable(dir);
+        FluidExtractable from = pipe.getFluidExtractable(dir);
         SideSection section = sideSections.get(dir);
         int max = SECTION_CAPACITY - section.fluid.getAmount();
         if (max <= 0) {
             return;
         }
-        IFluidFilter filter =
+        FluidFilter filter =
             section.fluid.isEmpty() ? ConstantFluidFilter.ANYTHING : new ExactFluidFilter(section.fluid.getFluidKey());
         FluidVolume extracted = from.attemptExtraction(filter, max, Simulation.SIMULATE);
         int extractedAmount = extracted.getAmount();
@@ -266,7 +267,7 @@ public class PipeFlowFluid extends PipeFlow {
                         sides.add(side);
                     }
                 } else {
-                    IFluidInsertable insertable = pipe.getNeighbourAttribute(FluidAttributes.INSERTABLE, side);
+                    FluidInsertable insertable = pipe.getNeighbourAttribute(FluidAttributes.INSERTABLE, side);
                     FluidVolume leftover = insertable.attemptInsertion(fluid, Simulation.SIMULATE);
                     if (leftover.getAmount() < fluid.getAmount()) {
                         sides.add(side);
@@ -316,7 +317,7 @@ public class PipeFlowFluid extends PipeFlow {
                             }
                         }
                     } else {
-                        IFluidInsertable insertable = pipe.getNeighbourAttribute(FluidAttributes.INSERTABLE, side);
+                        FluidInsertable insertable = pipe.getNeighbourAttribute(FluidAttributes.INSERTABLE, side);
                         int movable = (fluid.getAmount() + 1) / 2;
                         if (movable < 0) {
                             continue;

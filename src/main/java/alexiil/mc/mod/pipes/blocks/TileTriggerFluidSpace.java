@@ -3,11 +3,11 @@ package alexiil.mc.mod.pipes.blocks;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.Direction;
 
-import alexiil.mc.lib.attributes.fluid.IFluidInvStats;
-import alexiil.mc.lib.attributes.fluid.IFluidInvStats.FluidInvStatistic;
+import alexiil.mc.lib.attributes.fluid.FluidInvStats;
+import alexiil.mc.lib.attributes.fluid.FluidInvStats.FluidInvStatistic;
 import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.ExactFluidFilter;
-import alexiil.mc.lib.attributes.fluid.filter.IFluidFilter;
+import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidInvStats;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
@@ -37,11 +37,11 @@ public class TileTriggerFluidSpace extends TileTrigger {
 
     @Override
     protected EnumTriggerState getTriggerState(Direction dir) {
-        IFluidInvStats invStats = getNeighbourFluidStats(dir);
+        FluidInvStats invStats = getNeighbourFluidStats(dir);
         if (invStats == EmptyFluidInvStats.INSTANCE) {
             return EnumTriggerState.NO_TARGET;
         }
-        final IFluidFilter fluidFilter;
+        final FluidFilter fluidFilter;
         if (filter.isEmpty()) {
             fluidFilter = ConstantFluidFilter.ANYTHING;
         } else {

@@ -15,9 +15,9 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.AttributeList;
-import alexiil.mc.lib.attributes.IAttributeBlock;
+import alexiil.mc.lib.attributes.AttributeProvider;
 
-public class BlockTank extends BlockBase implements BlockEntityProvider, IAttributeBlock {
+public class BlockTank extends BlockBase implements BlockEntityProvider, AttributeProvider {
 
     public static final VoxelShape SHAPE = VoxelShapes.cube(2 / 16.0, 0, 2 / 16.0, 14 / 16.0, 12 / 16.0, 14 / 16.0);
 

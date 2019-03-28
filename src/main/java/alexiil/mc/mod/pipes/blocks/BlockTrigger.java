@@ -14,11 +14,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-import alexiil.mc.lib.attributes.SearchParamDirectional;
+import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
-import alexiil.mc.lib.attributes.fluid.IFluidInvStats;
-import alexiil.mc.lib.attributes.item.IItemInvStats;
+import alexiil.mc.lib.attributes.fluid.FluidInvStats;
 import alexiil.mc.lib.attributes.item.ItemAttributes;
+import alexiil.mc.lib.attributes.item.ItemInvStats;
 
 public abstract class BlockTrigger extends BlockBase implements BlockEntityProvider {
     public static final DirectionProperty FACING = Properties.FACING;
@@ -73,11 +73,11 @@ public abstract class BlockTrigger extends BlockBase implements BlockEntityProvi
      * @param dir the direction to look in. */
     protected abstract boolean isTriggerBlock(World world, BlockPos pos, Direction dir);
 
-    static IItemInvStats getNeighbourItemInvStats(World world, BlockPos pos, Direction dir) {
-        return ItemAttributes.INV_STATS.get(world, pos.offset(dir), SearchParamDirectional.of(dir));
+    static ItemInvStats getNeighbourItemInvStats(World world, BlockPos pos, Direction dir) {
+        return ItemAttributes.INV_STATS.get(world, pos.offset(dir), SearchOptions.inDirection(dir));
     }
 
-    static IFluidInvStats getNeighbourFluidInvStats(World world, BlockPos pos, Direction dir) {
-        return FluidAttributes.INV_STATS.get(world, pos.offset(dir), SearchParamDirectional.of(dir));
+    static FluidInvStats getNeighbourFluidInvStats(World world, BlockPos pos, Direction dir) {
+        return FluidAttributes.INV_STATS.get(world, pos.offset(dir), SearchOptions.inDirection(dir));
     }
 }

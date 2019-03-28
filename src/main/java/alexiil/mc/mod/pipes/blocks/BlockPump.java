@@ -14,10 +14,10 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.AttributeList;
-import alexiil.mc.lib.attributes.IAttributeBlock;
+import alexiil.mc.lib.attributes.AttributeProvider;
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
 
-public class BlockPump extends BlockBase implements BlockEntityProvider, IAttributeBlock {
+public class BlockPump extends BlockBase implements BlockEntityProvider, AttributeProvider {
 
     public static final EnumProperty<Direction> FACING = Properties.FACING;
 

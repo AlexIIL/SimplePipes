@@ -31,7 +31,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.AttributeList;
-import alexiil.mc.lib.attributes.IAttributeBlock;
+import alexiil.mc.lib.attributes.AttributeProvider;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
 import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
@@ -39,7 +39,7 @@ import alexiil.mc.lib.attributes.item.ItemAttributes;
 import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable;
 import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable;
 
-public abstract class BlockPipe extends BlockBase implements BlockEntityProvider, IAttributeBlock, Waterloggable {
+public abstract class BlockPipe extends BlockBase implements BlockEntityProvider, AttributeProvider, Waterloggable {
 
     public static final VoxelShape CENTER_SHAPE;
     private static final VoxelShape[] FACE_SHAPES;

@@ -7,7 +7,7 @@ import net.minecraft.util.math.Direction;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
-import alexiil.mc.lib.attributes.fluid.IFluidInsertable;
+import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.lib.attributes.fluid.world.FluidWorldUtil;
@@ -45,7 +45,7 @@ public class TilePump extends TileBase implements Tickable {
         }
         Direction facing = state.get(BlockPump.FACING);
         if (!stored.isEmpty()) {
-            IFluidInsertable insertable = getNeighbourAttribute(FluidAttributes.INSERTABLE, facing.getOpposite());
+            FluidInsertable insertable = getNeighbourAttribute(FluidAttributes.INSERTABLE, facing.getOpposite());
             stored = insertable.attemptInsertion(stored, Simulation.ACTION);
             if (!stored.isEmpty()) {
                 return;

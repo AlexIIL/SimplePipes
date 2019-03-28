@@ -21,11 +21,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
-import alexiil.mc.lib.attributes.fluid.IFluidExtractable;
-import alexiil.mc.lib.attributes.fluid.IFluidInsertable;
-import alexiil.mc.lib.attributes.item.IItemExtractable;
-import alexiil.mc.lib.attributes.item.IItemInsertable;
+import alexiil.mc.lib.attributes.fluid.FluidExtractable;
+import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.item.ItemAttributes;
+import alexiil.mc.lib.attributes.item.ItemExtractable;
+import alexiil.mc.lib.attributes.item.ItemInsertable;
 
 public abstract class TilePipe extends TileBase implements Tickable {
 
@@ -113,22 +113,22 @@ public abstract class TilePipe extends TileBase implements Tickable {
     }
 
     @Nonnull
-    public final IItemExtractable getItemExtractable(Direction dir) {
+    public final ItemExtractable getItemExtractable(Direction dir) {
         return getNeighbourAttribute(ItemAttributes.EXTRACTABLE, dir);
     }
 
     @Nonnull
-    public final IItemInsertable getItemInsertable(Direction dir) {
+    public final ItemInsertable getItemInsertable(Direction dir) {
         return getNeighbourAttribute(ItemAttributes.INSERTABLE, dir);
     }
 
     @Nonnull
-    public final IFluidExtractable getFluidExtractable(Direction dir) {
+    public final FluidExtractable getFluidExtractable(Direction dir) {
         return getNeighbourAttribute(FluidAttributes.EXTRACTABLE, dir);
     }
 
     @Nonnull
-    public final IFluidInsertable getFluidInsertable(Direction dir) {
+    public final FluidInsertable getFluidInsertable(Direction dir) {
         return getNeighbourAttribute(FluidAttributes.INSERTABLE, dir);
     }
 

@@ -34,13 +34,13 @@ public class TankBlockEntityRenderer extends BlockEntityRenderer<TileTank> {
         // gl state setup
         GuiLighting.disable();
         MinecraftClient.getInstance().getTextureManager().bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEX);
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+//        GlStateManager.enableBlend();
+//        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
         // buffer setup
 
         FluidVolume fluid = forRender.fluid;
-        int blocklight = fluid.fluidKey == FluidKeys.LAVA ? 15 : 0;
+        int blocklight = 0;// fluid.fluidKey == FluidKeys.LAVA ? 15 : 0;
         int combinedLight = tile.getWorld().getLightmapIndex(tile.getPos(), blocklight);
         GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, combinedLight & 0xFFFF, (combinedLight >> 16) & 0xFFFF);
 

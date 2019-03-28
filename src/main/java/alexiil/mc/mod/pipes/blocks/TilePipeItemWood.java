@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 
 import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.IItemExtractable;
+import alexiil.mc.lib.attributes.item.ItemExtractable;
 import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable;
 
 public class TilePipeItemWood extends TilePipeWood {
@@ -23,7 +23,7 @@ public class TilePipeItemWood extends TilePipeWood {
 
     @Override
     protected void tryExtract(Direction dir) {
-        IItemExtractable extractable = getItemExtractable(dir);
+        ItemExtractable extractable = getItemExtractable(dir);
         ItemStack stack = extractable.attemptAnyExtraction(1, Simulation.ACTION);
 
         if (!stack.isEmpty()) {

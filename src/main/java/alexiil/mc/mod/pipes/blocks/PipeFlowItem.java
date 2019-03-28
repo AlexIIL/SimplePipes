@@ -20,32 +20,32 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.IItemInsertable;
+import alexiil.mc.lib.attributes.item.ItemInsertable;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.IItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable;
 import alexiil.mc.mod.pipes.util.DelayedList;
 import alexiil.mc.mod.pipes.util.TagUtil;
 
 public class PipeFlowItem extends PipeFlow {
 
-    final IItemInsertable[] insertables;
+    final ItemInsertable[] insertables;
 
     private final DelayedList<TravellingItem> items = new DelayedList<>();
 
     public PipeFlowItem(TilePipe pipe) {
         super(pipe);
 
-        this.insertables = new IItemInsertable[6];
+        this.insertables = new ItemInsertable[6];
         for (Direction dir : Direction.values()) {
-            insertables[dir.getOpposite().ordinal()] = new IItemInsertable() {
+            insertables[dir.getOpposite().ordinal()] = new ItemInsertable() {
                 @Override
                 public ItemStack attemptInsertion(ItemStack stack, Simulation simulation) {
                     return stack;
                 }
 
                 @Override
-                public IItemFilter getInsertionFilter() {
+                public ItemFilter getInsertionFilter() {
                     return ConstantItemFilter.ANYTHING;
                 }
             };
@@ -250,7 +250,7 @@ public class PipeFlowItem extends PipeFlow {
     }
 
     private void onItemReachEnd(TravellingItem item) {
-        IItemInsertable ins = pipe.getItemInsertable(item.side);
+        ItemInsertable ins = pipe.getItemInsertable(item.side);
         ItemStack excess = item.stack;
         if (ins != null) {
             Direction oppositeSide = item.side.getOpposite();
