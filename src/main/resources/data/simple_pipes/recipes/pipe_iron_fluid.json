@@ -1,0 +1,12 @@
+{
+    "type": "crafting_shaped",
+    "result": {
+        "item": "simple_pipes:pipe_iron_fluid",
+        "count": 1
+    },
+    "pattern": [ "PD" ],
+    "key": {
+        "P": { "item": "simple_pipes:pipe_iron_item" },
+        "D": { "item": "minecraft:green_dye" }
+    }
+}
