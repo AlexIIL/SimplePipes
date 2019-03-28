@@ -78,6 +78,7 @@ public class PipeFlowItem extends PipeFlow {
         item.timeToDest = Short.toUnsignedInt(tag.getShort("time"));
         item.tickStarted = pipe.getWorldTime() + 1;
         item.tickFinished = item.tickStarted + item.timeToDest;
+        item.speed *= getSpeedModifier();
         items.add(item.timeToDest + 1, item);
     }
 
@@ -176,6 +177,10 @@ public class PipeFlowItem extends PipeFlow {
         return pipe instanceof TilePipeItemIron;
     }
 
+    protected double getSpeedModifier() {
+        return pipe instanceof TilePipeItemGold ? 6 : 1;
+    }
+
     private void onItemReachCenter(TravellingItem item) {
 
         if (item.stack.isEmpty()) {
@@ -203,7 +208,7 @@ public class PipeFlowItem extends PipeFlow {
 
         long now = pipe.getWorldTime();
         // Saves effort :p
-        final double newSpeed = 0.08;
+        final double newSpeed = 0.08 * getSpeedModifier();
         //
         // if (holder.fireEvent(modifySpeed)) {
         // double target = modifySpeed.targetSpeed;

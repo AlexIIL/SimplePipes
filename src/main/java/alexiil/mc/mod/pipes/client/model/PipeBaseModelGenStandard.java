@@ -168,6 +168,8 @@ public class PipeBaseModelGenStandard {
             return getPipeSprite("wooden_item_clear");
         } else if (block == SimplePipeBlocks.STONE_PIPE_ITEMS) {
             return getPipeSprite("stone_item");
+        } else if (block == SimplePipeBlocks.GOLD_PIPE_ITEMS) {
+            return getPipeSprite("gold_item");
         } else if (block == SimplePipeBlocks.IRON_PIPE_ITEMS) {
             return getPipeSprite("iron_item_filled");
         } else if (block == SimplePipeBlocks.CLAY_PIPE_ITEMS) {
