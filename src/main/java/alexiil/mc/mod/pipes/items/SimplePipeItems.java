@@ -20,6 +20,7 @@ public class SimplePipeItems {
     public static final BlockItem CLAY_PIPE_ITEMS;
     public static final BlockItem IRON_PIPE_ITEMS;
     public static final BlockItem GOLD_PIPE_ITEMS;
+    public static final BlockItem DIAMOND_PIPE_ITEMS;
 
     public static final BlockItem WOODEN_PIPE_FLUIDS;
     public static final BlockItem STONE_PIPE_FLUIDS;
@@ -48,6 +49,7 @@ public class SimplePipeItems {
         CLAY_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.CLAY_PIPE_ITEMS, pipes);
         IRON_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.IRON_PIPE_ITEMS, pipes);
         GOLD_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.GOLD_PIPE_ITEMS, pipes);
+        DIAMOND_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.DIAMOND_PIPE_ITEMS, pipes);
 
         WOODEN_PIPE_FLUIDS = new BlockItem(SimplePipeBlocks.WOODEN_PIPE_FLUIDS, pipes);
         STONE_PIPE_FLUIDS = new BlockItem(SimplePipeBlocks.STONE_PIPE_FLUIDS, pipes);
@@ -77,6 +79,7 @@ public class SimplePipeItems {
         registerItem(CLAY_PIPE_ITEMS, "pipe_clay_item");
         registerItem(IRON_PIPE_ITEMS, "pipe_iron_item");
         registerItem(GOLD_PIPE_ITEMS, "pipe_gold_item");
+        registerItem(DIAMOND_PIPE_ITEMS, "pipe_diamond_item");
 
         registerItem(WOODEN_PIPE_FLUIDS, "pipe_wooden_fluid");
         registerItem(STONE_PIPE_FLUIDS, "pipe_stone_fluid");

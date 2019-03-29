@@ -56,6 +56,8 @@ public class SimplePipeModels {
                         return new PipeBlockModel(SimplePipeBlocks.IRON_PIPE_ITEMS);
                     case "pipe_gold_item":
                         return new PipeBlockModel(SimplePipeBlocks.GOLD_PIPE_ITEMS);
+                    case "pipe_diamond_item":
+                        return new PipeBlockModel(SimplePipeBlocks.DIAMOND_PIPE_ITEMS);
 
                     case "pipe_wooden_fluid":
                         return new PipeBlockModel(SimplePipeBlocks.WOODEN_PIPE_FLUIDS);

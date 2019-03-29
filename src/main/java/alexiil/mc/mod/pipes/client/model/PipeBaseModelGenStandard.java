@@ -170,6 +170,8 @@ public class PipeBaseModelGenStandard {
             return getPipeSprite("stone_item");
         } else if (block == SimplePipeBlocks.GOLD_PIPE_ITEMS) {
             return getPipeSprite("gold_item");
+        } else if (block == SimplePipeBlocks.DIAMOND_PIPE_ITEMS) {
+            return getPipeSprite("diamond_item");
         } else if (block == SimplePipeBlocks.IRON_PIPE_ITEMS) {
             return getPipeSprite("iron_item_filled");
         } else if (block == SimplePipeBlocks.CLAY_PIPE_ITEMS) {
@@ -202,6 +204,20 @@ public class PipeBaseModelGenStandard {
                 } else if (block == SimplePipeBlocks.IRON_PIPE_FLUIDS) {
                     return getPipeSprite("iron_fluid_clear");
                 }
+            }
+        } else if (block == SimplePipeBlocks.DIAMOND_PIPE_ITEMS) {
+            if (face == Direction.DOWN) {
+                return getPipeSprite("diamond_item_down");
+            } else if (face == Direction.UP) {
+                return getPipeSprite("diamond_item_up");
+            } else if (face == Direction.NORTH) {
+                return getPipeSprite("diamond_item_north");
+            } else if (face == Direction.SOUTH) {
+                return getPipeSprite("diamond_item_south");
+            } else if (face == Direction.WEST) {
+                return getPipeSprite("diamond_item_west");
+            } else if (face == Direction.EAST) {
+                return getPipeSprite("diamond_item_east");
             }
         }
 
