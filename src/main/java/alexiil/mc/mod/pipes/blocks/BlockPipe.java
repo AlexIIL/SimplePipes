@@ -62,8 +62,8 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
             FACE_CENTER_SHAPES[dir.ordinal()] = VoxelShapes.union(faceShape, CENTER_SHAPE);
         }
 
-        SHAPES = new VoxelShape[2 * 2 * 2 * 2 * 2 * 2];
-        for (int c = 0; c < 0b111_111; c++) {
+        SHAPES = new VoxelShape[2 * 2 * 2 * 2 * 2 * 2 + 1];
+        for (int c = 0; c <= 0b111_111; c++) {
             VoxelShape shape = CENTER_SHAPE;
             for (Direction dir : Direction.values()) {
                 if ((c & (1 << dir.ordinal())) != 0) {
