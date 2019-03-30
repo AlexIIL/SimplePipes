@@ -1,0 +1,12 @@
+{
+    "type": "crafting_shaped",
+    "result": {
+        "item": "simple_pipes:pipe_gold_item",
+        "count": 8
+    },
+    "pattern": [ "WGW" ],
+    "key": {
+        "W": { "item": "minecraft:gold_ingot" },
+        "G": { "item": "minecraft:glass" }
+    }
+}

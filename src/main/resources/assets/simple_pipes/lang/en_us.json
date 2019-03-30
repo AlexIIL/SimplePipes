@@ -3,6 +3,8 @@
     "block.simple_pipes.pipe_iron_item": "Simple Iron Item Pipe",
     "block.simple_pipes.pipe_clay_item": "Simple Clay Item Pipe",
     "block.simple_pipes.pipe_stone_item": "Simple Stone Item Pipe",
+    "block.simple_pipes.pipe_gold_item": "Simple Gold Item Pipe",
+    "block.simple_pipes.pipe_diamond_item": "Simple Diamond Item Pipe",
 
     "block.simple_pipes.pipe_wooden_fluid": "Simple Wooden Fluid Pipe",
     "block.simple_pipes.pipe_iron_fluid": "Simple Iron Fluid Pipe",
