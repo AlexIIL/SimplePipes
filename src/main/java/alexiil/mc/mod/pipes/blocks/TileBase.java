@@ -42,7 +42,7 @@ public abstract class TileBase extends BlockEntity implements BlockEntityClientS
     }
 
     protected void sendPacket(ServerWorld w, BlockEntityUpdateS2CPacket packet) {
-        w.method_18766(player -> player.squaredDistanceTo(new Vec3d(getPos())) < 24 * 24)
+        w.getPlayers(player -> player.squaredDistanceTo(new Vec3d(getPos())) < 24 * 24)
             .forEach(player -> player.networkHandler.sendPacket(packet));
     }
 

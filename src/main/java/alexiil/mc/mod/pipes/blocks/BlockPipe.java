@@ -47,7 +47,7 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
     private static final VoxelShape[] SHAPES;
 
     static {
-        CENTER_SHAPE = VoxelShapes.cube(0.25, 0.25, 0.25, 0.75, 0.75, 0.75);
+        CENTER_SHAPE = VoxelShapes.cuboid(0.25, 0.25, 0.25, 0.75, 0.75, 0.75);
         FACE_SHAPES = new VoxelShape[6];
         FACE_CENTER_SHAPES = new VoxelShape[6];
         for (Direction dir : Direction.values()) {
@@ -57,7 +57,7 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
             double rx = dir.getAxis() == Axis.X ? 0.125 : 0.25;
             double ry = dir.getAxis() == Axis.Y ? 0.125 : 0.25;
             double rz = dir.getAxis() == Axis.Z ? 0.125 : 0.25;
-            VoxelShape faceShape = VoxelShapes.cube(x - rx, y - ry, z - rz, x + rx, y + ry, z + rz);
+            VoxelShape faceShape = VoxelShapes.cuboid(x - rx, y - ry, z - rz, x + rx, y + ry, z + rz);
             FACE_SHAPES[dir.ordinal()] = faceShape;
             FACE_CENTER_SHAPES[dir.ordinal()] = VoxelShapes.union(faceShape, CENTER_SHAPE);
         }
@@ -132,12 +132,14 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
             }
             return SHAPES[pipe.connections & 0b111111];
         }
+
         return CENTER_SHAPE;
     }
 
+    // TODO: Last Parameter important?
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos thisPos, Block neighbourBlock,
-        BlockPos neighbourPos) {
+        BlockPos neighbourPos, boolean idunno) {
         BlockEntity be = world.getBlockEntity(thisPos);
         if (be instanceof TilePipe) {
             TilePipe pipe = (TilePipe) be;

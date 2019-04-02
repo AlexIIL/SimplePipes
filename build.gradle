@@ -23,8 +23,8 @@ configurations {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:19w13a"
-    mappings "net.fabricmc:yarn:19w13a.2"
+    minecraft "com.mojang:minecraft:19w13b"
+    mappings "net.fabricmc:yarn:19w13b.9"
     modCompile "net.fabricmc:fabric-loader:0.3.7.109"
 
     //Fabric api
@@ -71,7 +71,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
-
+ 
 task mainJar(type: Jar, dependsOn: classes) {
     from sourceSets.main
 }
@@ -83,7 +83,7 @@ publishing {
         }
     }
     publications {
-       publishRemapJar(MavenPublication) {
+       publishRemapJar(MavenPublication) { 
             groupId "alexiil.mc.mod"
             artifactId "simple_pipes"
             version project.version
