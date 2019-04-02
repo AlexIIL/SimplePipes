@@ -33,8 +33,8 @@ dependencies {
     // Silk API
     // modCompile "io.github.prospector.silk:SilkAPI:1.2.3-38"
 
-    modCompile "alexiil.mc.lib:libblockattributes:0.3.0"
-    nest "alexiil.mc.lib:libblockattributes:0.3.0"
+    modCompile "alexiil.mc.lib:libblockattributes:0.3.1"
+    nest "alexiil.mc.lib:libblockattributes:0.3.1"
 
     // Misc
     compile "com.google.code.findbugs:jsr305:3.0.1"
