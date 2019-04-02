@@ -43,6 +43,6 @@ public class ScreenTriggerItemInvSpace extends ContainerScreen<ContainerTriggerI
     @Override
     protected void drawForeground(int mouseX, int mouseY) {
         font.draw(title.getFormattedText(), 8.0F, 6.0F, 0x40_40_40);
-        font.draw(playerInventory.getDisplayName().getFormattedText(), 8.0F, height - 96 + 2, 0x40_40_40);
+        font.draw(playerInventory.getDisplayName().getFormattedText(), 8.0F, containerHeight - 96 + 2, 0x40_40_40);
     }
 }

@@ -21,7 +21,7 @@ public class ScreenTriggerFluidInvSpace extends ContainerScreen<ContainerTrigger
 
     public ScreenTriggerFluidInvSpace(ContainerTriggerFluidSpace container) {
         super(container, container.player.inventory, SimplePipeBlocks.TRIGGER_FLUID_INV_SPACE.getTextComponent());
-        height = 153;
+        containerHeight = 153;
     }
 
     @Override
@@ -43,6 +43,6 @@ public class ScreenTriggerFluidInvSpace extends ContainerScreen<ContainerTrigger
     @Override
     protected void drawForeground(int mouseX, int mouseY) {
         font.draw(title.getFormattedText(), 8.0F, 6.0F, 0x40_40_40);
-        font.draw(playerInventory.getDisplayName().getFormattedText(), 8.0F, height - 96 + 2, 0x40_40_40);
+        font.draw(playerInventory.getDisplayName().getFormattedText(), 8.0F, containerHeight - 96 + 2, 0x40_40_40);
     }
 }

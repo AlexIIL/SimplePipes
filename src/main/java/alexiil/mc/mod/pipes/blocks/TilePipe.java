@@ -5,6 +5,7 @@
  */
 package alexiil.mc.mod.pipes.blocks;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 import javax.annotation.Nonnull;
@@ -155,11 +156,16 @@ public abstract class TilePipe extends TileBase implements Tickable {
     }
 
     protected void refreshModel() {
-        blockModelState = createModelState();
+        PipeBlockModelState newState = createModelState();
+        if (newState.equals(blockModelState)) {
+            return;
+        }
+        blockModelState = newState;
         World w = getWorld();
         if (w instanceof ServerWorld) {
             // method_18766 = getPlayers()
             sendPacket((ServerWorld) w, this.toUpdatePacket());
+            System.out.println("refreshModel() " + getPos());
         } else if (w != null) {
             w.scheduleBlockRender(getPos());
         }
@@ -186,6 +192,24 @@ public abstract class TilePipe extends TileBase implements Tickable {
         @Override
         public String toString() {
             return "PipeBlockModel{" + block + ", " + connections + "}";
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(block, connections);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null) return false;
+            if (getClass() != obj.getClass()) return false;
+            PipeBlockModelState other = (PipeBlockModelState) obj;
+            if (block == null) {
+                if (other.block != null) return false;
+            } else if (!block.equals(other.block)) return false;
+            if (connections != other.connections) return false;
+            return true;
         }
     }
 

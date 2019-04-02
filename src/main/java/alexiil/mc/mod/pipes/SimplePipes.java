@@ -5,6 +5,9 @@
  */
 package alexiil.mc.mod.pipes;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.fabricmc.api.ModInitializer;
 
 import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
@@ -14,6 +17,7 @@ import alexiil.mc.mod.pipes.items.SimplePipeItems;
 public class SimplePipes implements ModInitializer {
 
     public static final String MODID = "simple_pipes";
+    public static final Logger LOGGER = LogManager.getLogger(MODID);
 
     @Override
     public void onInitialize() {
