@@ -1,6 +1,7 @@
 package alexiil.mc.mod.pipes.blocks;
 
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.util.math.Direction;
@@ -13,8 +14,16 @@ public class TilePipeItemIron extends TilePipeIron {
             protected List<EnumSet<Direction>> getOrderForItem(TravellingItem item,
                 EnumSet<Direction> validDirections) {
                 List<EnumSet<Direction>> order = super.getOrderForItem(item, validDirections);
-                for (EnumSet<Direction> set : order) {
-                    set.remove(((TilePipeSided) pipe).currentDirection());
+                Direction currentDirection = ((TilePipeSided) pipe).currentDirection();
+                Iterator<EnumSet<Direction>> iterator = order.iterator();
+                while (iterator.hasNext()) {
+                    EnumSet<Direction> set = iterator.next();
+                    if (set.contains(currentDirection)) {
+                        set.clear();
+                        set.add(currentDirection);
+                    } else {
+                        iterator.remove();
+                    }
                 }
                 return order;
             }

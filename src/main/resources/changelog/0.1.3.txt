@@ -1,4 +1,6 @@
 Changes:
 
+* Updated required LibBlockAttributes version to 0.3.1
 * [#5] Fixed a crash when a pipe was connected on all sides (IZEDx)
 * Added gold and diamond item pipes (IZEDx)
+* Updated to 19w13b (IZEDx, AlexIIL)
