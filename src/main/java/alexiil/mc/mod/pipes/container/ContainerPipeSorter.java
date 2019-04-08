@@ -6,6 +6,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import alexiil.mc.mod.pipes.blocks.TilePipeItemDiamond;
 
@@ -33,4 +34,27 @@ public class ContainerPipeSorter extends ContainerTile<TilePipeItemDiamond> {
         }
         addPlayerInventory(140);
     }
+
+    @Override 
+    public ItemStack transferSlot(PlayerEntity player, int slotIndex){
+		ItemStack stack = ItemStack.EMPTY;
+        Slot slot = slotList.get(slotIndex);
+        
+		if (slot != null && slot.hasStack()) {
+			ItemStack slotStack = slot.getStack();
+			stack = slotStack.copy();
+			if (slotIndex < tile.filterInv.getInvSize()) { 
+                if (!insertItem(slotStack, tile.filterInv.getInvSize(), slotList.size(), true)) { 
+                    return ItemStack.EMPTY; 
+                }
+            } else if (!insertItem(slotStack, 0, tile.filterInv.getInvSize(), false)) {
+                return ItemStack.EMPTY;
+            }
+            if (slotStack.isEmpty()) slot.setStack(ItemStack.EMPTY);
+			else slot.markDirty();
+        }
+        
+		return stack;
+	}
+
 }
