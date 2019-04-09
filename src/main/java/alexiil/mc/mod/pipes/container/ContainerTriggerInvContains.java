@@ -6,6 +6,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 
 import alexiil.mc.mod.pipes.blocks.TileTriggerInvContains;
@@ -26,4 +27,9 @@ public class ContainerTriggerInvContains extends ContainerTile<TileTriggerInvCon
         addPlayerInventory(71);
         addSlot(new Slot(tile.filterInv, 0, 80, 26));
     }
+
+    @Override 
+    public ItemStack transferSlot(PlayerEntity player, int slotIndex){
+		return ItemStack.EMPTY;
+	}
 }
