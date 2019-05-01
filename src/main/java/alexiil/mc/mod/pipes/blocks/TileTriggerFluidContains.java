@@ -3,11 +3,11 @@ package alexiil.mc.mod.pipes.blocks;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.Direction;
 
-import alexiil.mc.lib.attributes.fluid.FluidInvStats;
+import alexiil.mc.lib.attributes.fluid.GroupedFluidInvView;
 import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.ExactFluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
-import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidInvStats;
+import alexiil.mc.lib.attributes.fluid.impl.EmptyGroupedFluidInv;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 
@@ -36,8 +36,8 @@ public class TileTriggerFluidContains extends TileTrigger {
 
     @Override
     protected EnumTriggerState getTriggerState(Direction dir) {
-        FluidInvStats invStats = getNeighbourFluidStats(dir);
-        if (invStats == EmptyFluidInvStats.INSTANCE) {
+        GroupedFluidInvView invStats = getNeighbourFluidStats(dir);
+        if (invStats == EmptyGroupedFluidInv.INSTANCE) {
             return EnumTriggerState.NO_TARGET;
         }
         final FluidFilter fluidFilter;

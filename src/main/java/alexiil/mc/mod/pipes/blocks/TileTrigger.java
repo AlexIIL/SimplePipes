@@ -8,8 +8,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
-import alexiil.mc.lib.attributes.fluid.FluidInvStats;
-import alexiil.mc.lib.attributes.item.ItemInvStats;
+import alexiil.mc.lib.attributes.fluid.GroupedFluidInvView;
+import alexiil.mc.lib.attributes.item.GroupedItemInvView;
 import alexiil.mc.lib.attributes.item.ItemAttributes;
 
 public abstract class TileTrigger extends TileBase implements Tickable {
@@ -40,11 +40,11 @@ public abstract class TileTrigger extends TileBase implements Tickable {
 
     protected abstract EnumTriggerState getTriggerState(Direction dir);
 
-    public ItemInvStats getNeighbourItemStats(Direction dir) {
-        return getNeighbourAttribute(ItemAttributes.INV_STATS, dir);
+    public GroupedItemInvView getNeighbourItemStats(Direction dir) {
+        return getNeighbourAttribute(ItemAttributes.GROUPED_INV_VIEW, dir);
     }
 
-    public FluidInvStats getNeighbourFluidStats(Direction dir) {
-        return getNeighbourAttribute(FluidAttributes.INV_STATS, dir);
+    public GroupedFluidInvView getNeighbourFluidStats(Direction dir) {
+        return getNeighbourAttribute(FluidAttributes.GROUPED_INV_VIEW, dir);
     }
 }

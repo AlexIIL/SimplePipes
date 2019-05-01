@@ -4,7 +4,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidInvStats;
+import alexiil.mc.lib.attributes.fluid.impl.EmptyGroupedFluidInv;
 
 public abstract class BlockTriggerFluidInv extends BlockTrigger {
 
@@ -14,6 +14,6 @@ public abstract class BlockTriggerFluidInv extends BlockTrigger {
 
     @Override
     protected boolean isTriggerBlock(World world, BlockPos pos, Direction dir) {
-        return getNeighbourFluidInvStats(world, pos, dir) != EmptyFluidInvStats.INSTANCE;
+        return getNeighbourGroupedFluidInvView(world, pos, dir) != EmptyGroupedFluidInv.INSTANCE;
     }
 }

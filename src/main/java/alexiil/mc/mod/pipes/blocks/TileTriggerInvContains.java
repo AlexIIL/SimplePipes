@@ -6,11 +6,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.math.Direction;
 
-import alexiil.mc.lib.attributes.item.ItemInvStats;
+import alexiil.mc.lib.attributes.item.GroupedItemInvView;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ExactItemStackFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import alexiil.mc.lib.attributes.item.impl.EmptyItemInvStats;
+import alexiil.mc.lib.attributes.item.impl.EmptyGroupedItemInv;
 
 public class TileTriggerInvContains extends TileTrigger {
 
@@ -45,8 +45,8 @@ public class TileTriggerInvContains extends TileTrigger {
 
     @Override
     protected EnumTriggerState getTriggerState(Direction dir) {
-        ItemInvStats invStats = getNeighbourItemStats(dir);
-        if (invStats == EmptyItemInvStats.INSTANCE) {
+        GroupedItemInvView invStats = getNeighbourItemStats(dir);
+        if (invStats == EmptyGroupedItemInv.INSTANCE) {
             return EnumTriggerState.NO_TARGET;
         }
         final ItemFilter filter;

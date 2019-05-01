@@ -91,7 +91,7 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
 
     @Override
     public FluidState getFluidState(BlockState blockState_1) {
-        return blockState_1.get(Properties.WATERLOGGED) ? Fluids.WATER.getState(false)
+        return blockState_1.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false)
             : super.getFluidState(blockState_1);
     }
 

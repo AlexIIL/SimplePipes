@@ -2,9 +2,9 @@ package alexiil.mc.mod.pipes.blocks;
 
 import net.minecraft.util.math.Direction;
 
-import alexiil.mc.lib.attributes.fluid.FluidInvStats;
+import alexiil.mc.lib.attributes.fluid.GroupedFluidInvView;
 import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
-import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidInvStats;
+import alexiil.mc.lib.attributes.fluid.impl.EmptyGroupedFluidInv;
 
 public class TileTriggerFluidEmpty extends TileTrigger {
     public TileTriggerFluidEmpty() {
@@ -13,8 +13,8 @@ public class TileTriggerFluidEmpty extends TileTrigger {
 
     @Override
     protected EnumTriggerState getTriggerState(Direction dir) {
-        FluidInvStats invStats = getNeighbourFluidStats(dir);
-        if (invStats == EmptyFluidInvStats.INSTANCE) {
+        GroupedFluidInvView invStats = getNeighbourFluidStats(dir);
+        if (invStats == EmptyGroupedFluidInv.INSTANCE) {
             return EnumTriggerState.NO_TARGET;
         }
         return EnumTriggerState.of(invStats.getStatistics(ConstantFluidFilter.ANYTHING).amount == 0);

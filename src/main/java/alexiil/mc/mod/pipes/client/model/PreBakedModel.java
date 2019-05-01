@@ -11,8 +11,8 @@ import java.util.Set;
 import java.util.function.Function;
 
 import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelLoader;
-import net.minecraft.client.render.model.ModelRotationContainer;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.Identifier;
@@ -36,7 +36,7 @@ public final class PreBakedModel implements UnbakedModel {
     }
 
     @Override
-    public BakedModel bake(ModelLoader var1, Function<Identifier, Sprite> var2, ModelRotationContainer var3) {
+    public BakedModel bake(ModelLoader var1, Function<Identifier, Sprite> var2, ModelBakeSettings settings) {
         return baked;
     }
 }

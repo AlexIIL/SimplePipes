@@ -54,10 +54,7 @@ public class BlockTank extends BlockBase implements BlockEntityProvider, Attribu
         BlockEntity be = world.getBlockEntity(pos);
         if (be instanceof TileTank) {
             TileTank tank = (TileTank) be;
-            to.offer(tank.fluidInv, SHAPE);
-            to.offer(tank.fluidInv.getStatistics(), SHAPE);
-            to.offer(tank.fluidInv.getInsertable(), SHAPE);
-            to.offer(tank.fluidInv.getExtractable(), SHAPE);
+            tank.fluidInv.offerSelfAsAttribute(to, null, SHAPE);
             // tank.addAttributes(to);
         }
     }

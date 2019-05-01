@@ -4,7 +4,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import alexiil.mc.lib.attributes.item.impl.EmptyItemInvStats;
+import alexiil.mc.lib.attributes.item.impl.EmptyGroupedItemInv;
 
 public abstract class BlockTriggerItemInv extends BlockTrigger {
 
@@ -14,7 +14,7 @@ public abstract class BlockTriggerItemInv extends BlockTrigger {
 
     @Override
     protected boolean isTriggerBlock(World world, BlockPos pos, Direction dir) {
-        return getNeighbourItemInvStats(world, pos, dir) != EmptyItemInvStats.INSTANCE;
+        return getNeighbourGroupedItemInvView(world, pos, dir) != EmptyGroupedItemInv.INSTANCE;
     }
 
 }
