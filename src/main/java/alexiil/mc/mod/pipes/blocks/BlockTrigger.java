@@ -32,7 +32,7 @@ public abstract class BlockTrigger extends BlockBase implements BlockEntityProvi
     @Override
     protected void appendProperties(Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.with(FACING, STATE);
+        builder.add(FACING, STATE);
     }
 
     @Override

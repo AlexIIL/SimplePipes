@@ -5,7 +5,7 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.VerticalEntityPosition;
+import net.minecraft.entity.EntityContext;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -32,7 +32,7 @@ public class BlockTank extends BlockBase implements BlockEntityProvider, Attribu
 
     @Override
     public VoxelShape getOutlineShape(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1,
-        VerticalEntityPosition verticalEntityPosition_1) {
+        EntityContext verticalEntityPosition_1) {
         return SHAPE;
     }
 
@@ -42,7 +42,7 @@ public class BlockTank extends BlockBase implements BlockEntityProvider, Attribu
     }
 
     @Override
-    public boolean skipRenderingSide(BlockState thisState, BlockState otherState, Direction side) {
+    public boolean isSideInvisible(BlockState thisState, BlockState otherState, Direction side) {
         if (otherState.getBlock() == this && side.getAxis() == Axis.Y) {
             return false;
         }

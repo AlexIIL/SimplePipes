@@ -11,8 +11,8 @@ import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.VerticalEntityPosition;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -81,7 +81,7 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
     @Override
     protected void appendProperties(Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.with(Properties.WATERLOGGED);
+        builder.add(Properties.WATERLOGGED);
     }
 
     @Override
@@ -123,7 +123,7 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos,
-        VerticalEntityPosition entityPos) {
+        EntityContext entityPos) {
         BlockEntity be = view.getBlockEntity(pos);
         if (be instanceof TilePipe) {
             TilePipe pipe = (TilePipe) be;

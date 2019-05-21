@@ -27,7 +27,7 @@ public class BlockPump extends BlockBase implements BlockEntityProvider, Attribu
 
     @Override
     protected void appendProperties(Builder<Block, BlockState> builder) {
-        builder.with(FACING);
+        builder.add(FACING);
     }
 
     @Override

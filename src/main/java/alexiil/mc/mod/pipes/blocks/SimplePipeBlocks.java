@@ -5,9 +5,9 @@
  */
 package alexiil.mc.mod.pipes.blocks;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.function.Supplier;
-
-import com.mojang.datafixers.types.Type;
 
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 
@@ -105,37 +105,34 @@ public class SimplePipeBlocks {
         TANK = new BlockTank(triggerSettings);
         PUMP = new BlockPump(triggerSettings);
 
-        WOODEN_PIPE_ITEM_TILE = create(TilePipeItemWood::new);
-        STONE_PIPE_ITEM_TILE = create(TilePipeItemStone::new);
-        CLAY_PIPE_ITEM_TILE = create(TilePipeItemClay::new);
-        IRON_PIPE_ITEM_TILE = create(TilePipeItemIron::new);
-        GOLD_PIPE_ITEM_TILE = create(TilePipeItemGold::new);
-        DIAMOND_PIPE_ITEM_TILE = create(TilePipeItemDiamond::new);
+        WOODEN_PIPE_ITEM_TILE = create(TilePipeItemWood::new, WOODEN_PIPE_ITEMS);
+        STONE_PIPE_ITEM_TILE = create(TilePipeItemStone::new, STONE_PIPE_ITEMS);
+        CLAY_PIPE_ITEM_TILE = create(TilePipeItemClay::new, CLAY_PIPE_ITEMS);
+        IRON_PIPE_ITEM_TILE = create(TilePipeItemIron::new, IRON_PIPE_ITEMS);
+        GOLD_PIPE_ITEM_TILE = create(TilePipeItemGold::new, GOLD_PIPE_ITEMS);
+        DIAMOND_PIPE_ITEM_TILE = create(TilePipeItemDiamond::new, DIAMOND_PIPE_ITEMS);
 
-        WOODEN_PIPE_FLUID_TILE = create(TilePipeFluidWood::new);
-        STONE_PIPE_FLUID_TILE = create(TilePipeFluidStone::new);
-        CLAY_PIPE_FLUID_TILE = create(TilePipeFluidClay::new);
-        IRON_PIPE_FLUID_TILE = create(TilePipeFluidIron::new);
+        WOODEN_PIPE_FLUID_TILE = create(TilePipeFluidWood::new, WOODEN_PIPE_FLUIDS);
+        STONE_PIPE_FLUID_TILE = create(TilePipeFluidStone::new, STONE_PIPE_FLUIDS);
+        CLAY_PIPE_FLUID_TILE = create(TilePipeFluidClay::new, CLAY_PIPE_FLUIDS);
+        IRON_PIPE_FLUID_TILE = create(TilePipeFluidIron::new, IRON_PIPE_FLUIDS);
 
-        TRIGGER_ITEM_INV_EMPTY_TILE = create(TileTriggerInvEmpty::new);
-        TRIGGER_ITEM_INV_FULL_TILE = create(TileTriggerInvFull::new);
-        TRIGGER_ITEM_INV_SPACE_TILE = create(TileTriggerInvSpace::new);
-        TRIGGER_ITEM_INV_CONTAINS_TILE = create(TileTriggerInvContains::new);
+        TRIGGER_ITEM_INV_EMPTY_TILE = create(TileTriggerInvEmpty::new, TRIGGER_ITEM_INV_EMPTY);
+        TRIGGER_ITEM_INV_FULL_TILE = create(TileTriggerInvFull::new, TRIGGER_ITEM_INV_FULL);
+        TRIGGER_ITEM_INV_SPACE_TILE = create(TileTriggerInvSpace::new, TRIGGER_ITEM_INV_SPACE);
+        TRIGGER_ITEM_INV_CONTAINS_TILE = create(TileTriggerInvContains::new, TRIGGER_ITEM_INV_CONTAINS);
 
-        TRIGGER_FLUID_INV_EMPTY_TILE = create(TileTriggerFluidEmpty::new);
-        TRIGGER_FLUID_INV_FULL_TILE = create(TileTriggerFluidFull::new);
-        TRIGGER_FLUID_INV_SPACE_TILE = create(TileTriggerFluidSpace::new);
-        TRIGGER_FLUID_INV_CONTAINS_TILE = create(TileTriggerFluidContains::new);
+        TRIGGER_FLUID_INV_EMPTY_TILE = create(TileTriggerFluidEmpty::new, TRIGGER_FLUID_INV_EMPTY);
+        TRIGGER_FLUID_INV_FULL_TILE = create(TileTriggerFluidFull::new, TRIGGER_FLUID_INV_FULL);
+        TRIGGER_FLUID_INV_SPACE_TILE = create(TileTriggerFluidSpace::new, TRIGGER_FLUID_INV_SPACE);
+        TRIGGER_FLUID_INV_CONTAINS_TILE = create(TileTriggerFluidContains::new, TRIGGER_FLUID_INV_CONTAINS);
 
-        TANK_TILE = create(TileTank::new);
-        PUMP_TILE = create(TilePump::new);
+        TANK_TILE = create(TileTank::new, TANK);
+        PUMP_TILE = create(TilePump::new, PUMP);
     }
 
-    private static <T extends BlockEntity> BlockEntityType<T> create(Supplier<T> supplier) {
-        Type<?> choiceType = null;
-        // Schemas.getFixer().getSchema(DataFixUtils.makeKey(SharedConstants.getGameVersion().getWorldVersion()))
-        // .getChoiceType(TypeReferences.BLOCK_ENTITY, name);
-        return BlockEntityType.Builder.create(supplier).build(choiceType);
+    private static <T extends BlockEntity> BlockEntityType<T> create(Supplier<T> supplier, Block... blocks) {
+        return new BlockEntityType<>(supplier, new HashSet<>(Arrays.asList(blocks)), null);
     }
 
     public static void load() {

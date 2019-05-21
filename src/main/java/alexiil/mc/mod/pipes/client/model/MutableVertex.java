@@ -188,7 +188,7 @@ public class MutableVertex {
                     break;
                 }
                 case COLOR: {
-                    assert elem.getFormat() == Format.UNSIGNED_BYTE;
+                    assert elem.getFormat() == Format.UBYTE;
                     colouri(data[o++]);
                     break;
                 }

@@ -14,7 +14,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.text.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Identifier;
 
 import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace;
@@ -92,9 +92,9 @@ public class ScreenTank extends ContainerScreen<ContainerTank> {
                 renderTooltip(str, mouseX, mouseY);
                 return;
             }
-            List<TextComponent> tooltip = fluid.fluid.getTooltipText(TooltipContext.Default.NORMAL);
+            List<Component> tooltip = fluid.fluid.getTooltipText(TooltipContext.Default.NORMAL);
             List<String> str = new ArrayList<>();
-            for (TextComponent text : tooltip) {
+            for (Component text : tooltip) {
                 str.add(text.getFormattedText());
             }
             str.add(fluid.fluid.fluidKey.unit.localizeTank(fluid.fluid.getAmount(), capacity));

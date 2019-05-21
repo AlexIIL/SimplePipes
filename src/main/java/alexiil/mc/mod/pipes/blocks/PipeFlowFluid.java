@@ -25,6 +25,9 @@ import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import alexiil.mc.mod.pipes.blocks.PipeFlowFluid.CenterSection;
+import alexiil.mc.mod.pipes.blocks.PipeFlowFluid.Section;
+import alexiil.mc.mod.pipes.blocks.PipeFlowFluid.SideSection;
 
 public class PipeFlowFluid extends PipeFlow {
 

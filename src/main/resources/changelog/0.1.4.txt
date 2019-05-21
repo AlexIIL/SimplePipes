@@ -1,5 +1,5 @@
 Changes:
 
 * Updated required LibBlockAttributes version to 0.4.1. (AlexIIL)
-* Updated to Minecraft 1.14. (AlexIIL)
+* Updated to Minecraft 1.14 (AlexIIL)
 * [#10] Fixed client crashing on shift-clicking in a container gui. (IZEDx)

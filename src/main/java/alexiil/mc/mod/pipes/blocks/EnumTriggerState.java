@@ -1,10 +1,9 @@
 package alexiil.mc.mod.pipes.blocks;
 
 import java.util.Locale;
+import net.minecraft.util.StringIdentifiable;
 
-import net.minecraft.util.StringRepresentable;
-
-public enum EnumTriggerState implements StringRepresentable {
+public enum EnumTriggerState implements StringIdentifiable {
     NO_TARGET,
     OFF,
     ON;
