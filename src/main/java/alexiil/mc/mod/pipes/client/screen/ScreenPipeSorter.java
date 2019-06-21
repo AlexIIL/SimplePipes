@@ -5,19 +5,18 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.fabric.api.client.screen.ContainerScreenFactory;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.util.Identifier;
 
 import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
 import alexiil.mc.mod.pipes.container.ContainerPipeSorter;
 
-public class ScreenPipeSorter extends ContainerScreen<ContainerPipeSorter> {
+public class ScreenPipeSorter extends AbstractContainerScreen<ContainerPipeSorter> {
 
     public static final ContainerScreenFactory<ContainerPipeSorter> FACTORY = ScreenPipeSorter::new;
 
-    private static final Identifier GUI =
-        new Identifier(SimplePipes.MODID, "textures/gui/filter.png");
+    private static final Identifier GUI = new Identifier(SimplePipes.MODID, "textures/gui/filter.png");
 
     public ScreenPipeSorter(ContainerPipeSorter container) {
         super(container, container.player.inventory, SimplePipeBlocks.DIAMOND_PIPE_ITEMS.getTextComponent());

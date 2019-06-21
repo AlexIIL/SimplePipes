@@ -1,0 +1,7 @@
+Changes:
+
+* Updated to Minecraft 1.14.2 (AlexIIL)
+
+Bug Fixes:
+
+* [#18] Pipes are invisible
