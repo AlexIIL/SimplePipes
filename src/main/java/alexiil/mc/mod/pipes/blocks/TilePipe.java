@@ -83,8 +83,10 @@ public abstract class TilePipe extends TileBase implements Tickable {
             BlockEntity oTile = world.getBlockEntity(getPos().offset(dir));
             if (this instanceof TilePipeWood && oTile instanceof TilePipeWood) {
                 disconnect(dir);
-            } else if (oTile instanceof TilePipe || canConnect(dir) || (this instanceof TilePipeSided
-                && ((TilePipeSided) this).currentDirection() == dir && ((TilePipeSided) this).canFaceDirection(dir))) {
+            } else if (
+                oTile instanceof TilePipe || canConnect(dir) || (this instanceof TilePipeSided && ((TilePipeSided) this)
+                    .currentDirection() == dir && ((TilePipeSided) this).canFaceDirection(dir))
+            ) {
                 connect(dir);
             } else {
                 disconnect(dir);
@@ -163,9 +165,7 @@ public abstract class TilePipe extends TileBase implements Tickable {
         blockModelState = newState;
         World w = getWorld();
         if (w instanceof ServerWorld) {
-            // method_18766 = getPlayers()
             sendPacket((ServerWorld) w, this.toUpdatePacket());
-            System.out.println("refreshModel() " + getPos());
         } else if (w != null) {
             w.scheduleBlockRender(getPos());
         }

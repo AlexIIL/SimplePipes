@@ -13,6 +13,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Direction;
@@ -54,12 +55,29 @@ public class PipeFlowItem extends PipeFlow {
 
     @Override
     public void fromTag(CompoundTag tag) {
-
+        ListTag list = tag.getList("items", new CompoundTag().getType());
+        for (int i = 0; i < list.size(); i++) {
+            TravellingItem item = new TravellingItem(list.getCompoundTag(i), 0);
+            if (!item.stack.isEmpty()) {
+                items.add(item.getCurrentDelay(0), item);
+            }
+        }
     }
 
     @Override
     public CompoundTag toTag() {
-        return new CompoundTag();
+        CompoundTag nbt = new CompoundTag();
+        List<List<TravellingItem>> allItems = items.getAllElements();
+        ListTag list = new ListTag();
+
+        long tickNow = pipe.getWorldTime();
+        for (List<TravellingItem> l : allItems) {
+            for (TravellingItem item : l) {
+                list.add(item.writeToNbt(tickNow));
+            }
+        }
+        nbt.put("items", list);
+        return nbt;
     }
 
     @Override

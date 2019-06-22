@@ -1,0 +1,15 @@
+{
+    "type": "crafting_shaped",
+    "result": {
+        "item": "simple_pipes:tank"
+    },
+    "pattern": [
+        " G ",
+        "GBG",
+        " G "
+    ],
+    "key": {
+        "G": { "item": "minecraft:glass" },
+        "B": { "item": "minecraft:bucket" }
+    }
+}

@@ -13,7 +13,7 @@ repositories {
 }
 
 archivesBaseName = "SimplePipes"
-version = "0.1.7"
+version = "0.1.8"
 
 minecraft {
 }
@@ -28,7 +28,7 @@ dependencies {
     modCompile "net.fabricmc:fabric-loader:0.4.8+build.154"
 
     //Fabric api
-    modCompile "net.fabricmc.fabric-api:fabric-api:0.3.0+build.175"
+    modCompile "net.fabricmc.fabric-api:fabric-api:0.3.0+build.185"
 
     // Silk API
     // modCompile "io.github.prospector.silk:SilkAPI:1.2.3-38"

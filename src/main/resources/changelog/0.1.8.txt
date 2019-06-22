@@ -1,0 +1,8 @@
+Changes:
+
+* Updated fabric.mod.json to schema version 1.
+
+Bug Fixes:
+
+* Item pipes didn't save+load their contents 
+* [#16] Added a recipe for the fluid tank (1 bucket surrounded with 4 glass blocks).
