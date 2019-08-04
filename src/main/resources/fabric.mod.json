@@ -9,7 +9,7 @@
     "main": ["alexiil.mc.mod.pipes.SimplePipes"],
     "client": ["alexiil.mc.mod.pipes.SimplePipesClient"]
   },
-  "requires": {
+  "depends": {
     "fabric": "*",
     "libblockattributes": ">=0.4.2"
   },
