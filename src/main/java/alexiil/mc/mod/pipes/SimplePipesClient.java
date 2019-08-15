@@ -9,8 +9,11 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.render.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.entity.player.PlayerEntity;
 
 import alexiil.mc.lib.multipart.api.render.MultipartRenderRegistry;
 import alexiil.mc.mod.pipes.blocks.TilePipe;
@@ -19,9 +22,13 @@ import alexiil.mc.mod.pipes.client.model.part.FacadePartBaker;
 import alexiil.mc.mod.pipes.client.model.part.FacadePartKey;
 import alexiil.mc.mod.pipes.client.model.part.TankPartBaker;
 import alexiil.mc.mod.pipes.client.model.part.TankPartModelKey;
+import alexiil.mc.mod.pipes.client.render.DetachedRenderer;
+import alexiil.mc.mod.pipes.client.render.DetachedRenderer.RenderMatrixType;
+import alexiil.mc.mod.pipes.client.render.ItemPlacemenentGhostRenderer;
 import alexiil.mc.mod.pipes.client.render.PipeBlockEntityRenderer;
 import alexiil.mc.mod.pipes.client.render.TankPartRenderer;
 import alexiil.mc.mod.pipes.client.screen.SimplePipeScreens;
+import alexiil.mc.mod.pipes.mixin.api.IPostCutoutRenderer;
 import alexiil.mc.mod.pipes.part.PartTank;
 
 public class SimplePipesClient implements ClientModInitializer {
@@ -37,6 +44,21 @@ public class SimplePipesClient implements ClientModInitializer {
         MultipartRenderRegistry.registerBaker(TankPartModelKey.class, TankPartBaker.INSTANCE);
         MultipartRenderRegistry.registerBaker(FacadePartKey.class, FacadePartBaker.INSTANCE);
         SimplePipeScreens.load();
+        RenderMatrixType.FROM_WORLD_ORIGIN.addRenderer(ItemPlacemenentGhostRenderer::render);
+        ClientTickCallback.EVENT.register(mc -> {
+            ItemPlacemenentGhostRenderer.clientTick();
+        });
+        IPostCutoutRenderer.EVENT.register(() -> {
+            MinecraftClient mc = MinecraftClient.getInstance();
+            PlayerEntity player = mc.player;
+            if (player == null) return;
+            float partialTicks = mc.getTickDelta();
+            if (mc.isPaused()) {
+                partialTicks = 1;
+            }
+
+            DetachedRenderer.INSTANCE.renderAfterCutout(player, partialTicks);
+        });
     }
 
     private void registerSprites(SpriteAtlasTexture atlasTexture, ClientSpriteRegistryCallback.Registry registry) {

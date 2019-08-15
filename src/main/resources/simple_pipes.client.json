@@ -3,6 +3,7 @@
   "package": "alexiil.mc.mod.pipes.mixin.impl",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "GameRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
