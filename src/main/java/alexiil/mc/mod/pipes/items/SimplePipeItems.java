@@ -50,12 +50,13 @@ public class SimplePipeItems {
     public static final BlockItem TRIGGER_FLUID_INV_CONTAINS;
 
     static {
-        Item.Settings pipes = new Item.Settings();
-        pipes.itemGroup(ItemGroup.TRANSPORTATION);
-
+        ItemGroup mainGroup = FabricItemGroupBuilder.build(SimplePipes.id("main"), SimplePipeItems::getMainGroupStack);
         ItemGroup facadeGroup = FabricItemGroupBuilder.build(
             SimplePipes.id("facades"), SimplePipeItems::getFacadeGroupStack
         );
+
+        Item.Settings pipes = new Item.Settings();
+        pipes.itemGroup(mainGroup);
         FACADE = new ItemFacade(new Item.Settings().itemGroup(facadeGroup));
 
         WOODEN_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.WOODEN_PIPE_ITEMS, pipes);
@@ -71,7 +72,7 @@ public class SimplePipeItems {
         IRON_PIPE_FLUIDS = new BlockItem(SimplePipeBlocks.IRON_PIPE_FLUIDS, pipes);
 
         Item.Settings triggers = new Item.Settings();
-        triggers.itemGroup(ItemGroup.REDSTONE);
+        triggers.itemGroup(mainGroup);
 
         TANK = new ItemSimplePart(triggers, SimplePipeParts.TANK, PartTank::new);
         PUMP = new BlockItem(SimplePipeBlocks.PUMP, triggers);
@@ -87,8 +88,12 @@ public class SimplePipeItems {
         TRIGGER_FLUID_INV_CONTAINS = new BlockItem(SimplePipeBlocks.TRIGGER_FLUID_INV_CONTAINS, triggers);
     }
 
+    private static ItemStack getMainGroupStack() {
+        return new ItemStack(WOODEN_PIPE_ITEMS);
+    }
+
     private static ItemStack getFacadeGroupStack() {
-        return FACADE.createItemStack(new FullFacade(FacadeStateManager.getDefaultState(), ItemFacade.DEFAULT_SHAPE));
+        return FACADE.createItemStack(new FullFacade(FacadeStateManager.getPreviewState(), ItemFacade.DEFAULT_SHAPE));
     }
 
     public static void load() {

@@ -21,8 +21,11 @@
     "block.simple_pipes.trigger_fluid_inv_space": "Fluid Inventory Has Space Trigger",
     "block.simple_pipes.trigger_fluid_inv_contains": "Fluid Inventory Contains Trigger",
 
-    "block.simple_pipes.tank": "Simple Fluid Tank",
+    "item.simple_pipes.tank": "Simple Fluid Tank",
     "block.simple_pipes.pump": "Simple Fluid Pump",
+
+    "itemGroup.simple_pipes.main": "Simple Pipes: Main",
+    "itemGroup.simple_pipes.facades": "Simple Pipes: Facades",
 
     "item.simple_pipes.plug_facade.slab": "Slab Facade: %s",
     "item.simple_pipes.plug_facade.hollow.slab": "Hollow Slab Facade: %s",
