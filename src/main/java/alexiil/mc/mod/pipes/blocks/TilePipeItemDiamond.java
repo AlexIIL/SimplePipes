@@ -13,7 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 
 public class TilePipeItemDiamond extends TilePipe {
 
-    public final int INV_SIZE = 9 * 6;
+    public static final int INV_SIZE = 9 * 6;
 
     public final BasicInventory filterInv = new BasicInventory(INV_SIZE);
 

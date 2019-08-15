@@ -10,6 +10,8 @@ import java.util.function.Function;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.Direction;
 
+import alexiil.mc.mod.pipes.part.PipeFlow;
+
 public abstract class TilePipeIron extends TilePipeSided {
 
     public TilePipeIron(BlockEntityType<?> type, BlockPipe pipeBlock, Function<TilePipe, PipeFlow> flowConstructor) {

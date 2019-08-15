@@ -1,4 +1,4 @@
-package alexiil.mc.mod.pipes.blocks;
+package alexiil.mc.mod.pipes.part;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -6,10 +6,15 @@ import net.minecraft.util.DefaultedList;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-public abstract class PipeFlow {
-    public final TilePipe pipe;
+import alexiil.mc.lib.net.IMsgReadCtx;
+import alexiil.mc.lib.net.IMsgWriteCtx;
+import alexiil.mc.lib.net.InvalidInputDataException;
+import alexiil.mc.lib.net.NetByteBuf;
 
-    public PipeFlow(TilePipe pipe) {
+public abstract class PipeFlow {
+    public final PartPipe pipe;
+
+    public PipeFlow(PartPipe pipe) {
         this.pipe = pipe;
     }
 
@@ -21,13 +26,11 @@ public abstract class PipeFlow {
 
     public abstract CompoundTag toTag();
 
-    protected abstract void fromClientTag(CompoundTag tag);
-
-    protected void fromInitialClientTag(CompoundTag tag) {
+    public void writeCreationData(NetByteBuf buf, IMsgWriteCtx ctx) {
         // nothing by default
     }
 
-    public void toInitialClientTag(CompoundTag tag) {
+    public void readCreationData(NetByteBuf buf, IMsgReadCtx ctx) throws InvalidInputDataException {
         // nothing by default
     }
 
@@ -38,5 +41,4 @@ public abstract class PipeFlow {
     public void removeItemsForDrop(DefaultedList<ItemStack> all) {}
 
     protected abstract Object getInsertable(Direction searchDirection);
-
 }

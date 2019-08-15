@@ -17,6 +17,8 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.Direction;
 
+import alexiil.mc.mod.pipes.part.PipeFlow;
+
 public abstract class TilePipeSided extends TilePipe {
 
     private Direction currentDirection = null;

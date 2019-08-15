@@ -30,11 +30,11 @@ import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alexiil.mc.mod.pipes.blocks.PipeFlow;
-import alexiil.mc.mod.pipes.blocks.PipeFlowFluid;
-import alexiil.mc.mod.pipes.blocks.PipeFlowItem;
 import alexiil.mc.mod.pipes.blocks.TilePipe;
-import alexiil.mc.mod.pipes.blocks.TravellingItem;
+import alexiil.mc.mod.pipes.part.PipeFlow;
+import alexiil.mc.mod.pipes.part.PipeFlowFluid;
+import alexiil.mc.mod.pipes.part.PipeFlowItem;
+import alexiil.mc.mod.pipes.part.TravellingItem;
 import alexiil.mc.mod.pipes.util.VecUtil;
 
 public class PipeBlockEntityRenderer extends BlockEntityRenderer<TilePipe> {
@@ -157,8 +157,10 @@ public class PipeBlockEntityRenderer extends BlockEntityRenderer<TilePipe> {
 
             ItemStack stack = item.stack;
             if (stack != null && !stack.isEmpty()) {
-                renderItemStack(x + pos.x, y + pos.y, z + pos.z, //
-                    stack, lightc, item.getRenderDirection(now, partialTicks));
+                renderItemStack(
+                    x + pos.x, y + pos.y, z + pos.z, //
+                    stack, lightc, item.getRenderDirection(now, partialTicks)
+                );
             }
             // if (item.colour != null) {
             // bb.setTranslation(x + pos.x, y + pos.y, z + pos.z);

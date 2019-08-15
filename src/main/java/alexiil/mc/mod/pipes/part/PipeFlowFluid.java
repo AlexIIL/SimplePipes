@@ -1,4 +1,4 @@
-package alexiil.mc.mod.pipes.blocks;
+package alexiil.mc.mod.pipes.part;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +28,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.mod.pipes.blocks.PipeFlowFluid.CenterSection;
 import alexiil.mc.mod.pipes.blocks.PipeFlowFluid.Section;
 import alexiil.mc.mod.pipes.blocks.PipeFlowFluid.SideSection;
+import alexiil.mc.mod.pipes.part.PipeFlow;
 
 public class PipeFlowFluid extends PipeFlow {
 

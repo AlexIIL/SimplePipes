@@ -1,4 +1,4 @@
-package alexiil.mc.mod.pipes.blocks;
+package alexiil.mc.mod.pipes.part;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +25,11 @@ import alexiil.mc.lib.attributes.item.ItemInsertable;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable;
+import alexiil.mc.lib.net.IMsgReadCtx;
+import alexiil.mc.lib.net.InvalidInputDataException;
+import alexiil.mc.lib.net.NetByteBuf;
+import alexiil.mc.mod.pipes.blocks.TilePipeItemGold;
+import alexiil.mc.mod.pipes.blocks.TilePipeItemIron;
 import alexiil.mc.mod.pipes.util.DelayedList;
 import alexiil.mc.mod.pipes.util.TagUtil;
 
@@ -34,7 +39,7 @@ public class PipeFlowItem extends PipeFlow {
 
     private final DelayedList<TravellingItem> items = new DelayedList<>();
 
-    public PipeFlowItem(TilePipe pipe) {
+    public PipeFlowItem(PartPipe pipe) {
         super(pipe);
 
         this.insertables = new ItemInsertable[6];
@@ -81,6 +86,11 @@ public class PipeFlowItem extends PipeFlow {
     }
 
     @Override
+    public void readCreationData(NetByteBuf buf, IMsgReadCtx ctx) throws InvalidInputDataException {
+
+    }
+
+    @Override
     protected void fromClientTag(CompoundTag tag) {
 
         // tag.put("item", item.stack.toTag(new CompoundTag()));
@@ -91,8 +101,8 @@ public class PipeFlowItem extends PipeFlow {
 
         TravellingItem item = new TravellingItem(ItemStack.fromTag(tag.getCompound("item")));
         item.toCenter = tag.getBoolean("to_center");
-        item.side = TagUtil.readEnum(tag.getTag("side"), Direction.class);
-        item.colour = TagUtil.readEnum(tag.getTag("colour"), DyeColor.class);
+        item.side = TagUtil.readEnum(tag.getTag("side"), Direction.class, null);
+        item.colour = TagUtil.readEnum(tag.getTag("colour"), DyeColor.class, null);
         item.timeToDest = Short.toUnsignedInt(tag.getShort("time"));
         item.tickStarted = pipe.getWorldTime() + 1;
         item.tickFinished = item.tickStarted + item.timeToDest;
@@ -171,7 +181,7 @@ public class PipeFlowItem extends PipeFlow {
     protected List<EnumSet<Direction>> getOrderForItem(TravellingItem item, EnumSet<Direction> validDirections) {
         List<EnumSet<Direction>> list = new ArrayList<>();
 
-        if (pipe instanceof TilePipeItemClay) {
+        if (pipe instanceof PartPipeItemClay) {
             EnumSet<Direction> invs = EnumSet.noneOf(Direction.class);
             EnumSet<Direction> others = EnumSet.noneOf(Direction.class);
             for (Direction dir : validDirections) {
@@ -275,9 +285,9 @@ public class PipeFlowItem extends PipeFlow {
     private void onItemReachEnd(TravellingItem item) {
         ItemInsertable ins = pipe.getItemInsertable(item.side);
         ItemStack excess = item.stack;
-        if (ins != null) {
+        if (ins != RejectingItemInsertable.NULL) {
             Direction oppositeSide = item.side.getOpposite();
-            TilePipe oPipe = pipe.getNeighbourPipe(item.side);
+            PartPipe oPipe = pipe.getNeighbourPipe(item.side);
 
             if (oPipe != null && oPipe.flow instanceof PipeFlowItem) {
                 excess = ((PipeFlowItem) oPipe.flow).injectItem(excess, true, oppositeSide, item.colour, item.speed);

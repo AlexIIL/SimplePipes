@@ -27,6 +27,7 @@ import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.item.ItemAttributes;
 import alexiil.mc.lib.attributes.item.ItemExtractable;
 import alexiil.mc.lib.attributes.item.ItemInsertable;
+import alexiil.mc.mod.pipes.part.PipeFlow;
 
 public abstract class TilePipe extends TileBase implements Tickable {
 

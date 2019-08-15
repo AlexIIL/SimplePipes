@@ -11,6 +11,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.Direction;
 
 import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable;
+import alexiil.mc.mod.pipes.part.PipeFlow;
 
 public abstract class TilePipeWood extends TilePipeSided {
 
