@@ -1,8 +1,9 @@
 {
   "required": true,
-  "package": "alexiil.mc.mod.pipes.mixin",
+  "package": "alexiil.mc.mod.pipes.mixin.impl",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "RecipeManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

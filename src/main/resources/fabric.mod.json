@@ -13,5 +13,9 @@
     "fabric": "*",
     "libblockattributes": ">=0.4.2"
   },
+  "mixins": [
+    "simple_pipes.client.json",
+    "simple_pipes.common.json"
+  ],
   "authors": [ "AlexIIL" ]
 }
