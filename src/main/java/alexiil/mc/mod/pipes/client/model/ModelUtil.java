@@ -5,15 +5,61 @@
  */
 package alexiil.mc.mod.pipes.client.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.util.ModelIdentifier;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Direction.AxisDirection;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
 
 /** Provides various utilities for creating {@link MutableQuad} out of various position information, such as a single
  * face of a cuboid. */
 public class ModelUtil {
+
+    public static BakedModel getModel(ModelIdentifier modelLocation) {
+        return MinecraftClient.getInstance().getBakedModelManager().getModel(modelLocation);
+    }
+
+    public static BakedModel getMissingModel() {
+        return MinecraftClient.getInstance().getBakedModelManager().getMissingModel();
+    }
+
+    public static BakedModel getItemModel(ItemStack stack) {
+        return MinecraftClient.getInstance().getItemRenderer().getModel(stack);
+    }
+
+    public static BakedModel getBlockModel(BlockState state) {
+        return MinecraftClient.getInstance().getBakedModelManager().getBlockStateMaps().getModel(state);
+    }
+
+    public static List<BakedQuad> getQuads(BlockState state, int seed) {
+        return getQuads(getBlockModel(state), state, seed);
+    }
+
+    public static List<BakedQuad> getQuads(BakedModel model, BlockState state, int seed) {
+        if (model == null) {
+            return Collections.emptyList();
+        }
+        List<BakedQuad> quads = new ArrayList<>();
+        quads.addAll(model.getQuads(state, null, new Random(seed)));
+        for (Direction dir : Direction.values()) {
+            quads.addAll(model.getQuads(state, dir, new Random(seed)));
+        }
+        return quads;
+    }
+
     /** Mutable class for holding the current {@link #minU}, {@link #maxU}, {@link #minV} and {@link #maxV} of a
      * face. */
     public static class UvFaceData {
@@ -69,6 +115,20 @@ public class ModelUtil {
         public String toString() {
             return "[ " + minU * 16 + ", " + minV * 16 + ", " + maxU * 16 + ", " + maxV * 16 + " ]";
         }
+
+        public void inSprite(Sprite sprite) {
+            minU = sprite.getU(minU * 16);
+            minV = sprite.getV(minV * 16);
+            maxU = sprite.getU(maxU * 16);
+            maxV = sprite.getV(maxV * 16);
+        }
+
+        // public void inSprite(ISprite sprite) {
+        // minU = (float) sprite.getInterpU(minU);
+        // minV = (float) sprite.getInterpV(minV);
+        // maxU = (float) sprite.getInterpU(maxU);
+        // maxV = (float) sprite.getInterpV(maxV);
+        // }
     }
 
     public static class TexturedFace {
@@ -113,8 +173,75 @@ public class ModelUtil {
         return new MutableQuad[] { norm, norm.copyAndInvertNormal() };
     }
 
+    public static List<MutableQuad> createModel(VoxelShape shape, Sprite sprite) {
+        List<MutableQuad> list = new ArrayList<>();
+        UvFaceData uvs = new UvFaceData();
+        for (BoundingBox box : shape.getBoundingBoxes()) {
+            Vec3d center = box.getCenter();
+            Vec3d radius = new Vec3d(box.maxX - box.minX, box.maxY - box.minY, box.maxZ - box.minZ).multiply(0.5);
+            for (Direction dir : Direction.values()) {
+                mapBoxToUvs(box, dir, uvs);
+                uvs.inSprite(sprite);
+                list.add(createFace(dir, center, radius, uvs));
+            }
+        }
+        return list;
+    }
+
+    public static void mapBoxToUvs(BoundingBox box, Direction side, UvFaceData uvs) {
+        // TODO: Fix these!
+        switch (side) {
+            case WEST: /* -X */ {
+                uvs.minU = (float) box.minZ;
+                uvs.maxU = (float) box.maxZ;
+                uvs.minV = 1 - (float) box.maxY;
+                uvs.maxV = 1 - (float) box.minY;
+                return;
+            }
+            case EAST: /* +X */ {
+                uvs.minU = 1 - (float) box.minZ;
+                uvs.maxU = 1 - (float) box.maxZ;
+                uvs.minV = 1 - (float) box.maxY;
+                uvs.maxV = 1 - (float) box.minY;
+                return;
+            }
+            case DOWN: /* -Y */ {
+                uvs.minU = (float) box.minX;
+                uvs.maxU = (float) box.maxX;
+                uvs.minV = 1 - (float) box.maxZ;
+                uvs.maxV = 1 - (float) box.minZ;
+                return;
+            }
+            case UP: /* +Y */ {
+                uvs.minU = (float) box.minX;
+                uvs.maxU = (float) box.maxX;
+                uvs.minV = (float) box.maxZ;
+                uvs.maxV = (float) box.minZ;
+                return;
+            }
+            case NORTH: /* -Z */ {
+                uvs.minU = 1 - (float) box.minX;
+                uvs.maxU = 1 - (float) box.maxX;
+                uvs.minV = 1 - (float) box.maxY;
+                uvs.maxV = 1 - (float) box.minY;
+                return;
+            }
+            case SOUTH: /* +Z */ {
+                uvs.minU = (float) box.minX;
+                uvs.maxU = (float) box.maxX;
+                uvs.minV = 1 - (float) box.maxY;
+                uvs.maxV = 1 - (float) box.minY;
+                return;
+            }
+            default: {
+                throw new IllegalStateException("Unknown Direction " + side);
+            }
+        }
+    }
+
     public static Vec3d[] getPointsForFace(Direction face, Vec3d center, Vec3d radius) {
-        Vec3d faceAdd = new Vec3d(//
+        Vec3d faceAdd = new Vec3d(
+            //
             face.getOffsetX() * radius.x, //
             face.getOffsetY() * radius.y, //
             face.getOffsetZ() * radius.z //

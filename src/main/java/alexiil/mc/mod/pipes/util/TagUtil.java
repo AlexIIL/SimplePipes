@@ -8,13 +8,15 @@ package alexiil.mc.mod.pipes.util;
 import java.util.BitSet;
 import java.util.EnumSet;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.ByteArrayTag;
 import net.minecraft.nbt.ByteTag;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 
-public enum TagUtil {
-    ;
+public final class TagUtil {
+    private TagUtil() {}
 
     private static final String NULL_ENUM_STRING = "_NULL";
 
@@ -26,10 +28,14 @@ public enum TagUtil {
     }
 
     public static <E extends Enum<E>> E readEnum(Tag tag, Class<E> clazz) {
+        return readEnum(tag, clazz, null);
+    }
+
+    public static <E extends Enum<E>> E readEnum(Tag tag, Class<E> clazz, E defaultValue) {
         if (tag instanceof StringTag) {
             String value = ((StringTag) tag).asString();
             if (NULL_ENUM_STRING.equals(value)) {
-                return null;
+                return defaultValue;
             }
             try {
                 return Enum.valueOf(clazz, value);
@@ -37,15 +43,15 @@ public enum TagUtil {
                 // In case we didn't find the constant
                 System.out.println("Tried and failed to read the value(" + value + ") from " + clazz.getSimpleName());
                 t.printStackTrace();
-                return null;
+                return defaultValue;
             }
         } else if (tag == null) {
-            return null;
+            return defaultValue;
         } else {
             new IllegalArgumentException(
-                "Tried to read an enum value when it was not a string! This is probably not good!").printStackTrace();
-            ;
-            return null;
+                "Tried to read an enum value when it was not a string! This is probably not good!"
+            ).printStackTrace();
+            return defaultValue;
         }
     }
 
@@ -91,5 +97,17 @@ public enum TagUtil {
             }
         }
         return set;
+    }
+
+    public static CompoundTag getItemData(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return new CompoundTag();
+        }
+        CompoundTag nbt = stack.getTag();
+        if (nbt == null) {
+            nbt = new CompoundTag();
+            stack.setTag(nbt);
+        }
+        return nbt;
     }
 }

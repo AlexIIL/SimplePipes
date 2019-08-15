@@ -5,15 +5,24 @@
  */
 package alexiil.mc.mod.pipes.items;
 
+import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.registry.Registry;
 
 import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
+import alexiil.mc.mod.pipes.part.FacadeStateManager;
+import alexiil.mc.mod.pipes.part.FullFacade;
+import alexiil.mc.mod.pipes.part.PartTank;
+import alexiil.mc.mod.pipes.part.SimplePipeParts;
 
 public class SimplePipeItems {
+
+    public static final ItemFacade FACADE;
 
     public static final BlockItem WOODEN_PIPE_ITEMS;
     public static final BlockItem STONE_PIPE_ITEMS;
@@ -27,7 +36,7 @@ public class SimplePipeItems {
     public static final BlockItem CLAY_PIPE_FLUIDS;
     public static final BlockItem IRON_PIPE_FLUIDS;
 
-    public static final BlockItem TANK;
+    public static final ItemSimplePart TANK;
     public static final BlockItem PUMP;
 
     public static final BlockItem TRIGGER_ITEM_INV_EMPTY;
@@ -44,6 +53,11 @@ public class SimplePipeItems {
         Item.Settings pipes = new Item.Settings();
         pipes.itemGroup(ItemGroup.TRANSPORTATION);
 
+        ItemGroup facadeGroup = FabricItemGroupBuilder.build(
+            SimplePipes.id("facades"), SimplePipeItems::getFacadeGroupStack
+        );
+        FACADE = new ItemFacade(new Item.Settings().itemGroup(facadeGroup));
+
         WOODEN_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.WOODEN_PIPE_ITEMS, pipes);
         STONE_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.STONE_PIPE_ITEMS, pipes);
         CLAY_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.CLAY_PIPE_ITEMS, pipes);
@@ -59,7 +73,7 @@ public class SimplePipeItems {
         Item.Settings triggers = new Item.Settings();
         triggers.itemGroup(ItemGroup.REDSTONE);
 
-        TANK = new BlockItem(SimplePipeBlocks.TANK, triggers);
+        TANK = new ItemSimplePart(triggers, SimplePipeParts.TANK, PartTank::new);
         PUMP = new BlockItem(SimplePipeBlocks.PUMP, triggers);
 
         TRIGGER_ITEM_INV_EMPTY = new BlockItem(SimplePipeBlocks.TRIGGER_ITEM_INV_EMPTY, triggers);
@@ -73,7 +87,13 @@ public class SimplePipeItems {
         TRIGGER_FLUID_INV_CONTAINS = new BlockItem(SimplePipeBlocks.TRIGGER_FLUID_INV_CONTAINS, triggers);
     }
 
+    private static ItemStack getFacadeGroupStack() {
+        return FACADE.createItemStack(new FullFacade(FacadeStateManager.getDefaultState(), ItemFacade.DEFAULT_SHAPE));
+    }
+
     public static void load() {
+        registerItem(FACADE, "facade");
+
         registerItem(WOODEN_PIPE_ITEMS, "pipe_wooden_item");
         registerItem(STONE_PIPE_ITEMS, "pipe_stone_item");
         registerItem(CLAY_PIPE_ITEMS, "pipe_clay_item");

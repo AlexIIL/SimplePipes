@@ -13,6 +13,7 @@ package alexiil.mc.mod.pipes.client.model;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.VertexFormat;
@@ -214,6 +215,14 @@ public class MutableVertex {
 
     // Rendering
 
+    public void putData(int vertexIndex, QuadEmitter emitter) {
+        emitter.pos(vertexIndex, position_x, position_y, position_z);
+        emitter.spriteColor(vertexIndex, 0, colourBGRA());
+        emitter.sprite(vertexIndex, 0, tex_u, tex_v);
+        emitter.normal(vertexIndex, normal_x, normal_y, normal_z);
+        emitter.lightmap(vertexIndex, lightc());
+    }
+
     public void render(BufferBuilder bb) {
         VertexFormat vf = bb.getVertexFormat();
         if (vf == VertexFormats.POSITION_COLOR_UV_NORMAL) {
@@ -379,6 +388,15 @@ public class MutableVertex {
         rgba |= (colour_g & 0xFF) << 16;
         rgba |= (colour_b & 0xFF) << 8;
         rgba |= (colour_a & 0xFF) << 0;
+        return rgba;
+    }
+
+    public int colourBGRA() {
+        int rgba = 0;
+        rgba |= (colour_a & 0xFF) << 24;
+        rgba |= (colour_r & 0xFF) << 16;
+        rgba |= (colour_g & 0xFF) << 8;
+        rgba |= (colour_b & 0xFF) << 0;
         return rgba;
     }
 

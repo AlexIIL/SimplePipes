@@ -10,9 +10,13 @@ import org.apache.logging.log4j.Logger;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.minecraft.util.Identifier;
+
 import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
 import alexiil.mc.mod.pipes.container.SimplePipeContainers;
 import alexiil.mc.mod.pipes.items.SimplePipeItems;
+import alexiil.mc.mod.pipes.part.FacadeStateManager;
+import alexiil.mc.mod.pipes.part.SimplePipeParts;
 
 public class SimplePipes implements ModInitializer {
 
@@ -21,8 +25,14 @@ public class SimplePipes implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        FacadeStateManager.load();
+        SimplePipeParts.load();
         SimplePipeBlocks.load();
         SimplePipeItems.load();
         SimplePipeContainers.load();
+    }
+
+    public static Identifier id(String path) {
+        return new Identifier(MODID, path);
     }
 }

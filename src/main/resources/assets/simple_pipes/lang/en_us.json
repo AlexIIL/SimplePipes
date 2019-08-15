@@ -22,5 +22,18 @@
     "block.simple_pipes.trigger_fluid_inv_contains": "Fluid Inventory Contains Trigger",
 
     "block.simple_pipes.tank": "Simple Fluid Tank",
-    "block.simple_pipes.pump": "Simple Fluid Pump"
+    "block.simple_pipes.pump": "Simple Fluid Pump",
+
+    "item.simple_pipes.plug_facade.slab": "Slab Facade: %s",
+    "item.simple_pipes.plug_facade.hollow.slab": "Hollow Slab Facade: %s",
+    "item.simple_pipes.plug_facade.thick": "Thick Facade: %s",
+    "item.simple_pipes.plug_facade.hollow.thick": "Hollow Thick Facade: %s",
+    "item.simple_pipes.plug_facade.thin": "Thin Facade: %s",
+    "item.simple_pipes.plug_facade.hollow.thin": "Hollow Thin Facade: %s",
+    "item.simple_pipes.plug_facade.strip.slab": "Slab Strip Facade: %s",
+    "item.simple_pipes.plug_facade.strip.thick": "Thick Strip Facade: %s",
+    "item.simple_pipes.plug_facade.strip.thin": "Thin Strip Facade: %s",
+    "item.simple_pipes.plug_facade.corner.slab": "Slab Corner Facade: %s",
+    "item.simple_pipes.plug_facade.corner.thick": "Thick Corner Facade: %s",
+    "item.simple_pipes.plug_facade.corner.thin": "Thin Corner Facade: %s"
 }

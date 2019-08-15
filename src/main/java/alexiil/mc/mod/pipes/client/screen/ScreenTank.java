@@ -49,10 +49,10 @@ public class ScreenTank extends AbstractContainerScreen<ContainerTank> {
         int x = (this.width - this.containerWidth) / 2;
         int y = (this.height - this.containerHeight) / 2;
         blit(x, y, 0, 0, this.containerWidth, this.containerHeight);
-        FluidStackInterp fluid = container.tile.getFluidForRender(partialTicks);
+        FluidStackInterp fluid = container.part.getFluidForRender(partialTicks);
         if (fluid != null && !fluid.fluid.isEmpty() && fluid.amount > 0.1) {
             double x0 = 0;
-            double y0 = 48 - 48 * fluid.amount / container.tile.fluidInv.tankCapacity;
+            double y0 = 48 - 48 * fluid.amount / container.part.fluidInv.tankCapacity;
             double x1 = 16;
             double y1 = 48;
             FluidRenderFace face = FluidRenderFace.createFlatFaceZ(x0, y0, 0, x1, y1, 0, 1, false);
@@ -83,9 +83,9 @@ public class ScreenTank extends AbstractContainerScreen<ContainerTank> {
         super.drawMouseoverTooltip(mouseX, mouseY);
         int x = (this.width - this.containerWidth) / 2;
         int y = (this.height - this.containerHeight) / 2;
-        int capacity = container.tile.fluidInv.tankCapacity;
+        int capacity = container.part.fluidInv.tankCapacity;
         if (mouseX >= x + 80 && mouseX <= x + 96 && mouseY >= y + 23 && mouseY <= y + 71) {
-            FluidStackInterp fluid = container.tile.getFluidForRender(1);
+            FluidStackInterp fluid = container.part.getFluidForRender(1);
             if (fluid == null || fluid.fluid.isEmpty()) {
                 List<String> str = new ArrayList<>();
                 str.add(FluidUnit.BUCKET.localizeTank(0, capacity));

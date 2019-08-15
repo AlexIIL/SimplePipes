@@ -1,5 +1,8 @@
 package alexiil.mc.mod.pipes.blocks;
 
+import java.util.Collections;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockRenderLayer;
@@ -16,8 +19,12 @@ import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
+import alexiil.mc.lib.multipart.api.MultipartContainer.MultipartCreator;
+import alexiil.mc.lib.multipart.api.NativeMultipart;
+import alexiil.mc.mod.pipes.part.PartTank;
+import alexiil.mc.mod.pipes.part.SimplePipeParts;
 
-public class BlockTank extends BlockBase implements BlockEntityProvider, AttributeProvider {
+public class BlockTank extends BlockBase implements BlockEntityProvider, AttributeProvider, NativeMultipart {
 
     public static final VoxelShape SHAPE = VoxelShapes.cuboid(2 / 16.0, 0, 2 / 16.0, 14 / 16.0, 12 / 16.0, 14 / 16.0);
 
@@ -54,8 +61,22 @@ public class BlockTank extends BlockBase implements BlockEntityProvider, Attribu
         BlockEntity be = world.getBlockEntity(pos);
         if (be instanceof TileTank) {
             TileTank tank = (TileTank) be;
-            tank.fluidInv.offerSelfAsAttribute(to, null, SHAPE);
-            // tank.addAttributes(to);
+            to.offer(tank.fluidInv, SHAPE);
         }
+    }
+
+    @Override
+    public List<MultipartCreator> getMultipartConversion(World world, BlockPos pos, BlockState state) {
+        BlockEntity be = world.getBlockEntity(pos);
+        if (!(be instanceof TileTank)) {
+            return null;
+        }
+        TileTank tank = (TileTank) be;
+        MultipartCreator creator = holder -> {
+            PartTank part = new PartTank(SimplePipeParts.TANK, holder);
+            part.fluidInv.forceSetInvFluid(0, tank.fluidInv.getInvFluid(0));
+            return part;
+        };
+        return Collections.singletonList(creator);
     }
 }

@@ -2,25 +2,29 @@ package alexiil.mc.mod.pipes.container;
 
 import net.fabricmc.fabric.api.container.ContainerFactory;
 
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
-import alexiil.mc.mod.pipes.blocks.TileTank;
+import alexiil.mc.lib.multipart.api.MultipartContainer;
+import alexiil.mc.lib.multipart.api.MultipartUtil;
+import alexiil.mc.mod.pipes.part.PartTank;
 
-public class ContainerTank extends ContainerTile<TileTank> {
+public class ContainerTank extends ContainerPart<PartTank> {
 
     public static final ContainerFactory<Container> FACTORY = (syncId, id, player, buffer) -> {
         BlockPos pos = buffer.readBlockPos();
-        BlockEntity be = player.world.getBlockEntity(pos);
-        if (be instanceof TileTank) {
-            return new ContainerTank(syncId, player, (TileTank) be);
+        MultipartContainer c = MultipartUtil.get(player.world, pos);
+        if (c == null) {
+            return null;
+        }
+        for (PartTank tank : c.getParts(PartTank.class)) {
+            return new ContainerTank(syncId, player, tank);
         }
         return null;
     };
 
-    protected ContainerTank(int syncId, PlayerEntity player, TileTank tile) {
-        super(syncId, player, tile);
+    protected ContainerTank(int syncId, PlayerEntity player, PartTank tank) {
+        super(syncId, player, tank);
     }
 }

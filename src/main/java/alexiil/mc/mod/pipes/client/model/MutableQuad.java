@@ -11,6 +11,8 @@
  */
 package alexiil.mc.mod.pipes.client.model;
 
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.model.BakedQuad;
@@ -154,6 +156,14 @@ public class MutableQuad {
         vertex_1.render(bb);
         vertex_2.render(bb);
         vertex_3.render(bb);
+    }
+
+    /** Outputs the vertex data into the given {@link QuadEmitter}. Doesn't call {@link QuadEmitter#emit()}. */
+    public void putData(QuadEmitter emitter) {
+        vertex_0.putData(0, emitter);
+        vertex_1.putData(1, emitter);
+        vertex_2.putData(2, emitter);
+        vertex_3.putData(3, emitter);
     }
 
     public Vector3f getCalculatedNormal() {

@@ -2,14 +2,13 @@ package alexiil.mc.mod.pipes.util;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alexiil.mc.mod.pipes.util.FluidSmoother._Client;
-import alexiil.mc.mod.pipes.util.FluidSmoother._Server;
-import alexiil.mc.mod.pipes.util.FluidSmoother._Side;
+import alexiil.mc.lib.net.IMsgReadCtx;
+import alexiil.mc.lib.net.IMsgWriteCtx;
+import alexiil.mc.lib.net.NetByteBuf;
 
 public class FluidSmoother {
     final IFluidDataSender sender;
@@ -31,23 +30,23 @@ public class FluidSmoother {
         data.tick(world);
     }
 
-    public void handleMessage(World world, CompoundTag tag) {
+    public void handleMessage(World world, NetByteBuf buffer, IMsgReadCtx ctx) {
         if (data == null) {
             data = new _Client();
         }
         if (data instanceof _Client) {
-            ((_Client) data).handleMessage(world, tag);
+            ((_Client) data).handleMessage(world, buffer, ctx);
         } else {
             throw new IllegalStateException("You can only call this on the client!");
         }
     }
 
-    public void writeInit(CompoundTag tag) {
+    public void writeInit(NetByteBuf buffer, IMsgWriteCtx ctx) {
         if (data == null) {
             data = new _Server();
         }
         if (data instanceof _Server) {
-            ((_Server) data).writeMessage(tag);
+            ((_Server) data).writeMessage(buffer, ctx);
         } else {
             throw new IllegalStateException("You can only call this on the server!");
         }
@@ -96,7 +95,7 @@ public class FluidSmoother {
 
     @FunctionalInterface
     public interface IPayloadWriter {
-        void write(CompoundTag tag);
+        void write(NetByteBuf buffer, IMsgWriteCtx ctx);
     }
 
     @FunctionalInterface
@@ -127,21 +126,20 @@ public class FluidSmoother {
             FluidVolume fluid = tank.getInvFluid(0);
             boolean hasFluid = !fluid.isEmpty();
             if ((fluid.getAmount() != sentAmount || hasFluid != sentHasFluid)) {
-                if (world.getTime() % 4 == 0) {
-                    sender.writePacket(this::writeMessage);
-                }
+                sender.writePacket(this::writeMessage);
             }
         }
 
-        void writeMessage(CompoundTag tag) {
+        void writeMessage(NetByteBuf buffer, IMsgWriteCtx ctx) {
             FluidVolume fluid = tank.getInvFluid(0);
             boolean hasFluid = !fluid.isEmpty();
 
             sentAmount = fluid.getAmount();
             sentHasFluid = hasFluid;
 
-            tag.putInt("target", sentAmount);
-            tag.put("fluid", fluid.toTag(new CompoundTag()));
+            buffer.writeInt(sentAmount);
+            // TODO: Replace this with buffer writing in LBA!
+            buffer.writeCompoundTag(fluid.toTag());
         }
     }
 
@@ -166,9 +164,9 @@ public class FluidSmoother {
             }
         }
 
-        void handleMessage(World world, CompoundTag tag) {
-            target = tag.getInt("target");
-            fluid = FluidVolume.fromTag(tag.getCompound("fluid"));
+        void handleMessage(World world, NetByteBuf buffer, IMsgReadCtx ctx) {
+            target = buffer.readInt();
+            fluid = FluidVolume.fromTag(buffer.readCompoundTag());
             lastMessageMinus1 = lastMessage;
             lastMessage = world.getTime();
         }

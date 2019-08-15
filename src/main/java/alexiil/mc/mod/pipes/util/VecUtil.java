@@ -3,8 +3,10 @@ package alexiil.mc.mod.pipes.util;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3d;
 
-public enum VecUtil {
-    ;
+public final class VecUtil {
+    private VecUtil() {}
+
+    public static final Vec3d VEC_HALF = new Vec3d(0.5, 0.5, 0.5);
 
     public static Vec3d min(Vec3d a, Vec3d b) {
         return new Vec3d(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.min(a.z, b.z));

@@ -5,6 +5,8 @@
  */
 package alexiil.mc.mod.pipes.client.model;
 
+import java.util.function.Consumer;
+
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
 import net.fabricmc.fabric.api.client.model.ModelResourceProvider;
 import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
@@ -18,6 +20,12 @@ import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
 
 public class SimplePipeModels {
+
+    public static final ModelIdentifier TANK_BLOCK_ID;
+
+    static {
+        TANK_BLOCK_ID = new ModelIdentifier("simple_pipes:tank");
+    }
 
     public static ModelResourceProvider createResourceProvider(ResourceManager manager) {
         return (Identifier resourceId, ModelProviderContext context) -> {
@@ -35,10 +43,26 @@ public class SimplePipeModels {
         };
     }
 
+    public static void appendModels(ResourceManager manager, Consumer<ModelIdentifier> out) {
+        out.accept(TANK_BLOCK_ID);
+    }
+
     private static BakedModel getModel(ResourceManager manager, ModelIdentifier resourceId,
         ModelProviderContext context) {
         if ("inventory".equals(resourceId.getVariant())) {
-            return null;
+
+            switch (resourceId.getNamespace()) {
+                case SimplePipes.MODID:
+                    switch (resourceId.getPath()) {
+                        case "facade":
+                            return new ModelFacadeItem();
+                        default:
+                            return null;
+                    }
+                default: {
+                    return null;
+                }
+            }
         }
 
         switch (resourceId.getNamespace()) {
