@@ -11,6 +11,7 @@ import alexiil.mc.lib.multipart.api.MultipartContainer.PartOffer;
 import alexiil.mc.lib.multipart.api.MultipartHolder;
 import alexiil.mc.lib.multipart.api.MultipartUtil;
 import alexiil.mc.lib.multipart.api.PartDefinition;
+import alexiil.mc.mod.pipes.util.SoundUtil;
 
 public class ItemSimplePart extends Item {
 
@@ -44,7 +45,8 @@ public class ItemSimplePart extends Item {
             return ActionResult.FAIL;
         }
         offer.apply();
-        ctx.getItemStack().addAmount(-1);
+        ctx.getStack().increment(-1);
+        SoundUtil.playBlockPlace(w, plCtx.getBlockPos());
         return ActionResult.SUCCESS;
     }
 }

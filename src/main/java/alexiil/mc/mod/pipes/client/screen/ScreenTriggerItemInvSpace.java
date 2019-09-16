@@ -21,7 +21,7 @@ public class ScreenTriggerItemInvSpace extends AbstractContainerScreen<Container
     );
 
     public ScreenTriggerItemInvSpace(ContainerTriggerInvSpace container) {
-        super(container, container.player.inventory, SimplePipeBlocks.TRIGGER_ITEM_INV_SPACE.getTextComponent());
+        super(container, container.player.inventory, SimplePipeBlocks.TRIGGER_ITEM_INV_SPACE.getName());
         containerHeight = 153;
     }
 
@@ -43,7 +43,7 @@ public class ScreenTriggerItemInvSpace extends AbstractContainerScreen<Container
 
     @Override
     protected void drawForeground(int mouseX, int mouseY) {
-        font.draw(title.getFormattedText(), 8.0F, 6.0F, 0x40_40_40);
-        font.draw(playerInventory.getDisplayName().getFormattedText(), 8.0F, containerHeight - 96 + 2, 0x40_40_40);
+        font.draw(title.asFormattedString(), 8.0F, 6.0F, 0x40_40_40);
+        font.draw(playerInventory.getDisplayName().asFormattedString(), 8.0F, containerHeight - 96 + 2, 0x40_40_40);
     }
 }

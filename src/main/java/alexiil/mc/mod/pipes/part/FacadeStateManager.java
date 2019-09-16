@@ -392,7 +392,7 @@ public final class FacadeStateManager {
         }
 
         for (V value : property.getValues()) {
-            String name = property.getValueAsString(value);
+            String name = property.getName(value);
             Optional<V> optional = property.getValue(name);
             V parsed = optional == null ? null : optional.orElse(null);
             if (!Objects.equals(value, parsed)) {

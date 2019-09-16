@@ -14,8 +14,8 @@ public abstract class GhostPlacement {
      * <li>A new {@link GhostPlacement} which will be rendered instead</li>
      * <li>Null - if this {@link GhostPlacement} is no longer valid</li>
      * </ol>
-     * Note that this must inspect the current {@link ItemStack} in {@link ItemUsageContext#getItemStack()} to ensure
-     * that it is still a valid stack. */
+     * Note that this must inspect the current {@link ItemStack} in {@link ItemUsageContext#getStack()} to ensure that
+     * it is still a valid stack. */
     @Nullable
     public abstract GhostPlacement preRender(ItemUsageContext ctx);
 

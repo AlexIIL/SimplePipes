@@ -9,6 +9,9 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.lib.net.IMsgReadCtx;
 import alexiil.mc.lib.net.IMsgWriteCtx;
 import alexiil.mc.lib.net.NetByteBuf;
+import alexiil.mc.mod.pipes.util.FluidSmoother._Client;
+import alexiil.mc.mod.pipes.util.FluidSmoother._Server;
+import alexiil.mc.mod.pipes.util.FluidSmoother._Side;
 
 public class FluidSmoother {
     final IFluidDataSender sender;

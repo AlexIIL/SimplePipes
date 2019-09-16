@@ -11,7 +11,6 @@ import javax.annotation.Nullable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import net.minecraft.ChatFormat;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.item.TooltipContext;
@@ -21,11 +20,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DefaultedList;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -48,6 +48,7 @@ import alexiil.mc.mod.pipes.part.SimplePipeParts;
 import alexiil.mc.mod.pipes.util.BlockUtil;
 import alexiil.mc.mod.pipes.util.EnumCuboidCorner;
 import alexiil.mc.mod.pipes.util.EnumCuboidEdge;
+import alexiil.mc.mod.pipes.util.SoundUtil;
 import alexiil.mc.mod.pipes.util.TagUtil;
 
 public class ItemFacade extends Item implements IItemPlacmentGhost {
@@ -121,8 +122,8 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
     }
 
     @Override
-    public void appendItemsForGroup(ItemGroup group, DefaultedList<ItemStack> subItems) {
-        if (isInItemGroup(group)) {
+    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> subItems) {
+        if (isIn(group)) {
             addSubItems(group, subItems);
         }
     }
@@ -149,7 +150,7 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
     }
 
     @Override
-    public Component getTranslatedNameTrimmed(ItemStack stack) {
+    public Text getName(ItemStack stack) {
         FullFacade facade = getStates(stack);
 
         String key = "item.simple_pipes.plug_facade.";
@@ -169,25 +170,25 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
             key += "unknown_shape";
         }
         key += facade.shape.getSize().name().toLowerCase(Locale.ROOT);
-        return new TranslatableComponent(key, getFacadeStateDisplayName(facade.state.state));
+        return new TranslatableText(key, getFacadeStateDisplayName(facade.state.state));
     }
 
-    public static TranslatableComponent getFacadeStateDisplayName(BlockState state) {
-        return new TranslatableComponent(state.getBlock().getTranslationKey());
+    public static TranslatableText getFacadeStateDisplayName(BlockState state) {
+        return new TranslatableText(state.getBlock().getTranslationKey());
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void buildTooltip(ItemStack stack, World world, List<Component> tooltip, TooltipContext flag) {
+    public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext flag) {
         FullFacade states = getStates(stack);
         if (flag.isAdvanced()) {
             Identifier blockId = Registry.BLOCK.getId(states.state.state.getBlock());
-            tooltip.add(new TextComponent(blockId.toString()));
+            tooltip.add(new LiteralText(blockId.toString()));
         }
-        String propertiesStart = ChatFormat.GRAY + "" + ChatFormat.ITALIC;
+        String propertiesStart = Formatting.GRAY + "" + Formatting.ITALIC;
         FacadeBlockStateInfo info = states.state;
         BlockUtil.getPropertiesStringMap(info.state, info.varyingProperties).forEach(
-            (name, value) -> tooltip.add(new TextComponent(propertiesStart + name + " = " + value))
+            (name, value) -> tooltip.add(new LiteralText(propertiesStart + name + " = " + value))
         );
     }
 
@@ -196,7 +197,7 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
     @Nullable
     private static PartOffer offer(ItemUsageContext ctx) {
         World w = ctx.getWorld();
-        FullFacade fullState = getStates(ctx.getItemStack());
+        FullFacade fullState = getStates(ctx.getStack());
 
         // Try to add it to the first valid block position, in the 27(!) positions surrounding the hit vec
         List<FacadePotentialPlacament> variants = new ArrayList<>();
@@ -206,7 +207,7 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
                 variants.add(new FacadePotentialPlacament(shape, pos.toImmutable()));
             }
         }
-        Vec3d hit = ctx.getPos();
+        Vec3d hit = ctx.getHitPos();
         variants.sort(Comparator.comparingDouble(potential -> potential.centre.distanceTo(hit)));
 
         for (FacadePotentialPlacament variant : variants) {
@@ -229,12 +230,10 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
 
         PartOffer offer = offer(ctx);
         if (offer != null) {
-            FullFacade fullState = getStates(ctx.getItemStack());
+            FullFacade fullState = getStates(ctx.getStack());
             offer.apply();
-            ctx.getItemStack().addAmount(-1);
-            // SoundUtil.playBlockPlace(
-            // ctx.getWorld(), ctx.getBlockPos(), fullState.state.state
-            // );
+            ctx.getStack().increment(-1);
+            SoundUtil.playBlockPlace(ctx.getWorld(), ctx.getBlockPos(), fullState.state.state);
             return ActionResult.SUCCESS;
         }
         return ActionResult.FAIL;
@@ -265,7 +264,7 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
 
         @Override
         public GhostPlacement preRender(ItemUsageContext ctx) {
-            if (ctx.getItemStack().getItem() != ItemFacade.this) {
+            if (ctx.getStack().getItem() != ItemFacade.this) {
                 return null;
             }
 

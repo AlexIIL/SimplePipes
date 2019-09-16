@@ -5,7 +5,7 @@ import java.util.Locale;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.BooleanBiFunction;
-import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Direction.AxisDirection;
@@ -303,7 +303,7 @@ public abstract class FacadeShape {
             min = VecUtil.replaceValue(min, axisB, positiveB ? 1 - offset : 0);
             max = VecUtil.replaceValue(max, axisB, positiveB ? 1 : offset);
 
-            return VoxelShapes.cuboid(new BoundingBox(min, max));
+            return VoxelShapes.cuboid(new Box(min, max));
         }
 
         public static Strip get(FacadeSize size, EnumCuboidEdge edge) {

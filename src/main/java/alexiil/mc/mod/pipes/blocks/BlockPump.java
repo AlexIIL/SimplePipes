@@ -37,7 +37,7 @@ public class BlockPump extends BlockBase implements BlockEntityProvider, Attribu
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return getDefaultState().with(FACING, ctx.getPlayerFacing());
+        return getDefaultState().with(FACING, ctx.getPlayerLookDirection());
     }
 
     @Override

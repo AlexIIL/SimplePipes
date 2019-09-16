@@ -14,7 +14,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.network.chat.Component;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace;
@@ -31,7 +31,7 @@ public class ScreenTank extends AbstractContainerScreen<ContainerTank> {
     private static final Identifier TANK_GUI = new Identifier(SimplePipes.MODID, "textures/gui/tank.png");
 
     public ScreenTank(ContainerTank container) {
-        super(container, container.player.inventory, SimplePipeBlocks.TANK.getTextComponent());
+        super(container, container.player.inventory, SimplePipeBlocks.TANK.getName());
         containerHeight = 176;
     }
 
@@ -74,8 +74,8 @@ public class ScreenTank extends AbstractContainerScreen<ContainerTank> {
 
     @Override
     protected void drawForeground(int mouseX, int mouseY) {
-        font.draw(title.getFormattedText(), 8.0F, 6.0F, 0x40_40_40);
-        font.draw(playerInventory.getDisplayName().getFormattedText(), 8.0F, containerHeight - 96 + 2, 0x40_40_40);
+        font.draw(title.asFormattedString(), 8.0F, 6.0F, 0x40_40_40);
+        font.draw(playerInventory.getDisplayName().asFormattedString(), 8.0F, containerHeight - 96 + 2, 0x40_40_40);
     }
 
     @Override
@@ -92,10 +92,10 @@ public class ScreenTank extends AbstractContainerScreen<ContainerTank> {
                 renderTooltip(str, mouseX, mouseY);
                 return;
             }
-            List<Component> tooltip = fluid.fluid.getTooltipText(TooltipContext.Default.NORMAL);
+            List<Text> tooltip = fluid.fluid.getTooltipText(TooltipContext.Default.NORMAL);
             List<String> str = new ArrayList<>();
-            for (Component text : tooltip) {
-                str.add(text.getFormattedText());
+            for (Text text : tooltip) {
+                str.add(text.asFormattedString());
             }
             str.add(fluid.fluid.fluidKey.unit.localizeTank(fluid.fluid.getAmount(), capacity));
             renderTooltip(str, mouseX, mouseY);

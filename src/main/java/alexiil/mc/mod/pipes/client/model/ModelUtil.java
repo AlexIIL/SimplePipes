@@ -17,7 +17,7 @@ import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Direction.AxisDirection;
@@ -176,7 +176,7 @@ public class ModelUtil {
     public static List<MutableQuad> createModel(VoxelShape shape, Sprite sprite) {
         List<MutableQuad> list = new ArrayList<>();
         UvFaceData uvs = new UvFaceData();
-        for (BoundingBox box : shape.getBoundingBoxes()) {
+        for (Box box : shape.getBoundingBoxes()) {
             Vec3d center = box.getCenter();
             Vec3d radius = new Vec3d(box.maxX - box.minX, box.maxY - box.minY, box.maxZ - box.minZ).multiply(0.5);
             for (Direction dir : Direction.values()) {
@@ -188,7 +188,7 @@ public class ModelUtil {
         return list;
     }
 
-    public static void mapBoxToUvs(BoundingBox box, Direction side, UvFaceData uvs) {
+    public static void mapBoxToUvs(Box box, Direction side, UvFaceData uvs) {
         // TODO: Fix these!
         switch (side) {
             case WEST: /* -X */ {

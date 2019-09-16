@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.ArrayList;
 
 import net.minecraft.util.math.Direction;
+
+import alexiil.mc.lib.attributes.item.ItemAttributes;
+
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DefaultedList;
@@ -29,12 +32,14 @@ public class TilePipeItemDiamond extends TilePipe {
                     boolean emptyRow = true;
 
                     for (int x = 0; x < 9; x++) {
-                        ItemStack stack = ((TilePipeItemDiamond)pipe).filterInv.getInvStack(dir.getId() * 9 + x);
+                        ItemStack filter = ((TilePipeItemDiamond)pipe).filterInv.getInvStack(dir.getId() * 9 + x);
                     
-                        if (!stack.isEmpty()) {
+                        if (!filter.isEmpty()) {
                             emptyRow = false;
 
-                            if (stack.getItem().equals(item.stack.getItem())) {
+                            if (filter.getItem().equals(item.stack.getItem())) {
+                                matches.add(dir);
+                            } else if (ItemAttributes.FILTER.get(filter).matches(item.stack)) {
                                 matches.add(dir);
                             }
                         }

@@ -11,6 +11,7 @@ import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
@@ -167,7 +168,9 @@ public abstract class TilePipe extends TileBase implements Tickable {
         if (w instanceof ServerWorld) {
             sendPacket((ServerWorld) w, this.toUpdatePacket());
         } else if (w != null) {
-            w.scheduleBlockRender(getPos());
+            // air -> pipe
+            // (This just forces the world to re-render us)
+            w.scheduleBlockRender(getPos(), Blocks.AIR.getDefaultState(), getCachedState());
         }
     }
 

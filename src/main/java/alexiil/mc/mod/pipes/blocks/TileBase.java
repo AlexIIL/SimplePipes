@@ -33,7 +33,7 @@ public abstract class TileBase extends BlockEntity implements BlockEntityClientS
     }
 
     public DefaultedList<ItemStack> removeItemsForDrop() {
-        return DefaultedList.create();
+        return DefaultedList.of();
     }
 
     protected void sendPacket(ServerWorld w, CompoundTag tag) {

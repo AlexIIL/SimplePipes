@@ -3,7 +3,7 @@ package alexiil.mc.mod.pipes.util;
 import javax.annotation.Nullable;
 
 import net.minecraft.util.BooleanBiFunction;
-import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3d;
@@ -33,7 +33,7 @@ public final class ShapeUtil {
             return shape;
         }
         VoxelShape result = VoxelShapes.empty();
-        for (BoundingBox box : shape.getBoundingBoxes()) {
+        for (Box box : shape.getBoundingBoxes()) {
             Vec3d min = PositionUtil.rotateVec(new Vec3d(box.minX, box.minY, box.minZ), from, to, rotationAxis);
             Vec3d max = PositionUtil.rotateVec(new Vec3d(box.maxX, box.maxY, box.maxZ), from, to, rotationAxis);
             result = VoxelShapes.combine(result, cuboid(min, max), BooleanBiFunction.OR);

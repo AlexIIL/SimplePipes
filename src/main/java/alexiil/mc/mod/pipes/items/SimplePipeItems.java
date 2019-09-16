@@ -56,8 +56,8 @@ public class SimplePipeItems {
         );
 
         Item.Settings pipes = new Item.Settings();
-        pipes.itemGroup(mainGroup);
-        FACADE = new ItemFacade(new Item.Settings().itemGroup(facadeGroup));
+        pipes.group(mainGroup);
+        FACADE = new ItemFacade(new Item.Settings().group(facadeGroup));
 
         WOODEN_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.WOODEN_PIPE_ITEMS, pipes);
         STONE_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.STONE_PIPE_ITEMS, pipes);
@@ -72,7 +72,7 @@ public class SimplePipeItems {
         IRON_PIPE_FLUIDS = new BlockItem(SimplePipeBlocks.IRON_PIPE_FLUIDS, pipes);
 
         Item.Settings triggers = new Item.Settings();
-        triggers.itemGroup(mainGroup);
+        triggers.group(mainGroup);
 
         TANK = new ItemSimplePart(triggers, SimplePipeParts.TANK, PartTank::new);
         PUMP = new BlockItem(SimplePipeBlocks.PUMP, triggers);

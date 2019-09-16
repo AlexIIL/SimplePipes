@@ -147,7 +147,7 @@ public class TravellingItem {
             && colour == with.colour//
             && side == with.side//
             && Math.abs(tickFinished - with.tickFinished) < 4//
-            && stack.getMaxAmount() >= stack.getAmount() + with.stack.getAmount()//
+            && stack.getMaxCount() >= stack.getCount() + with.stack.getCount()//
             && ItemStackUtil.areEqualIgnoreAmounts(stack, with.stack);
     }
 
@@ -157,7 +157,7 @@ public class TravellingItem {
      * @return */
     public boolean mergeWith(TravellingItem with) {
         if (canMerge(with)) {
-            this.stack.addAmount(with.stack.getAmount());
+            this.stack.increment(with.stack.getCount());
             return true;
         }
         return false;

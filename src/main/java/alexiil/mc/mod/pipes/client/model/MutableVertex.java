@@ -280,7 +280,7 @@ public class MutableVertex {
     // Mutating
 
     public MutableVertex positionv(Vector3f vec) {
-        return positionf(vec.x(), vec.y(), vec.z());
+        return positionf(vec.getX(), vec.getY(), vec.getZ());
     }
 
     public MutableVertex positionv(Vec3d vec) {
@@ -311,7 +311,7 @@ public class MutableVertex {
      * 
      * @see #normalf(float, float, float) */
     public MutableVertex normalv(Vector3f vec) {
-        return normalf(vec.x(), vec.y(), vec.z());
+        return normalf(vec.getX(), vec.getY(), vec.getZ());
     }
 
     /** Sets the current normal given the x, y, and z coordinates. These are NOT normalised or checked. */
@@ -350,7 +350,7 @@ public class MutableVertex {
     }
 
     public MutableVertex colourv(Vector4f vec) {
-        return colourf(vec.x(), vec.y(), vec.z(), vec.w());
+        return colourf(vec.getX(), vec.getY(), vec.getZ(), vec.getW());
     }
 
     public MutableVertex colourf(float r, float g, float b, float a) {

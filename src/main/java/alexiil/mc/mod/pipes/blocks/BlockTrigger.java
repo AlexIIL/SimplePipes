@@ -22,7 +22,7 @@ import alexiil.mc.lib.attributes.item.ItemAttributes;
 
 public abstract class BlockTrigger extends BlockBase implements BlockEntityProvider {
     public static final DirectionProperty FACING = Properties.FACING;
-    public static final EnumProperty<EnumTriggerState> STATE = EnumProperty.create("state", EnumTriggerState.class);
+    public static final EnumProperty<EnumTriggerState> STATE = EnumProperty.of("state", EnumTriggerState.class);
 
     public BlockTrigger(Block.Settings settings) {
         super(settings);
@@ -42,7 +42,7 @@ public abstract class BlockTrigger extends BlockBase implements BlockEntityProvi
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return getDefaultState().with(FACING, ctx.getPlayerFacing());
+        return getDefaultState().with(FACING, ctx.getPlayerLookDirection());
     }
 
     @Override

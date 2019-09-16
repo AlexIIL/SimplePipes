@@ -61,7 +61,7 @@ public final class SimplePipeParts {
                     continue;
                 }
                 stack = stack.copy();
-                stack.setAmount(1);
+                stack.setCount(1);
                 if (!seen.add(stack)) {
                     continue;
                 }
@@ -93,7 +93,7 @@ public final class SimplePipeParts {
             for (boolean hollow : new boolean[] { false, true }) {
                 FacadeShape.Sided shape = FacadeShape.Sided.get(size, Direction.WEST, hollow);
                 ItemStack output = SimplePipeItems.FACADE.createItemStack(new FullFacade(state, shape));
-                output.setAmount(16 / size.microVoxelSize);
+                output.setCount(16 / size.microVoxelSize);
                 recipeAdder.accept(new StonecuttingRecipe(id, "", ingredient, output));
             }
         }
@@ -103,19 +103,19 @@ public final class SimplePipeParts {
             FacadeSize size = FacadeSize.values()[i];
             FacadeShape.Strip shape = FacadeShape.Strip.get(size, EnumCuboidEdge.Z_NN);
             ItemStack output = SimplePipeItems.FACADE.createItemStack(new FullFacade(state, shape));
-            output.setAmount(stripAmounts[i]);
+            output.setCount(stripAmounts[i]);
             recipeAdder.accept(new StonecuttingRecipe(id, "", ingredient, output));
         }
         {
             FacadeShape.Corner shape = FacadeShape.Corner.get(FacadeSize.SLAB, EnumCuboidCorner.NNN);
             ItemStack output = SimplePipeItems.FACADE.createItemStack(new FullFacade(state, shape));
-            output.setAmount(8);
+            output.setCount(8);
             recipeAdder.accept(new StonecuttingRecipe(id, "", ingredient, output));
         }
         {
             FacadeShape.Corner shape = FacadeShape.Corner.get(FacadeSize.THICK, EnumCuboidCorner.NNN);
             ItemStack output = SimplePipeItems.FACADE.createItemStack(new FullFacade(state, shape));
-            output.setAmount(64);
+            output.setCount(64);
             recipeAdder.accept(new StonecuttingRecipe(id, "", ingredient, output));
         }
     }
@@ -151,7 +151,7 @@ public final class SimplePipeParts {
             }
             FullFacade newFacade = new FullFacade(state, oShape);
             ItemStack output = facadeItem.createItemStack(newFacade);
-            output.setAmount(ratio);
+            output.setCount(ratio);
             recipeAdder.accept(new StonecuttingRecipe(id, "", ingredient, output));
         }
     }

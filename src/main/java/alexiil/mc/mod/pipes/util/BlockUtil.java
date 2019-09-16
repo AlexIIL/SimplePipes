@@ -44,7 +44,7 @@ public final class BlockUtil {
     }
 
     public static <T extends Comparable<T>> String getPropertyStringValue(BlockState blockState, Property<T> property) {
-        return property.getValueAsString(blockState.get(property));
+        return property.getName(blockState.get(property));
     }
 
     public static Map<String, String> getPropertiesStringMap(BlockState blockState, Collection<Property<

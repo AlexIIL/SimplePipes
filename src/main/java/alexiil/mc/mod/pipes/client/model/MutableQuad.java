@@ -182,7 +182,7 @@ public class MutableQuad {
     }
 
     public static float diffuseLight(Vector3f normal) {
-        return diffuseLight(normal.x(), normal.y(), normal.z());
+        return diffuseLight(normal.getX(), normal.getY(), normal.getZ());
     }
 
     public static float diffuseLight(float x, float y, float z) {
@@ -294,7 +294,7 @@ public class MutableQuad {
 
     /** Sets the normal for all vertices to the specified {@link Vector3f}. */
     public MutableQuad normalvf(Vector3f vec) {
-        return normalf(vec.x(), vec.y(), vec.z());
+        return normalf(vec.getX(), vec.getY(), vec.getZ());
     }
 
     /** Sets the normal for all vertices to the specified {@link Vec3d}. */
@@ -480,7 +480,7 @@ public class MutableQuad {
     }
 
     public MutableQuad translatevf(Vector3f vec) {
-        return translatef(vec.x(), vec.y(), vec.z());
+        return translatef(vec.getX(), vec.getY(), vec.getZ());
     }
 
     public MutableQuad translatevd(Vec3d vec) {

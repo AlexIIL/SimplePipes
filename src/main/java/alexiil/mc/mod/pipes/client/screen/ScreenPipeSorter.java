@@ -19,7 +19,7 @@ public class ScreenPipeSorter extends AbstractContainerScreen<ContainerPipeSorte
     private static final Identifier GUI = new Identifier(SimplePipes.MODID, "textures/gui/filter.png");
 
     public ScreenPipeSorter(ContainerPipeSorter container) {
-        super(container, container.player.inventory, SimplePipeBlocks.DIAMOND_PIPE_ITEMS.getTextComponent());
+        super(container, container.player.inventory, SimplePipeBlocks.DIAMOND_PIPE_ITEMS.getName());
         containerHeight = 222;
     }
 
@@ -41,7 +41,7 @@ public class ScreenPipeSorter extends AbstractContainerScreen<ContainerPipeSorte
 
     @Override
     protected void drawForeground(int mouseX, int mouseY) {
-        font.draw(title.getFormattedText(), 8.0F, 6.0F, 0x40_40_40);
-        font.draw(playerInventory.getDisplayName().getFormattedText(), 8.0F, containerHeight - 92, 0x40_40_40);
+        font.draw(title.asFormattedString(), 8.0F, 6.0F, 0x40_40_40);
+        font.draw(playerInventory.getDisplayName().asFormattedString(), 8.0F, containerHeight - 92, 0x40_40_40);
     }
 }
