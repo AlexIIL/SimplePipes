@@ -20,8 +20,8 @@ import net.minecraft.util.Identifier;
 import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace;
 import alexiil.mc.lib.attributes.fluid.volume.FluidUnit;
 import alexiil.mc.mod.pipes.SimplePipes;
-import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
 import alexiil.mc.mod.pipes.container.ContainerTank;
+import alexiil.mc.mod.pipes.items.SimplePipeItems;
 import alexiil.mc.mod.pipes.util.FluidSmoother.FluidStackInterp;
 
 public class ScreenTank extends AbstractContainerScreen<ContainerTank> {
@@ -31,7 +31,7 @@ public class ScreenTank extends AbstractContainerScreen<ContainerTank> {
     private static final Identifier TANK_GUI = new Identifier(SimplePipes.MODID, "textures/gui/tank.png");
 
     public ScreenTank(ContainerTank container) {
-        super(container, container.player.inventory, SimplePipeBlocks.TANK.getName());
+        super(container, container.player.inventory, SimplePipeItems.TANK.getName());
         containerHeight = 176;
     }
 

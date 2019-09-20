@@ -33,7 +33,7 @@ dependencies {
     // Silk API
     // modCompile "io.github.prospector.silk:SilkAPI:1.2.3-38"
 
-    modCompile "alexiil.mc.lib:libblockattributes-all:0.5.0-pre1"
+    modCompile "alexiil.mc.lib:libblockattributes-all:0.5.0-pre4"
     modCompile ("alexiil.mc.lib:libnetworkstack:0.1.2+build.2") { transitive = false }
     modCompile ("alexiil.mc.lib:libmultipart:0.1.1+build.11") { transitive = false }
 //    nest ("alexiil.mc.lib:libblockattributes:0.4.2") { transitive = false }
