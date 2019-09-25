@@ -11,7 +11,9 @@
   },
   "depends": {
     "fabric": "*",
-    "libblockattributes": ">=0.4.2"
+    "libblockattributes": ">=0.5.0-pre0",
+    "libmultipart": ">=0.1.1+build.16",
+    "libnetworkstack": ">=0.1.2+build.6"
   },
   "mixins": [
     "simple_pipes.client.json",

@@ -146,7 +146,10 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
                 }
             }
         }
-        SimplePipes.LOGGER.info("[facades] " + subItems.size() + " sub facade items");
+
+        if (FacadeStateManager.DEBUG) {
+            SimplePipes.LOGGER.info("[facades] " + subItems.size() + " sub facade items");
+        }
     }
 
     @Override

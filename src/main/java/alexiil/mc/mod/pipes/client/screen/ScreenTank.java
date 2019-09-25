@@ -97,7 +97,7 @@ public class ScreenTank extends AbstractContainerScreen<ContainerTank> {
             for (Text text : tooltip) {
                 str.add(text.asFormattedString());
             }
-            str.add(fluid.fluid.fluidKey.unit.localizeTank(fluid.fluid.getAmount(), capacity));
+            str.add(fluid.fluid.fluidKey.unitSet.localizeTank(fluid.fluid.getAmount(), capacity));
             renderTooltip(str, mouseX, mouseY);
         }
     }

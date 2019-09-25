@@ -76,9 +76,11 @@ public final class FacadeStateManager {
 
     static {
         if (DEBUG) {
-            SimplePipes.LOGGER.info("Debugging disabled for facades. (Add -Dsimplepipes.debug_facades=true to enable)");
-        } else {
             SimplePipes.LOGGER.info("Debugging enabled for facades. Prepare for log spam!");
+        } else {
+            SimplePipes.LOGGER.debug(
+                "Debugging disabled for facades. (Add -Dsimplepipes.debug_facades=true to enable)"
+            );
         }
 
         limitedProperties.put(Properties.PERSISTENT, false);

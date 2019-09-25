@@ -32,7 +32,7 @@ public class RecipeManagerMixin {
     @Redirect(
         at = @At(value = "INVOKE", target = "Ljava/util/stream/Stream;findFirst()Ljava/util/Optional;"),
         method = "getFirstMatch(Lnet/minecraft/recipe/RecipeType;"
-            + "Lnet/minecraft/inventory/Inventory;Lnet/minecraft/world/World;)Ljava/util/List;")
+            + "Lnet/minecraft/inventory/Inventory;Lnet/minecraft/world/World;)Ljava/util/Optional;")
     public <C extends Inventory, T extends Recipe<C>> Optional<T> redirectFindFirst(Stream<T> stream) {
         Optional<T> first = stream.findFirst();
         if (first.isPresent()) {
@@ -78,6 +78,7 @@ public class RecipeManagerMixin {
             + "Lnet/minecraft/inventory/Inventory;Lnet/minecraft/world/World;)Ljava/util/Optional;")
     public <C extends Inventory, T extends Recipe<C>> void getFirstMatch(RecipeType<T> type, C inv, World world,
         CallbackInfoReturnable<List<T>> ci) {
+
         lastSeenMatchFinder = new RecipeMatchFinder<>(type, inv, world, true);
     }
 
