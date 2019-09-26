@@ -7,7 +7,7 @@ package alexiil.mc.mod.pipes.blocks;
 
 import net.minecraft.world.BlockView;
 
-public class BlockPipeItemWooden extends BlockPipeSided {
+public class BlockPipeItemWooden extends BlockPipeSided implements BlockPipeItem {
 
     public BlockPipeItemWooden(Settings settings) {
         super(settings);

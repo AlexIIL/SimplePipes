@@ -7,7 +7,7 @@ package alexiil.mc.mod.pipes.blocks;
 
 import net.minecraft.world.BlockView;
 
-public class BlockPipeItemGold extends BlockPipe {
+public class BlockPipeItemGold extends BlockPipe implements BlockPipeItem {
 
     public BlockPipeItemGold(Settings settings) {
         super(settings);

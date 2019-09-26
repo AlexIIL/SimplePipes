@@ -307,6 +307,7 @@ def generateJar(
             excludes.add("fabric.mod.json");
             includes.addAll(_includes);
             excludes.addAll(_excludes);
+            exclude "META-INF/jars/**"
             if (hasMixins) {
                 includes.add(project.name + "-refmap.json");
             } else {
@@ -327,6 +328,7 @@ def generateJar(
             excludes.add("fabric.mod.json");
             includes.addAll(_includes);
             excludes.addAll(_excludes);
+            exclude "META-INF/jars/**"
         }
     }
 

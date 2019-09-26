@@ -4,6 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
@@ -36,7 +37,8 @@ public class TilePump extends TileBase implements Tickable {
 
     @Override
     public void tick() {
-        if (world.isClient) {
+        final World w = world;
+        if (w == null || w.isClient) {
             return;
         }
         BlockState state = getCachedState();
@@ -51,7 +53,7 @@ public class TilePump extends TileBase implements Tickable {
                 return;
             }
         }
-        if (!world.isReceivingRedstonePower(getPos())) {
+        if (!w.isReceivingRedstonePower(getPos())) {
             return;
         }
         FluidVolume drained = FluidWorldUtil.drain(getWorld(), getPos().offset(facing), Simulation.ACTION);

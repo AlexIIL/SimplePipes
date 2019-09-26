@@ -16,18 +16,15 @@ import net.minecraft.util.math.Direction;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
-import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.fluid.FluidExtractable;
+import alexiil.mc.lib.attributes.fluid.FluidInsertable;
+import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.ExactFluidFilter;
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alexiil.mc.mod.pipes.blocks.PipeFlowFluid.CenterSection;
-import alexiil.mc.mod.pipes.blocks.PipeFlowFluid.Section;
-import alexiil.mc.mod.pipes.blocks.PipeFlowFluid.SideSection;
 
 public class PipeFlowFluid extends PipeFlow {
 
@@ -53,7 +50,29 @@ public class PipeFlowFluid extends PipeFlow {
 
                 @Override
                 public FluidVolume attemptInsertion(FluidVolume fluid, Simulation simulation) {
-                    return fluid;
+                    if (fluid.isEmpty()) {
+                        return fluid;
+                    }
+                    SideSection sideSection = sideSections.get(dir);
+                    if (!sideSection.fluid.isEmpty()) {
+                        if (sideSection.fluid.getAmount() >= SECTION_CAPACITY || !sideSection.fluid.canMerge(fluid)) {
+                            return fluid;
+                        }
+                    }
+                    FluidVolume incoming = fluid.copy();
+                    FluidVolume inSection = sideSection.fluid.copy();
+                    FluidVolume merged = FluidVolume.merge(inSection, incoming);
+                    if (merged == null) {
+                        return fluid;
+                    }
+                    FluidVolume excess = FluidVolumeUtil.EMPTY;
+                    if (merged.getAmount() > SECTION_CAPACITY) {
+                        excess = merged.split(merged.getAmount() - SECTION_CAPACITY);
+                    }
+                    if (simulation == Simulation.ACTION) {
+                        sideSection.fluid = merged;
+                    }
+                    return excess;
                 }
 
                 @Override
@@ -138,8 +157,9 @@ public class PipeFlowFluid extends PipeFlow {
         if (max <= 0) {
             return;
         }
-        FluidFilter filter =
-            section.fluid.isEmpty() ? ConstantFluidFilter.ANYTHING : new ExactFluidFilter(section.fluid.getFluidKey());
+        FluidFilter filter = section.fluid.isEmpty() ? ConstantFluidFilter.ANYTHING : new ExactFluidFilter(
+            section.fluid.getFluidKey()
+        );
         FluidVolume extracted = from.attemptExtraction(filter, max, Simulation.SIMULATE);
         int extractedAmount = extracted.getAmount();
         if (extractedAmount < 0) {
@@ -159,9 +179,11 @@ public class PipeFlowFluid extends PipeFlow {
         }
         FluidVolume reallyExtracted = from.attemptExtraction(filter, extractedAmount, Simulation.ACTION);
         if (reallyExtracted.isEmpty() || reallyExtracted.getAmount() != extractedAmount) {
-            throw new IllegalStateException("The second call to attemptExtraction on " + from.getClass()
-                + " returned a different fluid than was expected!\n  first = " + extracted + ",\n  second = "
-                + reallyExtracted);
+            throw new IllegalStateException(
+                "The second call to attemptExtraction on " + from.getClass()
+                    + " returned a different fluid than was expected!\n  first = " + extracted + ",\n  second = "
+                    + reallyExtracted
+            );
         }
         FluidVolume reallyMerged = FluidVolume.merge(section.fluid, reallyExtracted);
         if (reallyMerged == null) {
@@ -332,10 +354,12 @@ public class PipeFlowFluid extends PipeFlow {
                         if (inserted > 0) {
                             FluidVolume merged = FluidVolume.merge(fluidCopy, leftover);
                             if (merged == null) {
-                                throw new IllegalStateException("The fluid " + fluidCopy.getClass() + " and "
-                                    + leftover.getClass() + " didn't merge again after they were split!\n"
-                                    + "This is either a bug in that fluid volume class, or a bug in "
-                                    + insertable.getClass() + "for returning an invalid result from attemptInsertion");
+                                throw new IllegalStateException(
+                                    "The fluid " + fluidCopy.getClass() + " and " + leftover.getClass()
+                                        + " didn't merge again after they were split!\n"
+                                        + "This is either a bug in that fluid volume class, or a bug in " + insertable
+                                            .getClass() + "for returning an invalid result from attemptInsertion"
+                                );
                             }
                             fluid = merged;
                             if (fluid.isEmpty()) {

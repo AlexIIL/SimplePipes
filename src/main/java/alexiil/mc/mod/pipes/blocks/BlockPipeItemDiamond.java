@@ -7,7 +7,7 @@ package alexiil.mc.mod.pipes.blocks;
 
 import net.minecraft.world.BlockView;
 
-public class BlockPipeItemDiamond extends BlockPipeSorter {
+public class BlockPipeItemDiamond extends BlockPipeSorter implements BlockPipeItem {
 
     public BlockPipeItemDiamond(Settings settings) {
         super(settings);

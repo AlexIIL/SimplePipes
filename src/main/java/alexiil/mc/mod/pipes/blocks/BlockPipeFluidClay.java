@@ -7,7 +7,7 @@ package alexiil.mc.mod.pipes.blocks;
 
 import net.minecraft.world.BlockView;
 
-public class BlockPipeFluidClay extends BlockPipe {
+public class BlockPipeFluidClay extends BlockPipe implements BlockPipeFluid {
 
     public BlockPipeFluidClay(Settings settings) {
         super(settings);

@@ -20,6 +20,8 @@
     "simple_pipes.common.json"
   ],
   "authors": [ "AlexIIL" ],
+  "license": "Mozilla Public License Version 2.0",
+  "icon": "assets/simple_pipes/icon.png",
   "__buildscript_inherit": {
     "~depends": {
       "+libblockattributes": ">=$libblockattributes_version",

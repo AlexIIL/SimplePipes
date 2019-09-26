@@ -7,7 +7,7 @@ package alexiil.mc.mod.pipes.blocks;
 
 import net.minecraft.world.BlockView;
 
-public class BlockPipeFluidIron extends BlockPipeSided {
+public class BlockPipeFluidIron extends BlockPipeSided implements BlockPipeFluid {
 
     public BlockPipeFluidIron(Settings settings) {
         super(settings);

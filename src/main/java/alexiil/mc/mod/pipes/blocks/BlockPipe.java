@@ -32,12 +32,8 @@ import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
-import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
-import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
-import alexiil.mc.lib.attributes.item.ItemAttributes;
 import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable;
-import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable;
 
 public abstract class BlockPipe extends BlockBase implements BlockEntityProvider, AttributeProvider, Waterloggable {
 
@@ -122,8 +118,7 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos,
-        EntityContext entityPos) {
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext entityPos) {
         BlockEntity be = view.getBlockEntity(pos);
         if (be instanceof TilePipe) {
             TilePipe pipe = (TilePipe) be;
@@ -166,10 +161,6 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
             // Pipes only work with physical connections
             return;
         }
-        if (to.attribute != ItemAttributes.EXTRACTABLE || to.attribute != ItemAttributes.INSERTABLE
-            || to.attribute != FluidAttributes.EXTRACTABLE || to.attribute != FluidAttributes.INSERTABLE) {
-            return;
-        }
         BlockEntity be = world.getBlockEntity(pos);
         if (!(be instanceof TilePipe)) {
             return;
@@ -178,16 +169,17 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
         TilePipe pipe = (TilePipe) be;
         VoxelShape pipeShape = pipe.isConnected(pipeSide) ? FACE_CENTER_SHAPES[pipeSide.ordinal()] : CENTER_SHAPE;
 
-        if (this instanceof BlockPipeItemWooden) {
-            if (to.attribute == ItemAttributes.INSERTABLE || to.attribute == FluidAttributes.INSERTABLE) {
-                to.offer(pipe.flow.getInsertable(searchDirection), pipeShape);
-            } else {
-                to.offer(RejectingItemInsertable.EXTRACTOR, pipeShape);
-                to.offer(RejectingFluidInsertable.EXTRACTOR, pipeShape);
-            }
+        boolean isItems = this instanceof BlockPipeItem;
+        assert isItems != this instanceof BlockPipeFluid;
+
+        if (isExtractionPipe() && be instanceof TilePipeSided && ((TilePipeSided) be).currentDirection() == pipeSide) {
+            to.offer(pipe.flow.getInsertable(searchDirection), pipeShape);
         } else {
-            to.offer(EmptyItemExtractable.SUPPLIER, pipeShape);
-            to.offer(EmptyFluidExtractable.SUPPLIER, pipeShape);
+            to.offer(isItems ? EmptyItemExtractable.SUPPLIER : EmptyFluidExtractable.SUPPLIER, pipeShape);
         }
+    }
+
+    protected boolean isExtractionPipe() {
+        return this instanceof BlockPipeItemWooden || this instanceof BlockPipeFluidWooden;
     }
 }
