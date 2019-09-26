@@ -35,6 +35,11 @@
       "+custom": { 
         "modmenu:api": true,
         "modmenu:parent": "simple_pipes"
+      },
+      "-entrypoints": {},
+      "-mixins": {},
+      "~depends": {
+        "+simple_pipes": ">=$version"
       }
     }
   }

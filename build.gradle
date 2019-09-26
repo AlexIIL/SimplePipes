@@ -13,13 +13,9 @@ repositories {
 }
 
 archivesBaseName = "SimplePipes"
-version = "0.2.0-pre.4"
+version = "0.2.0-pre.5"
 
 minecraft {
-}
-
-configurations {
-    nest {}
 }
 
 dependencies {
@@ -37,33 +33,13 @@ dependencies {
     modApi "alexiil.mc.lib:libnetworkstack-base:$libnetworkstack_version"
     modApi "alexiil.mc.lib:libmultipart-base:$libmultipart_version"
 
-    include "alexiil.mc.lib:libblockattributes-core:$libblockattributes_version"
+    include "alexiil.mc.lib:libblockattributes-all:$libblockattributes_version"
     include "alexiil.mc.lib:libnetworkstack-base:$libnetworkstack_version"
     include "alexiil.mc.lib:libmultipart-base:$libmultipart_version"
 
     // Misc
     compile "com.google.code.findbugs:jsr305:3.0.1"
     testCompile "junit:junit:4.12"
-}
-
-processResources {
-    inputs.property "version", project.version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
-        expand "version": project.version
-        expand project.properties
-        /*expand "libblockattributes_version": ext.libblockattributes_version
-        expand "libnetworkstack_version": "$libnetworkstack_version"
-        expand "libmultipart_version": "$libmultipart_version"*/
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
-    }
-
-    // FIXME: Apparently we can wait for fabric-loom to provide support for this.
-    from (configurations.nest.artifacts)
 }
 
 // ensure that the encoding is set to UTF-8, no matter what the system default is
@@ -100,6 +76,13 @@ apply from: "extra_jar_def.gradle"
 // Variables (that should be changed)
 ext.mainName = "simplepipes"
 ext.mavenGroupId = "alexiil.mc.mod";
+
+ext.extra_jar_def__fabric_mod_json_replacements = [
+  ["\$version", project.version],
+  ["\$libblockattributes_version", "$libblockattributes_version"],
+  ["\$libnetworkstack_version", "$libnetworkstack_version"],
+  ["\$libmultipart_version", "$libmultipart_version"]
+];
 
 def allIncludes = [
     "assets/simple_pipes/icon.png"
