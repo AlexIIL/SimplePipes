@@ -13,7 +13,7 @@ repositories {
 }
 
 archivesBaseName = "SimplePipes"
-version = "0.2.0-pre.3"
+version = "0.2.0-pre.4"
 
 minecraft {
 }
@@ -33,10 +33,13 @@ dependencies {
     // Silk API
     // modCompile "io.github.prospector.silk:SilkAPI:1.2.3-38"
 
-    modCompile "alexiil.mc.lib:libblockattributes-all:0.5.0-pre.12"
-    modCompile ("alexiil.mc.lib:libnetworkstack:0.1.2+build.6") { transitive = false }
-    modCompile ("alexiil.mc.lib:libmultipart:0.1.1+build.18") { transitive = false }
-//    nest ("alexiil.mc.lib:libblockattributes:0.4.2") { transitive = false }
+    modApi "alexiil.mc.lib:libblockattributes-all:$libblockattributes_version"
+    modApi "alexiil.mc.lib:libnetworkstack-base:$libnetworkstack_version"
+    modApi "alexiil.mc.lib:libmultipart-base:$libmultipart_version"
+
+    include "alexiil.mc.lib:libblockattributes-core:$libblockattributes_version"
+    include "alexiil.mc.lib:libnetworkstack-base:$libnetworkstack_version"
+    include "alexiil.mc.lib:libmultipart-base:$libmultipart_version"
 
     // Misc
     compile "com.google.code.findbugs:jsr305:3.0.1"
@@ -49,6 +52,9 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         include "fabric.mod.json"
         expand "version": project.version
+        expand "libblockattributes_version": "$libblockattributes_version"
+        expand "libnetworkstack_version": "$libnetworkstack_version"
+        expand "libmultipart_version": "$libmultipart_version"
     }
 
     from(sourceSets.main.resources.srcDirs) {
@@ -73,10 +79,6 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
- 
-task mainJar(type: Jar, dependsOn: classes) {
-    from sourceSets.main
-}
 
 publishing {
     repositories {
@@ -84,25 +86,29 @@ publishing {
             url System.getenv("MAVEN_DIR") ?: "$projectDir/build/maven"
         }
     }
-    publications {
-       publishRemapJar(MavenPublication) { 
-            groupId "alexiil.mc.mod"
-            artifactId "simple_pipes"
-            version project.version
-
-            artifact (jar) {
-                builtBy remapJar
-            }
-        }
-        publishRemapSrcJar(MavenPublication) {
-            groupId "alexiil.mc.mod"
-            artifactId "simple_pipes"
-            version project.version
-
-            artifact (sourcesJar) {
-                classifier "sources"
-                builtBy remapSourcesJar
-            }
-        }
-    }
 }
+
+// #####################
+//
+// Extra jar section
+//
+// #####################
+
+apply from: "extra_jar_def.gradle"
+
+// Variables (that should be changed)
+ext.mainName = "simplepipes"
+ext.mavenGroupId = "alexiil.mc.mod";
+
+def allIncludes = [
+    "assets/simple_pipes/icon.png"
+];
+
+def jarDeps = [ 
+    ["alexiil.mc.lib", "libblockattributes-all", "$libblockattributes_version"],
+    ["alexiil.mc.lib", "libnetworkstack-base", "$libnetworkstack_version"],
+    ["alexiil.mc.lib", "libmultipart-base", "$libmultipart_version"]
+];
+
+generateJar("base", ["**"], [], true);
+generateJar("all", allIncludes, [], false, [], ["base"], [], jarDeps);
