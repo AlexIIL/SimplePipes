@@ -52,9 +52,10 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         include "fabric.mod.json"
         expand "version": project.version
-        expand "libblockattributes_version": "$libblockattributes_version"
+        expand project.properties
+        /*expand "libblockattributes_version": ext.libblockattributes_version
         expand "libnetworkstack_version": "$libnetworkstack_version"
-        expand "libmultipart_version": "$libmultipart_version"
+        expand "libmultipart_version": "$libmultipart_version"*/
     }
 
     from(sourceSets.main.resources.srcDirs) {

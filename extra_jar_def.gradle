@@ -41,6 +41,9 @@ ext.mavenGroupId = "alexiil.mc.lib";
 // '+': The value will be added to the json, (and will replace any existing json entry)
 // '~': The value must be an object, and will be applied as a json-diff.
 
+// Optionally you can include a "__buildscript_inherit" json object which will be applied to the
+// fabric.mod.json before applying per-module diffs.
+
 // For example, given this "fabric.mod.json":
 
 /*
@@ -120,6 +123,7 @@ generateJar("items", itemsReq, [], false, [], ["core"]);
 // ==========
 
 // 2019/09/26 AlexIIL: Add everything (and this changelog)
+// 2019/09/26 AlexIIL: Add an additional section "__buildscript_inherit" to fabric.mod.json, which is applied to everything.
 
 // ==========================================================
 // User config - change both of these on a per-project basis
@@ -206,6 +210,9 @@ def writeFabricModJsonFile(String key, List<String> addedJars) {
     }
     temp.createNewFile();
     def elements = new HashMap<>();
+    
+    // def allDiff = source.remove("__buildscript_inherit");
+    
     def diff = source.remove("__buildscript_diff")[key];
     transformJson(source, diff);
 
