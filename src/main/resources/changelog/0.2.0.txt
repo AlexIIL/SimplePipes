@@ -1,0 +1,6 @@
+Changes:
+
+* Updated to minecraft 1.14.4
+* Split this into two modules: "-base", which just includes simple pipes, and "-all", which includes "-base", plus it's dependencies (lba-all, lmp-base, lns-base)
+* Added facades
+* Made tanks multiparts.
