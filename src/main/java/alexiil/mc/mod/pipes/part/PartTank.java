@@ -14,6 +14,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.AttributeList;
+import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
@@ -156,7 +157,7 @@ public class PartTank extends AbstractPart {
             return true;
         }
         isPlayerInteracting = true;
-        return FluidVolumeUtil.interactWithTank(fluidInv, player, hand);
+        return FluidVolumeUtil.interactWithTank((FixedFluidInv)fluidInv, player, hand);
     }
 
     @Override

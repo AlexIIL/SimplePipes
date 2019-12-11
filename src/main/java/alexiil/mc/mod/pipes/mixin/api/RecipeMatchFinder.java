@@ -7,19 +7,22 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.world.World;
 
-public final class RecipeMatchFinder<I extends Inventory, R extends Recipe<I>> {
-    public final RecipeType<R> recipeType;
-    public final I inventory;
+public final class RecipeMatchFinder {
+    public final RecipeType<?> recipeType;
+    public final Inventory inventory;
     public final World world;
+    public final Consumer<Recipe<?>> consumer;
 
-    /** If true then the {@link FindMatchingRecipesEvent#addRecipes(RecipeMatchFinder, Consumer)} consumer will only use
-     * the first recipe given to it. */
+    /** If true then the {@link #consumer} will only use the first recipe given to it. */
     public final boolean single;
 
-    public RecipeMatchFinder(RecipeType<R> recipeType, I inventory, World world, boolean single) {
+    public RecipeMatchFinder(RecipeType<?> recipeType, Inventory inventory, World world, Consumer<Recipe<?>> consumer,
+        boolean single) {
+
         this.recipeType = recipeType;
         this.inventory = inventory;
         this.world = world;
+        this.consumer = consumer;
         this.single = single;
     }
 }

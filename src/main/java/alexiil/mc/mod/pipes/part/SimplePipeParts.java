@@ -49,7 +49,7 @@ public final class SimplePipeParts {
         Registry.register(Registry.RECIPE_SERIALIZER, FacadeCraftingRecipe.ID, FacadeCraftingRecipe.INSTANCE);
     }
 
-    private static void addFacadeRecipes(RecipeMatchFinder<?, ?> context, Consumer<Recipe<?>> recipeAdder) {
+    private static void addFacadeRecipes(RecipeMatchFinder context) {
         if (context.recipeType == RecipeType.STONECUTTING) {
 
             FacadeStateManager facades = FacadeStateManager.getInstance();
@@ -67,7 +67,7 @@ public final class SimplePipeParts {
                 }
 
                 if (stack.getItem() instanceof ItemFacade) {
-                    generateFacadeToFacadeCuttingRecipes(context, recipeAdder, stack);
+                    generateFacadeToFacadeCuttingRecipes(context, stack);
                     continue;
                 }
 
@@ -77,7 +77,7 @@ public final class SimplePipeParts {
                 }
                 for (FacadeBlockStateInfo state : states) {
                     if (canCut(context, state.state)) {
-                        generateBlockToFacadeCuttingRecipes(recipeAdder, facades, stack, state);
+                        generateBlockToFacadeCuttingRecipes(context.consumer, facades, stack, state);
                     }
                 }
             }
@@ -120,8 +120,7 @@ public final class SimplePipeParts {
         }
     }
 
-    private static void generateFacadeToFacadeCuttingRecipes(RecipeMatchFinder<?, ?> context, //
-        Consumer<Recipe<?>> recipeAdder, ItemStack stack) {
+    private static void generateFacadeToFacadeCuttingRecipes(RecipeMatchFinder context, ItemStack stack) {
         ItemFacade facadeItem = (ItemFacade) stack.getItem();
         FullFacade facade = ItemFacade.getStates(stack);
         if (facade == null) {
@@ -152,11 +151,11 @@ public final class SimplePipeParts {
             FullFacade newFacade = new FullFacade(state, oShape);
             ItemStack output = facadeItem.createItemStack(newFacade);
             output.setCount(ratio);
-            recipeAdder.accept(new StonecuttingRecipe(id, "", ingredient, output));
+            context.consumer.accept(new StonecuttingRecipe(id, "", ingredient, output));
         }
     }
 
-    private static boolean canCut(RecipeMatchFinder<?, ?> context, BlockState state) {
+    private static boolean canCut(RecipeMatchFinder context, BlockState state) {
         // Stone pickaxe (not iron) so that there's actually a reason to upgrade to the laser cutter
         return state.getMaterial().canBreakByHand() || new ItemStack(Items.STONE_PICKAXE).isEffectiveOn(state);
     }

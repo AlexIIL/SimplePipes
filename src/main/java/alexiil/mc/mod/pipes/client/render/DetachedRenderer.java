@@ -23,8 +23,8 @@ import net.minecraft.entity.player.PlayerEntity;
 
 /** Dispatches "detached renderer elements" - rendering that does not require a specific tile or entity in the world. */
 @Environment(EnvType.CLIENT)
-public enum DetachedRenderer {
-    INSTANCE;
+public final class DetachedRenderer {
+    public static final DetachedRenderer INSTANCE = new DetachedRenderer();
 
     public enum RenderMatrixType implements IGlPre, IGLPost {
         FROM_PLAYER(null, null),
@@ -70,7 +70,7 @@ public enum DetachedRenderer {
 
     private final Map<RenderMatrixType, List<IDetachedRenderer>> renders = new EnumMap<>(RenderMatrixType.class);
 
-    DetachedRenderer() {
+    private DetachedRenderer() {
         for (RenderMatrixType type : RenderMatrixType.values()) {
             renders.put(type, new ArrayList<>());
         }
