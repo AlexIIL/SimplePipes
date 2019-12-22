@@ -27,9 +27,8 @@ public final class BlockUtil {
                 Identifier idB = Registry.BLOCK.getId(blockB);
                 return Objects.toString(idA).compareTo(Objects.toString(idB));
             }
-            for (Property<?> property : Sets.intersection(
-                new HashSet<>(blockStateA.getProperties()), new HashSet<>(blockStateB.getProperties())
-            )) {
+            for (Property<?> property : Sets
+                .intersection(new HashSet<>(blockStateA.getProperties()), new HashSet<>(blockStateB.getProperties()))) {
                 int compareResult = compareProperty(property, blockStateA, blockStateB);
                 if (compareResult != 0) {
                     return compareResult;
@@ -44,11 +43,12 @@ public final class BlockUtil {
     }
 
     public static <T extends Comparable<T>> String getPropertyStringValue(BlockState blockState, Property<T> property) {
-        return property.getName(blockState.get(property));
+        return property.name(blockState.get(property));
     }
 
-    public static Map<String, String> getPropertiesStringMap(BlockState blockState, Collection<Property<
-        ?>> properties) {
+    public static Map<String, String> getPropertiesStringMap(
+        BlockState blockState, Collection<Property<?>> properties
+    ) {
         ImmutableMap.Builder<String, String> mapBuilder = new ImmutableMap.Builder<>();
         for (Property<?> property : properties) {
             mapBuilder.put(property.getName(), getPropertyStringValue(blockState, property));

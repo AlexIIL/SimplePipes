@@ -12,14 +12,14 @@ import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.Direction;
+
+import alexiil.mc.mod.pipes.util.SpriteUtil;
 
 public class PerspAwareModelBase implements BakedModel {
     private final ImmutableList<BakedQuad> quads;
@@ -27,12 +27,11 @@ public class PerspAwareModelBase implements BakedModel {
 
     public PerspAwareModelBase(List<BakedQuad> quads, Sprite particle) {
         this.quads = quads == null ? ImmutableList.of() : ImmutableList.copyOf(quads);
-        this.particle = particle != null ? particle : MissingSprite.getMissingSprite();
+        this.particle = particle != null ? particle : SpriteUtil.getMissingSprite();
     }
 
     public static List<BakedQuad> missingModel() {
-        BakedModel model =
-            MinecraftClient.getInstance().getBlockRenderManager().getModels().getModelManager().getMissingModel();
+        BakedModel model = ModelUtil.getMissingModel();
         return model.getQuads(Blocks.AIR.getDefaultState(), null, new Random());
     }
 

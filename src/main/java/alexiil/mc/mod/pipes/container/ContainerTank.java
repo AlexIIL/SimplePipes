@@ -26,5 +26,6 @@ public class ContainerTank extends ContainerPart<PartTank> {
 
     protected ContainerTank(int syncId, PlayerEntity player, PartTank tank) {
         super(syncId, player, tank);
+        addPlayerInventory(94);
     }
 }

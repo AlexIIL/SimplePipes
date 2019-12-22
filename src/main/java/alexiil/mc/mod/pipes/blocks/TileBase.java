@@ -12,6 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -56,7 +57,7 @@ public abstract class TileBase extends BlockEntity implements BlockEntityClientS
 
     public void onPlacedBy(LivingEntity placer, ItemStack stack) {}
 
-    public boolean activate(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        return false;
+    public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
+        return ActionResult.PASS;
     }
 }

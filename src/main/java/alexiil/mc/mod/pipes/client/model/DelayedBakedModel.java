@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019 SpaceToad and the BuildCraft team
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
- * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
- */
 package alexiil.mc.mod.pipes.client.model;
 
 import java.util.Collection;
@@ -20,12 +15,30 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
 
-public final class PreBakedModel implements UnbakedModel {
+public final class DelayedBakedModel implements UnbakedModel {
 
-    private final BakedModel baked;
+    public static final class ModelBakeCtx implements SpriteSupplier {
+        public final ModelCtx modelCtx;
 
-    public PreBakedModel(BakedModel baked) {
-        this.baked = baked;
+        public ModelBakeCtx(Function<SpriteIdentifier, Sprite> spriteGetter) {
+            this.modelCtx = new ModelCtx(spriteGetter);
+        }
+
+        @Override
+        public Sprite getSprite(Identifier atlasId, Identifier spriteId) {
+            return modelCtx.getSprite(atlasId, spriteId);
+        }
+    }
+
+    @FunctionalInterface
+    public interface IModelBaker {
+        BakedModel bake(ModelBakeCtx ctx);
+    }
+
+    private final IModelBaker baker;
+
+    public DelayedBakedModel(IModelBaker baker) {
+        this.baker = baker;
     }
 
     @Override
@@ -45,6 +58,6 @@ public final class PreBakedModel implements UnbakedModel {
         ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer,
         Identifier modelId
     ) {
-        return baked;
+        return baker.bake(new ModelBakeCtx(textureGetter));
     }
 }

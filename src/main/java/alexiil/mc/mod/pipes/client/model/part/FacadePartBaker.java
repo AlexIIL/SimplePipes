@@ -5,10 +5,13 @@ import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 
-import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteAtlasTexture;
 
 import alexiil.mc.lib.multipart.api.render.PartModelBaker;
 import alexiil.mc.lib.multipart.api.render.PartRenderContext;
@@ -24,10 +27,11 @@ public enum FacadePartBaker implements PartModelBaker<FacadePartKey> {
         BakedModel model = ModelUtil.getBlockModel(key.state);
         Sprite sprite = model.getSprite();
         if (sprite == null) {
-            sprite = MissingSprite.getMissingSprite();
+            sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEX)
+                .apply(MissingSprite.getMissingSpriteId());
         }
 
-        BlockRenderLayer blockLayer = key.state.getBlock().getRenderLayer();
+        RenderLayer blockLayer = RenderLayers.getBlockLayer(key.state);
         QuadEmitter emitter = ctx.getEmitter();
         MaterialFinder finder = RendererAccess.INSTANCE.getRenderer().materialFinder();
         finder = finder.blendMode(0, blockLayer);

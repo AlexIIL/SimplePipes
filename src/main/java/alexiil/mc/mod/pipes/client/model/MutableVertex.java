@@ -30,6 +30,9 @@ import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
+import alexiil.mc.mod.pipes.mixin.impl.BufferBuilderAccessor;
+import alexiil.mc.mod.pipes.util.SpriteUtil;
+
 /** Holds all of the information necessary to make one of the verticies in a {@link BakedQuad}. This provides a variety
  * of methods to quickly set or get different elements. This should be used with {@link MutableQuad} to make a face, or
  * by itself if you only need to define a single vertex. <br>
@@ -120,46 +123,51 @@ public class MutableVertex {
     }
 
     public void toBakedBlock(int[] data, int offset) {
+        // POS_TEX_COL_LIGHT_NORM
         // POSITION_3F
-        data[offset + 0] = Float.floatToRawIntBits(position_x);
-        data[offset + 1] = Float.floatToRawIntBits(position_y);
-        data[offset + 2] = Float.floatToRawIntBits(position_z);
+        data[offset++] = Float.floatToRawIntBits(position_x);
+        data[offset++] = Float.floatToRawIntBits(position_y);
+        data[offset++] = Float.floatToRawIntBits(position_z);
         // COLOR_4UB
-        data[offset + 3] = colourRGBA();
+        data[offset++] = colourRGBA();
         // TEX_2F
-        data[offset + 4] = Float.floatToRawIntBits(tex_u);
-        data[offset + 5] = Float.floatToRawIntBits(tex_v);
+        data[offset++] = Float.floatToRawIntBits(tex_u);
+        data[offset++] = Float.floatToRawIntBits(tex_v);
         // TEX_2S
-        data[offset + 6] = lightc();
+        data[offset++] = lightc();
+        // NORMAL_3B
+        data[offset++] = normalToPackedInt();
     }
 
     public void toBakedItem(int[] data, int offset) {
         // POSITION_3F
-        data[offset + 0] = Float.floatToRawIntBits(position_x);
-        data[offset + 1] = Float.floatToRawIntBits(position_y);
-        data[offset + 2] = Float.floatToRawIntBits(position_z);
+        data[offset++] = Float.floatToRawIntBits(position_x);
+        data[offset++] = Float.floatToRawIntBits(position_y);
+        data[offset++] = Float.floatToRawIntBits(position_z);
         // COLOR_4UB
-        data[offset + 3] = colourRGBA();
+        data[offset++] = colourRGBA();
         // TEX_2F
-        data[offset + 4] = Float.floatToRawIntBits(tex_u);
-        data[offset + 5] = Float.floatToRawIntBits(tex_v);
+        data[offset++] = Float.floatToRawIntBits(tex_u);
+        data[offset++] = Float.floatToRawIntBits(tex_v);
         // NORMAL_3B
-        data[offset + 6] = normalToPackedInt();
+        data[offset++] = normalToPackedInt();
     }
 
     public void fromBakedBlock(int[] data, int offset) {
+        // POS_TEX_COL_LIGHT_NORM
         // POSITION_3F
         position_x = Float.intBitsToFloat(data[offset + 0]);
         position_y = Float.intBitsToFloat(data[offset + 1]);
         position_z = Float.intBitsToFloat(data[offset + 2]);
-        // COLOR_4UB
-        colouri(data[offset + 3]);
         // TEX_2F
         tex_u = Float.intBitsToFloat(data[offset + 4]);
         tex_v = Float.intBitsToFloat(data[offset + 5]);
+        // COLOR_4UB
+        colouri(data[offset + 3]);
         // TEX_2S
         lighti(data[offset + 6]);
-        normalf(0, 1, 0);
+        // NORMAL_3B
+        data[offset + 6] = normalToPackedInt();
     }
 
     public void fromBakedItem(int[] data, int offset) {
@@ -224,8 +232,8 @@ public class MutableVertex {
     }
 
     public void render(BufferBuilder bb) {
-        VertexFormat vf = bb.getVertexFormat();
-        if (vf == VertexFormats.POSITION_COLOR_UV_NORMAL) {
+        VertexFormat vf = ((BufferBuilderAccessor) bb).simplepipes_getFormat();
+        if (vf == VertexFormats.POSITION_COLOR_TEXTURE_LIGHT) {
             renderAsBlock(bb);
         } else {
             for (VertexFormatElement vfe : vf.getElements()) {
@@ -242,7 +250,7 @@ public class MutableVertex {
     }
 
     /** Renders this vertex into the given {@link BufferBuilder}, assuming that the {@link VertexFormat} is
-     * {@link VertexFormats#POSITION_COLOR_UV_LMAP}.
+     * {@link VertexFormats#POSITION_COLOR_TEXTURE_LIGHT}.
      * <p>
      * Slight performance increase over {@link #render(BufferBuilder)}. */
     public void renderAsBlock(BufferBuilder bb) {
@@ -427,14 +435,8 @@ public class MutableVertex {
     }
 
     public MutableVertex texFromSprite(Sprite sprite) {
-        tex_u = sprite.getU(tex_u * 16);
-        tex_v = sprite.getV(tex_v * 16);
-        return this;
-    }
-
-    public MutableVertex texFromSpriteRaw(Sprite sprite) {
-        tex_u = sprite.getU(tex_u);
-        tex_v = sprite.getV(tex_v);
+        tex_u = SpriteUtil.getU(sprite, tex_u);
+        tex_v = SpriteUtil.getV(sprite, tex_v);
         return this;
     }
 

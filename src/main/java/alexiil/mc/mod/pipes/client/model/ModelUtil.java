@@ -24,6 +24,8 @@ import net.minecraft.util.math.Direction.AxisDirection;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 
+import alexiil.mc.mod.pipes.util.SpriteUtil;
+
 /** Provides various utilities for creating {@link MutableQuad} out of various position information, such as a single
  * face of a cuboid. */
 public class ModelUtil {
@@ -37,11 +39,11 @@ public class ModelUtil {
     }
 
     public static BakedModel getItemModel(ItemStack stack) {
-        return MinecraftClient.getInstance().getItemRenderer().getModel(stack);
+        return MinecraftClient.getInstance().getItemRenderer().getModels().getModel(stack);
     }
 
     public static BakedModel getBlockModel(BlockState state) {
-        return MinecraftClient.getInstance().getBakedModelManager().getBlockStateMaps().getModel(state);
+        return MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(state);
     }
 
     public static List<BakedQuad> getQuads(BlockState state, int seed) {
@@ -117,10 +119,10 @@ public class ModelUtil {
         }
 
         public void inSprite(Sprite sprite) {
-            minU = sprite.getU(minU * 16);
-            minV = sprite.getV(minV * 16);
-            maxU = sprite.getU(maxU * 16);
-            maxV = sprite.getV(maxV * 16);
+            minU = SpriteUtil.getU(sprite, minU);
+            maxU = SpriteUtil.getU(sprite, maxU);
+            minV = SpriteUtil.getV(sprite, minV);
+            maxV = SpriteUtil.getV(sprite, maxV);
         }
 
         // public void inSprite(ISprite sprite) {
@@ -178,7 +180,7 @@ public class ModelUtil {
         UvFaceData uvs = new UvFaceData();
         for (Box box : shape.getBoundingBoxes()) {
             Vec3d center = box.getCenter();
-            Vec3d radius = new Vec3d(box.maxX - box.minX, box.maxY - box.minY, box.maxZ - box.minZ).multiply(0.5);
+            Vec3d radius = new Vec3d(box.x2 - box.x1, box.y2 - box.y1, box.z2 - box.z1).multiply(0.5);
             for (Direction dir : Direction.values()) {
                 mapBoxToUvs(box, dir, uvs);
                 uvs.inSprite(sprite);
@@ -192,45 +194,45 @@ public class ModelUtil {
         // TODO: Fix these!
         switch (side) {
             case WEST: /* -X */ {
-                uvs.minU = (float) box.minZ;
-                uvs.maxU = (float) box.maxZ;
-                uvs.minV = 1 - (float) box.maxY;
-                uvs.maxV = 1 - (float) box.minY;
+                uvs.minU = (float) box.z1;
+                uvs.maxU = (float) box.z2;
+                uvs.minV = 1 - (float) box.y2;
+                uvs.maxV = 1 - (float) box.y1;
                 return;
             }
             case EAST: /* +X */ {
-                uvs.minU = 1 - (float) box.minZ;
-                uvs.maxU = 1 - (float) box.maxZ;
-                uvs.minV = 1 - (float) box.maxY;
-                uvs.maxV = 1 - (float) box.minY;
+                uvs.minU = 1 - (float) box.z1;
+                uvs.maxU = 1 - (float) box.z2;
+                uvs.minV = 1 - (float) box.y2;
+                uvs.maxV = 1 - (float) box.y1;
                 return;
             }
             case DOWN: /* -Y */ {
-                uvs.minU = (float) box.minX;
-                uvs.maxU = (float) box.maxX;
-                uvs.minV = 1 - (float) box.maxZ;
-                uvs.maxV = 1 - (float) box.minZ;
+                uvs.minU = (float) box.x1;
+                uvs.maxU = (float) box.x2;
+                uvs.minV = 1 - (float) box.z2;
+                uvs.maxV = 1 - (float) box.z1;
                 return;
             }
             case UP: /* +Y */ {
-                uvs.minU = (float) box.minX;
-                uvs.maxU = (float) box.maxX;
-                uvs.minV = (float) box.maxZ;
-                uvs.maxV = (float) box.minZ;
+                uvs.minU = (float) box.x1;
+                uvs.maxU = (float) box.x2;
+                uvs.minV = (float) box.z2;
+                uvs.maxV = (float) box.z1;
                 return;
             }
             case NORTH: /* -Z */ {
-                uvs.minU = 1 - (float) box.minX;
-                uvs.maxU = 1 - (float) box.maxX;
-                uvs.minV = 1 - (float) box.maxY;
-                uvs.maxV = 1 - (float) box.minY;
+                uvs.minU = 1 - (float) box.x1;
+                uvs.maxU = 1 - (float) box.x2;
+                uvs.minV = 1 - (float) box.y2;
+                uvs.maxV = 1 - (float) box.y1;
                 return;
             }
             case SOUTH: /* +Z */ {
-                uvs.minU = (float) box.minX;
-                uvs.maxU = (float) box.maxX;
-                uvs.minV = 1 - (float) box.maxY;
-                uvs.maxV = 1 - (float) box.minY;
+                uvs.minU = (float) box.x1;
+                uvs.maxU = (float) box.x2;
+                uvs.minV = 1 - (float) box.y2;
+                uvs.maxV = 1 - (float) box.y1;
                 return;
             }
             default: {

@@ -92,12 +92,12 @@ public class TravellingItem {
         tickFinished = nbt.getInt("tickFinished") + tickNow;
         timeToDest = nbt.getInt("timeToDest");
 
-        side = TagUtil.readEnum(nbt.getTag("side"), Direction.class);
+        side = TagUtil.readEnum(nbt.get("side"), Direction.class);
         if (side == null || timeToDest == 0) {
             // Older 8.0.x. version
             toCenter = true;
         }
-        tried = TagUtil.readEnumSet(nbt.getTag("tried"), Direction.class);
+        tried = TagUtil.readEnumSet(nbt.get("tried"), Direction.class);
         isPhantom = nbt.getBoolean("isPhantom");
     }
 

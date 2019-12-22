@@ -23,6 +23,8 @@ import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
+import alexiil.mc.mod.pipes.mixin.impl.BakedQuadAccessor;
+
 /** Holds all of the information necessary to make a {@link BakedQuad}. This provides a variety of methods to quickly
  * set or get different elements. This currently holds 4 {@link MutableVertex}. */
 public class MutableQuad {
@@ -86,16 +88,17 @@ public class MutableQuad {
     }
 
     public BakedQuad toBakedBlock() {
-        int[] data = new int[28];
-        vertex_0.toBakedBlock(data, 0);
-        vertex_1.toBakedBlock(data, 7);
-        vertex_2.toBakedBlock(data, 14);
-        vertex_3.toBakedBlock(data, 21);
+        // POS_TEX_COL_LIGHT_NORM
+        int[] data = new int[32];
+        vertex_0.toBakedBlock(data, 8 * 0);
+        vertex_1.toBakedBlock(data, 8 * 1);
+        vertex_2.toBakedBlock(data, 8 * 2);
+        vertex_3.toBakedBlock(data, 8 * 3);
         return new BakedQuad(data, colourIndex, face, sprite);
     }
 
     public BakedQuad toBakedItem() {
-        int[] data = new int[28];
+        int[] data = new int[0];// TODO: Look into this!
         vertex_0.toBakedItem(data, 0);
         vertex_1.toBakedItem(data, 7);
         vertex_2.toBakedItem(data, 14);
@@ -106,7 +109,7 @@ public class MutableQuad {
     public MutableQuad fromBakedBlock(BakedQuad quad) {
         colourIndex = quad.getColorIndex();
         face = quad.getFace();
-        sprite = quad.getSprite();
+        sprite = ((BakedQuadAccessor) quad).simplepipes_getSprite();
 
         int[] data = quad.getVertexData();
         int stride = data.length / 4;
@@ -122,7 +125,7 @@ public class MutableQuad {
     public MutableQuad fromBakedItem(BakedQuad quad) {
         colourIndex = quad.getColorIndex();
         face = quad.getFace();
-        sprite = quad.getSprite();
+        sprite = ((BakedQuadAccessor) quad).simplepipes_getSprite();
 
         int[] data = quad.getVertexData();
         int stride = data.length / 4;
@@ -138,7 +141,7 @@ public class MutableQuad {
     public MutableQuad fromBakedFormat(BakedQuad quad, VertexFormat format) {
         colourIndex = quad.getColorIndex();
         face = quad.getFace();
-        sprite = quad.getSprite();
+        sprite = ((BakedQuadAccessor) quad).simplepipes_getSprite();
 
         int[] data = quad.getVertexData();
         int stride = data.length / 4;
@@ -167,10 +170,10 @@ public class MutableQuad {
     }
 
     public Vector3f getCalculatedNormal() {
-        Vector3f a = new Vector3f(vertex_1.positionvf());
+        Vector3f a = vertex_1.positionvf().copy();
         a.subtract(vertex_0.positionvf());
 
-        Vector3f b = new Vector3f(vertex_2.positionvf());
+        Vector3f b = vertex_2.positionvf().copy();
         b.subtract(vertex_0.positionvf());
 
         a.cross(b);
@@ -403,14 +406,6 @@ public class MutableQuad {
         vertex_1.texFromSprite(sprite);
         vertex_2.texFromSprite(sprite);
         vertex_3.texFromSprite(sprite);
-        return this;
-    }
-
-    public MutableQuad texFromSpriteRaw(Sprite sprite) {
-        vertex_0.texFromSpriteRaw(sprite);
-        vertex_1.texFromSpriteRaw(sprite);
-        vertex_2.texFromSpriteRaw(sprite);
-        vertex_3.texFromSpriteRaw(sprite);
         return this;
     }
 

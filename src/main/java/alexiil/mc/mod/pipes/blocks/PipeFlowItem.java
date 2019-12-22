@@ -57,7 +57,7 @@ public class PipeFlowItem extends PipeFlow {
     public void fromTag(CompoundTag tag) {
         ListTag list = tag.getList("items", new CompoundTag().getType());
         for (int i = 0; i < list.size(); i++) {
-            TravellingItem item = new TravellingItem(list.getCompoundTag(i), 0);
+            TravellingItem item = new TravellingItem(list.getCompound(i), 0);
             if (!item.stack.isEmpty()) {
                 items.add(item.getCurrentDelay(0), item);
             }
@@ -67,13 +67,15 @@ public class PipeFlowItem extends PipeFlow {
     @Override
     public CompoundTag toTag() {
         CompoundTag nbt = new CompoundTag();
-        List<List<TravellingItem>> allItems = items.getAllElements();
+        Iterable<? extends Iterable<TravellingItem>> allItems = items.getAllElements();
         ListTag list = new ListTag();
 
         long tickNow = pipe.getWorldTime();
-        for (List<TravellingItem> l : allItems) {
-            for (TravellingItem item : l) {
-                list.add(item.writeToNbt(tickNow));
+        for (Iterable<TravellingItem> l : allItems) {
+            if (l != null) {
+                for (TravellingItem item : l) {
+                    list.add(item.writeToNbt(tickNow));
+                }
             }
         }
         nbt.put("items", list);
@@ -91,8 +93,8 @@ public class PipeFlowItem extends PipeFlow {
 
         TravellingItem item = new TravellingItem(ItemStack.fromTag(tag.getCompound("item")));
         item.toCenter = tag.getBoolean("to_center");
-        item.side = TagUtil.readEnum(tag.getTag("side"), Direction.class);
-        item.colour = TagUtil.readEnum(tag.getTag("colour"), DyeColor.class);
+        item.side = TagUtil.readEnum(tag.get("side"), Direction.class);
+        item.colour = TagUtil.readEnum(tag.get("colour"), DyeColor.class);
         item.timeToDest = Short.toUnsignedInt(tag.getShort("time"));
         item.tickStarted = pipe.getWorldTime() + 1;
         item.tickFinished = item.tickStarted + item.timeToDest;
@@ -118,6 +120,9 @@ public class PipeFlowItem extends PipeFlow {
         }
 
         List<TravellingItem> toTick = items.advance();
+        if (toTick == null) {
+            return;
+        }
         long currentTime = pipe.getWorldTime();
 
         for (TravellingItem item : toTick) {
@@ -144,7 +149,10 @@ public class PipeFlowItem extends PipeFlow {
 
     @Override
     public void removeItemsForDrop(DefaultedList<ItemStack> all) {
-        for (List<TravellingItem> list : this.items.getAllElements()) {
+        for (Iterable<TravellingItem> list : this.items.getAllElements()) {
+            if (list == null) {
+                continue;
+            }
             for (TravellingItem travel : list) {
                 if (!travel.isPhantom) {
                     all.add(travel.stack);
@@ -316,8 +324,9 @@ public class PipeFlowItem extends PipeFlow {
         return pipe.isConnected(from);
     }
 
-    public ItemStack injectItem(@Nonnull ItemStack stack, boolean doAdd, Direction from, DyeColor colour,
-        double speed) {
+    public ItemStack injectItem(
+        @Nonnull ItemStack stack, boolean doAdd, Direction from, DyeColor colour, double speed
+    ) {
         if (world().isClient) {
             throw new IllegalStateException("Cannot inject items on the client side!");
         }

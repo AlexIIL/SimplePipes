@@ -22,9 +22,9 @@ public final class TagUtil {
 
     public static <E extends Enum<E>> Tag writeEnum(E value) {
         if (value == null) {
-            return new StringTag(NULL_ENUM_STRING);
+            return StringTag.of(NULL_ENUM_STRING);
         }
-        return new StringTag(value.name());
+        return StringTag.of(value.name());
     }
 
     public static <E extends Enum<E>> E readEnum(Tag tag, Class<E> clazz) {
@@ -71,7 +71,7 @@ public final class TagUtil {
         }
         byte[] bytes = bitset.toByteArray();
         if (bytes.length == 1) {
-            return new ByteTag(bytes[0]);
+            return ByteTag.of(bytes[0]);
         } else {
             return new ByteArrayTag(bytes);
         }

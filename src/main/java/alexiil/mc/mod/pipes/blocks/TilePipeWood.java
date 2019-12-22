@@ -10,19 +10,12 @@ import java.util.function.Function;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.Direction;
 
-import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable;
-
 public abstract class TilePipeWood extends TilePipeSided {
 
     private boolean lastRecv = true;
 
     public TilePipeWood(BlockEntityType<?> type, BlockPipe pipeBlock, Function<TilePipe, PipeFlow> flowConstructor) {
         super(type, pipeBlock, flowConstructor);
-    }
-
-    @Override
-    protected boolean canConnect(Direction dir) {
-        return false;
     }
 
     @Override

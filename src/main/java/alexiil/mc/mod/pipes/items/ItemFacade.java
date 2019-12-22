@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ */
 package alexiil.mc.mod.pipes.items;
 
 import java.util.ArrayList;
@@ -89,11 +94,11 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
             return new FullFacade(FacadeStateManager.getPreviewState(), DEFAULT_SHAPE);
         }
 
-        if (!nbt.containsKey("facade") && nbt.containsKey("states")) {
+        if (!nbt.contains("facade") && nbt.contains("states")) {
             ListTag states = nbt.getList("states", new CompoundTag().getType());
             if (states.size() > 0) {
                 // Only migrate if we actually have a facade to migrate.
-                boolean isHollow = states.getCompoundTag(0).getBoolean("isHollow");
+                boolean isHollow = states.getCompound(0).getBoolean("isHollow");
                 CompoundTag tagFacade = new CompoundTag();
                 tagFacade.putBoolean("isHollow", isHollow);
                 tagFacade.put("states", states);
@@ -190,9 +195,8 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
         }
         String propertiesStart = Formatting.GRAY + "" + Formatting.ITALIC;
         FacadeBlockStateInfo info = states.state;
-        BlockUtil.getPropertiesStringMap(info.state, info.varyingProperties).forEach(
-            (name, value) -> tooltip.add(new LiteralText(propertiesStart + name + " = " + value))
-        );
+        BlockUtil.getPropertiesStringMap(info.state, info.varyingProperties)
+            .forEach((name, value) -> tooltip.add(new LiteralText(propertiesStart + name + " = " + value)));
     }
 
     // Placement
@@ -214,9 +218,8 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
         variants.sort(Comparator.comparingDouble(potential -> potential.centre.distanceTo(hit)));
 
         for (FacadePotentialPlacament variant : variants) {
-            PartOffer offer = MultipartUtil.offerNewPart(
-                w, variant.pos, h -> createFacade(fullState.state, variant.shape, h)
-            );
+            PartOffer offer
+                = MultipartUtil.offerNewPart(w, variant.pos, h -> createFacade(fullState.state, variant.shape, h));
             if (offer != null) {
                 return offer;
             }
@@ -264,17 +267,12 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
     }
 
     class FacadePlacement extends GhostPlacementPart {
-
         @Override
         public GhostPlacement preRender(ItemUsageContext ctx) {
             if (ctx.getStack().getItem() != ItemFacade.this) {
                 return null;
             }
-
-            if (setup(offer(ctx))) {
-                return this;
-            }
-            return null;
+            return setup(offer(ctx)) ? this : null;
         }
     }
 }

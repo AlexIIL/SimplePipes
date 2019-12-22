@@ -5,12 +5,12 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import alexiil.mc.lib.multipart.impl.client.model.SinglePartBakedModel;
+import alexiil.mc.mod.pipes.client.model.DelayedBakedModel.ModelBakeCtx;
 import alexiil.mc.mod.pipes.client.model.part.FacadePartKey;
 import alexiil.mc.mod.pipes.items.ItemFacade;
 import alexiil.mc.mod.pipes.part.FacadeBlockStateInfo;
@@ -20,8 +20,8 @@ import alexiil.mc.mod.pipes.part.FullFacade;
 public final class ModelFacadeItem extends SimpleBakedModel {
     private final FacadeOverride override = new FacadeOverride();
 
-    public ModelFacadeItem() {
-        super(MissingSprite.getMissingSprite());
+    public ModelFacadeItem(ModelBakeCtx ctx) {
+        super(ctx.getMissingBlockSprite());
     }
 
     @Override

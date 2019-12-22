@@ -22,16 +22,21 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ExtendedBlockView;
+import net.minecraft.world.BlockRenderView;
 
 import alexiil.mc.mod.pipes.blocks.BlockPipe;
 import alexiil.mc.mod.pipes.blocks.TilePipe;
 import alexiil.mc.mod.pipes.blocks.TilePipe.PipeBlockModelState;
+import alexiil.mc.mod.pipes.client.model.DelayedBakedModel.ModelBakeCtx;
+import alexiil.mc.mod.pipes.mixin.impl.BakedQuadAccessor;
 
 public class PipeBlockModel extends PerspAwareModelBase implements FabricBakedModel {
 
-    public PipeBlockModel(BlockPipe pipeBlock) {
-        super(ImmutableList.of(), PipeBaseModelGenStandard.getCenterSprite(pipeBlock));
+    private final SpriteSupplier sprites;
+
+    public PipeBlockModel(ModelBakeCtx ctx, BlockPipe pipeBlock) {
+        super(ImmutableList.of(), PipeBaseModelGenStandard.getCenterSprite(ctx, pipeBlock));
+        this.sprites = ctx.modelCtx;
     }
 
     @Override
@@ -40,9 +45,10 @@ public class PipeBlockModel extends PerspAwareModelBase implements FabricBakedMo
     }
 
     @Override
-    public void emitBlockQuads(ExtendedBlockView blockView, BlockState state, BlockPos pos, Supplier<
-        Random> randomSupplier, RenderContext context) {
-
+    public void emitBlockQuads(
+        BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier,
+        RenderContext context
+    ) {
         BakedModel model;
 
         BlockEntity tile = blockView.getBlockEntity(pos);
@@ -58,8 +64,10 @@ public class PipeBlockModel extends PerspAwareModelBase implements FabricBakedMo
         if (state == null) {
             state = new PipeBlockModelState(null, (byte) 0);
         }
-        List<BakedQuad> quads = PipeBaseModelGenStandard.generateCutout(state);
-        return new PerspAwareModelBase(quads, quads.isEmpty() ? getSprite() : quads.get(0).getSprite());
+        List<BakedQuad> quads = PipeBaseModelGenStandard.generateCutout(sprites, state);
+        return new PerspAwareModelBase(
+            quads, quads.isEmpty() ? getSprite() : ((BakedQuadAccessor) quads.get(0)).simplepipes_getSprite()
+        );
     }
 
     @Override

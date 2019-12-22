@@ -17,11 +17,6 @@ public abstract class TilePipeIron extends TilePipeSided {
     }
 
     @Override
-    protected boolean canConnect(Direction dir) {
-        return false;
-    }
-
-    @Override
     protected boolean canFaceDirection(Direction dir) {
         return isConnected(dir);
     }

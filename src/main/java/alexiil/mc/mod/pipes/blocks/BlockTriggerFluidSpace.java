@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -26,21 +27,21 @@ public class BlockTriggerFluidSpace extends BlockTriggerFluidInv {
     }
 
     @Override
-    public boolean activate(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-        BlockHitResult hit) {
+    public ActionResult onUse(
+        BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit
+    ) {
         BlockEntity be = world.getBlockEntity(pos);
 
         if (be instanceof TileTriggerFluidSpace) {
-            if (world.isClient) {
-                return true;
+            if (!world.isClient) {
+                ContainerProviderRegistry.INSTANCE
+                    .openContainer(SimplePipeContainers.TRIGGER_FLUID_INV_SPACE, player, (buffer) -> {
+                        buffer.writeBlockPos(pos);
+                    });
             }
-            ContainerProviderRegistry.INSTANCE.openContainer(SimplePipeContainers.TRIGGER_FLUID_INV_SPACE, player,
-                (buffer) -> {
-                    buffer.writeBlockPos(pos);
-                });
-            return true;
+            return ActionResult.SUCCESS;
         }
 
-        return super.activate(state, world, pos, player, hand, hit);
+        return super.onUse(state, world, pos, player, hand, hit);
     }
 }

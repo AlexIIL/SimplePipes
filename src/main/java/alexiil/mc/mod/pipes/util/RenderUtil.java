@@ -1,7 +1,6 @@
 package alexiil.mc.mod.pipes.util;
 
 import javax.annotation.Nullable;
-import alexiil.mc.mod.pipes.util.RenderUtil.TessellatorQueue;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.fabricmc.fabric.api.client.render.ColorProviderRegistry;
@@ -44,7 +43,7 @@ public final class RenderUtil {
         float green = (color >> 8 & 255) / 255.0F;
         float blue = (color & 255) / 255.0F;
 
-        GlStateManager.color3f(red, green, blue);
+        GlStateManager.color4f(red, green, blue, 1.0f);
     }
 
     /** Takes ARGB */

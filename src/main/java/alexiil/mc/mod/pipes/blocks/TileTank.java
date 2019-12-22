@@ -32,7 +32,7 @@ public class TileTank extends TileBase implements Tickable {
     @Override
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
-        if (tag.containsKey("fluid")) {
+        if (tag.contains("fluid")) {
             FluidVolume fluid = FluidVolume.fromTag(tag.getCompound("fluid"));
             fluidInv.setInvFluid(0, fluid, Simulation.ACTION);
         }

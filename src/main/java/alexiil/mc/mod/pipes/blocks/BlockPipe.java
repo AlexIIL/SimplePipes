@@ -7,7 +7,6 @@ package alexiil.mc.mod.pipes.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.block.entity.BlockEntity;
@@ -17,7 +16,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateFactory.Builder;
+import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.BooleanBiFunction;
@@ -75,7 +74,7 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
     }
 
     @Override
-    protected void appendProperties(Builder<Block, BlockState> builder) {
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
         builder.add(Properties.WATERLOGGED);
     }
@@ -92,30 +91,28 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState blockState_1, Direction direction_1, BlockState blockState_2,
-        IWorld iWorld_1, BlockPos blockPos_1, BlockPos blockPos_2) {
+    public BlockState getStateForNeighborUpdate(
+        BlockState blockState_1, Direction direction_1, BlockState blockState_2, IWorld iWorld_1, BlockPos blockPos_1,
+        BlockPos blockPos_2
+    ) {
         if (blockState_1.get(Properties.WATERLOGGED)) {
             iWorld_1.getFluidTickScheduler().schedule(blockPos_1, Fluids.WATER, Fluids.WATER.getTickRate(iWorld_1));
         }
 
-        return super.getStateForNeighborUpdate(blockState_1, direction_1, blockState_2, iWorld_1, blockPos_1,
-            blockPos_2);
+        return super.getStateForNeighborUpdate(
+            blockState_1, direction_1, blockState_2, iWorld_1, blockPos_1, blockPos_2
+        );
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         FluidState fluidState_1 = ctx.getWorld().getFluidState(ctx.getBlockPos());
-        return this.getDefaultState().with(Properties.WATERLOGGED,
-            fluidState_1.matches(FluidTags.WATER) && fluidState_1.getLevel() == 8);
+        return this.getDefaultState()
+            .with(Properties.WATERLOGGED, fluidState_1.matches(FluidTags.WATER) && fluidState_1.getLevel() == 8);
     }
 
     @Override
     public abstract TilePipe createBlockEntity(BlockView var1);
-
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext entityPos) {
@@ -133,12 +130,13 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
 
     // TODO: Last Parameter important?
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos thisPos, Block neighbourBlock,
-        BlockPos neighbourPos, boolean idunno) {
+    public void neighborUpdate(
+        BlockState state, World world, BlockPos thisPos, Block neighbourBlock, BlockPos neighbourPos, boolean idunno
+    ) {
         BlockEntity be = world.getBlockEntity(thisPos);
         if (be instanceof TilePipe) {
             TilePipe pipe = (TilePipe) be;
-            pipe.setWorld(world);
+            pipe.setWorld(world, thisPos);
             pipe.onNeighbourChange();
         }
     }

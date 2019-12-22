@@ -1,0 +1,175 @@
+/*
+ * Copyright (c) 2017 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ */
+
+/*
+ * Copyright (c) 2019 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ */
+package alexiil.mc.mod.pipes.util;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayFIFOQueue;
+
+/** Implements a delayed list of something- stuff that can be postponed for later retrieval. A specialised ordered queue
+ * really. */
+public class DelayedList<E> {
+    protected final Inner<E> elements;
+    private Iterable<E> flatIterable;
+
+    public DelayedList() {
+        elements = new Inner<>();
+    }
+
+    /** @return The maximum delay value that any of the elements has. */
+    public int getMaxDelay() {
+        return elements.size();
+    }
+
+    /** Advances this list by one, effectively decrementing the delays of every element by one and returning all
+     * elements that have a delay of 0.
+     * 
+     * @return The elements that are no longer on a delay. */
+    @Nullable
+    public List<E> advance() {
+        if (elements.isEmpty()) {
+            return null;
+        }
+        return elements.dequeue();
+    }
+
+    /** Adds an element that will by returned by {@link #advance()} after it has been called delay times.
+     * 
+     * @param delay The number of times that advance needs to be called for the *next* advance to return this element.
+     *            Negative numbers default up to 0. */
+    public void add(int delay, E element) {
+        if (delay < 0) {
+            delay = 0;
+        }
+        elements.add(delay, element);
+    }
+
+    /** @return The inner data structure used to hold the elements. Most useful for saving the elements for later. */
+    public Iterable<? extends Iterable<E>> getAllElements() {
+        return elements;
+    }
+
+    /** Removes *all* elements from this list. */
+    public void clear() {
+        elements.clear();
+    }
+
+    public Iterable<E> flatIterable() {
+        return flatIterable == null ? (flatIterable = this::flatIterator) : flatIterable;
+    }
+
+    public Iterator<E> flatIterator() {
+        return new Iterator<E>() {
+
+            Iterator<E> inner = null;
+            int i = 0;
+
+            private void scan() {
+                if (inner != null && !inner.hasNext()) {
+                    inner = null;
+                }
+                if (inner == null) {
+                    while (i < elements.size()) {
+                        List<E> raw = elements.getRaw(i);
+                        if (raw != null) {
+                            assert !raw.isEmpty();
+                            inner = raw.iterator();
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public boolean hasNext() {
+                scan();
+                return inner != null && inner.hasNext();
+            }
+
+            @Override
+            public E next() {
+                scan();
+                return inner.next();
+            }
+        };
+    }
+
+    private static final class Inner<E> extends ObjectArrayFIFOQueue<List<E>> implements Iterable<List<E>> {
+
+        public List<E> getRaw(int index) {
+            Object[] objs = array;
+            int i = (start + index) % objs.length;
+            return (List<E>) objs[i];
+        }
+
+        public void add(int index, E val) {
+            expandTo(index);
+            Object[] a = array;
+            int i = (start + index) % a.length;
+            List<E> arr = (List<E>) a[i];
+            if (arr == null) {
+                array[i] = arr = new ArrayList<>();
+            }
+            arr.add(val);
+        }
+
+        private final void resize(final int size, final int newLength) {
+            final List<E>[] newArray = new List[newLength];
+            if (start >= end) {
+                if (size != 0) {
+                    System.arraycopy(array, start, newArray, 0, length - start);
+                    System.arraycopy(array, 0, newArray, length - start, end);
+                }
+            } else {
+                System.arraycopy(array, start, newArray, 0, end - start);
+            }
+            start = 0;
+            end = size;
+            array = newArray;
+            length = newLength;
+        }
+
+        public void expandTo(int count) {
+            if (length < count) {
+                expandBy(count - length);
+            }
+        }
+
+        public void expandBy(int count) {
+            if (length + count > array.length) {
+                int newLen = BitUtil.roundUpToPowerOf2(length + count);
+                resize(length + count, newLen);
+            }
+        }
+
+        @Override
+        public Iterator<List<E>> iterator() {
+            return new Iterator<List<E>>() {
+                int i = 0;
+
+                @Override
+                public boolean hasNext() {
+                    return i < length;
+                }
+
+                @Override
+                public List<E> next() {
+                    return getRaw(i++);
+                }
+            };
+        }
+    }
+}

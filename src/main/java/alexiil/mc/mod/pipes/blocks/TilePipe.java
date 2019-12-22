@@ -84,10 +84,13 @@ public abstract class TilePipe extends TileBase implements Tickable {
             BlockEntity oTile = world.getBlockEntity(getPos().offset(dir));
             if (this instanceof TilePipeWood && oTile instanceof TilePipeWood) {
                 disconnect(dir);
-            } else if (
-                oTile instanceof TilePipe || canConnect(dir) || (this instanceof TilePipeSided && ((TilePipeSided) this)
-                    .currentDirection() == dir && ((TilePipeSided) this).canFaceDirection(dir))
-            ) {
+            } else if (oTile instanceof TilePipe) {
+                if ((flow instanceof PipeFlowItem) == (((TilePipe) oTile).flow instanceof PipeFlowItem)) {
+                    connect(dir);
+                } else {
+                    disconnect(dir);
+                }
+            } else if (canConnect(dir)) {
                 connect(dir);
             } else {
                 disconnect(dir);
@@ -170,7 +173,7 @@ public abstract class TilePipe extends TileBase implements Tickable {
         } else if (w != null) {
             // air -> pipe
             // (This just forces the world to re-render us)
-            w.scheduleBlockRender(getPos(), Blocks.AIR.getDefaultState(), getCachedState());
+            w.checkBlockRerender(getPos(), Blocks.AIR.getDefaultState(), getCachedState());
         }
     }
 
@@ -234,6 +237,10 @@ public abstract class TilePipe extends TileBase implements Tickable {
     @Override
     public void tick() {
         flow.tick();
+        World w = world;
+        if (w != null) {
+            w.markDirty(getPos(), this);
+        }
     }
 
     @Override

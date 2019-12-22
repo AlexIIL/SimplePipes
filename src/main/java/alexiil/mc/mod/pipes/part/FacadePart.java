@@ -3,6 +3,7 @@ package alexiil.mc.mod.pipes.part;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 
 import alexiil.mc.lib.multipart.api.AbstractPart;
 import alexiil.mc.lib.multipart.api.MultipartHolder;
@@ -20,8 +21,9 @@ public class FacadePart extends AbstractPart {
     public final FacadeBlockStateInfo state;
     public final FacadeShape shape;
 
-    public FacadePart(PartDefinition definition, MultipartHolder holder, FacadeBlockStateInfo states,
-        FacadeShape shape) {
+    public FacadePart(
+        PartDefinition definition, MultipartHolder holder, FacadeBlockStateInfo states, FacadeShape shape
+    ) {
         super(definition, holder);
         this.state = states;
         this.shape = shape;
@@ -58,6 +60,11 @@ public class FacadePart extends AbstractPart {
     @Override
     public VoxelShape getShape() {
         return shape.shape;
+    }
+
+    @Override
+    public VoxelShape getCullingShape() {
+        return state.state.isOpaque() ? getShape() : VoxelShapes.empty();
     }
 
     @Override

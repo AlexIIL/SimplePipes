@@ -38,7 +38,7 @@ public abstract class FacadeShape {
 
     static {
         ALL_SHAPES = new FacadeShape[SHAPE_COUNT];
-        VALUES_BIT_COUNT = MathHelper.log2DeBrujin(SHAPE_COUNT);
+        VALUES_BIT_COUNT = MathHelper.log2DeBruijn(SHAPE_COUNT);
 
         ITEM_SHAPES = new FacadeShape[3 * (1 + 1 + 2)];
     }
@@ -74,19 +74,19 @@ public abstract class FacadeShape {
 
     public static FacadeShape fromTag(CompoundTag tag) {
         String type = tag.getString("type").toLowerCase(Locale.ROOT);
-        FacadeSize size = TagUtil.readEnum(tag.getTag("size"), FacadeSize.class, FacadeSize.SLAB);
+        FacadeSize size = TagUtil.readEnum(tag.get("size"), FacadeSize.class, FacadeSize.SLAB);
         // We're fairly forgiving about what we can load from
         if (type.startsWith("str")) {
             return Strip.get(
-                size, TagUtil.readEnum(tag.getTag(NBT_KEY_EDGE), EnumCuboidEdge.class, EnumCuboidEdge.X_NN)
+                size, TagUtil.readEnum(tag.get(NBT_KEY_EDGE), EnumCuboidEdge.class, EnumCuboidEdge.X_NN)
             );
         } else if (type.startsWith("c")) {
             return Corner.get(
-                size, TagUtil.readEnum(tag.getTag(NBT_KEY_CORNER), EnumCuboidCorner.class, EnumCuboidCorner.NNN)
+                size, TagUtil.readEnum(tag.get(NBT_KEY_CORNER), EnumCuboidCorner.class, EnumCuboidCorner.NNN)
             );
         } else {
             return Sided.get(
-                size, TagUtil.readEnum(tag.getTag(NBT_KEY_SIDE), Direction.class, Direction.UP), tag.getBoolean(
+                size, TagUtil.readEnum(tag.get(NBT_KEY_SIDE), Direction.class, Direction.UP), tag.getBoolean(
                     "hollow"
                 )
             );

@@ -82,6 +82,11 @@ public abstract class TilePipeSided extends TilePipe {
         }
     }
 
+    @Override
+    protected boolean canConnect(Direction dir) {
+        return currentDirection == dir && canFaceDirection(dir);
+    }
+
     protected abstract boolean canFaceDirection(Direction dir);
 
     public boolean attemptRotation() {

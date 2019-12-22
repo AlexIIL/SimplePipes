@@ -14,9 +14,7 @@ package alexiil.mc.mod.pipes.client.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -84,12 +82,12 @@ public class PipeBaseModelGenStandard {
         QUADS[1] = new MutableQuad[6][8];
         QUADS_COLOURED[1] = new MutableQuad[6][8];
         for (Direction side : Direction.values()) {
-            center = new Vec3d(//
+            center = new Vec3d(
                 0.5 + side.getOffsetX() * 0.375f, //
                 0.5 + side.getOffsetY() * 0.375f, //
                 0.5 + side.getOffsetZ() * 0.375f //
             );
-            radius = new Vec3d(//
+            radius = new Vec3d(
                 side.getAxis() == Axis.X ? 0.125f : 0.25f, //
                 side.getAxis() == Axis.Y ? 0.125f : 0.25f, //
                 side.getAxis() == Axis.Z ? 0.125f : 0.25f //
@@ -116,12 +114,13 @@ public class PipeBaseModelGenStandard {
 
     private static void dupDarker(MutableQuad[] quads) {
         int halfLength = quads.length / 2;
-        float mult = 0.75f;
+        float mult = 0.7f;
         for (int i = 0; i < halfLength; i++) {
             int n = i + halfLength;
             MutableQuad from = quads[i];
             if (from != null) {
                 MutableQuad to = from.copyAndInvertNormal();
+                to.translatevd(to.normalvd().multiply(1 / 16.0));
                 to.setCalculatedDiffuse();
                 to.multColourd(mult);
                 quads[n] = to;
@@ -135,19 +134,21 @@ public class PipeBaseModelGenStandard {
             int n = i + halfLength;
             MutableQuad from = quads[i];
             if (from != null) {
-                quads[n] = from.copyAndInvertNormal();
+                MutableQuad to = from.copyAndInvertNormal();
+                to.translatevd(to.normalvd().multiply(1 / 16.0));
+                quads[n] = to;
             }
         }
     }
 
     // Model Usage
 
-    public static List<BakedQuad> generateCutout(PipeBlockModelState key) {
+    public static List<BakedQuad> generateCutout(SpriteSupplier sprites, PipeBlockModelState key) {
         List<MutableQuad> quads = new ArrayList<>();
 
         for (Direction face : Direction.values()) {
             boolean connected = key.isConnected(face);
-            Sprite sprite = connected ? getSprite(key, face) : getCenterSprite(key.block);
+            Sprite sprite = connected ? getSprite(sprites, key, face) : getCenterSprite(sprites, key.block);
             int quadsIndex = connected ? 1 : 0;
             MutableQuad[] quadArray = QUADS[quadsIndex][face.ordinal()];
             addQuads(quadArray, quads, sprite);
@@ -159,69 +160,69 @@ public class PipeBaseModelGenStandard {
         return bakedQuads;
     }
 
-    private static Sprite getPipeSprite(String id) {
-        return MinecraftClient.getInstance().getSpriteAtlas().getSprite("simple_pipes:pipe_" + id);
+    private static Sprite getPipeSprite(SpriteSupplier sprites, String id) {
+        return sprites.getBlockSprite("simple_pipes:pipe_" + id);
     }
 
-    public static Sprite getCenterSprite(BlockPipe block) {
+    public static Sprite getCenterSprite(SpriteSupplier sprites, BlockPipe block) {
         if (block == SimplePipeBlocks.WOODEN_PIPE_ITEMS) {
-            return getPipeSprite("wooden_item_clear");
+            return getPipeSprite(sprites, "wooden_item_clear");
         } else if (block == SimplePipeBlocks.STONE_PIPE_ITEMS) {
-            return getPipeSprite("stone_item");
+            return getPipeSprite(sprites, "stone_item");
         } else if (block == SimplePipeBlocks.GOLD_PIPE_ITEMS) {
-            return getPipeSprite("gold_item");
+            return getPipeSprite(sprites, "gold_item");
         } else if (block == SimplePipeBlocks.DIAMOND_PIPE_ITEMS) {
-            return getPipeSprite("diamond_item");
+            return getPipeSprite(sprites, "diamond_item");
         } else if (block == SimplePipeBlocks.IRON_PIPE_ITEMS) {
-            return getPipeSprite("iron_item_filled");
+            return getPipeSprite(sprites, "iron_item_filled");
         } else if (block == SimplePipeBlocks.CLAY_PIPE_ITEMS) {
-            return getPipeSprite("clay_item");
+            return getPipeSprite(sprites, "clay_item");
         } else if (block == SimplePipeBlocks.WOODEN_PIPE_FLUIDS) {
-            return getPipeSprite("wooden_fluid_clear");
+            return getPipeSprite(sprites, "wooden_fluid_clear");
         } else if (block == SimplePipeBlocks.STONE_PIPE_FLUIDS) {
-            return getPipeSprite("stone_fluid");
+            return getPipeSprite(sprites, "stone_fluid");
         } else if (block == SimplePipeBlocks.IRON_PIPE_FLUIDS) {
-            return getPipeSprite("iron_fluid_filled");
+            return getPipeSprite(sprites, "iron_fluid_filled");
         } else if (block == SimplePipeBlocks.CLAY_PIPE_FLUIDS) {
-            return getPipeSprite("clay_fluid");
+            return getPipeSprite(sprites, "clay_fluid");
         } else {
-            return MissingSprite.getMissingSprite();
+            return sprites.getMissingBlockSprite();
         }
     }
 
-    private static Sprite getSprite(PipeBlockModelState key, Direction face) {
+    private static Sprite getSprite(SpriteSupplier sprites, PipeBlockModelState key, Direction face) {
         BlockPipe block = key.block;
 
         if (key instanceof PipeBlockModelStateSided) {
             Direction mainDir = ((PipeBlockModelStateSided) key).mainSide;
             if (mainDir == face) {
                 if (block == SimplePipeBlocks.WOODEN_PIPE_ITEMS) {
-                    return getPipeSprite("wooden_item_filled");
+                    return getPipeSprite(sprites, "wooden_item_filled");
                 } else if (block == SimplePipeBlocks.IRON_PIPE_ITEMS) {
-                    return getPipeSprite("iron_item_clear");
+                    return getPipeSprite(sprites, "iron_item_clear");
                 } else if (block == SimplePipeBlocks.WOODEN_PIPE_FLUIDS) {
-                    return getPipeSprite("wooden_fluid_filled");
+                    return getPipeSprite(sprites, "wooden_fluid_filled");
                 } else if (block == SimplePipeBlocks.IRON_PIPE_FLUIDS) {
-                    return getPipeSprite("iron_fluid_clear");
+                    return getPipeSprite(sprites, "iron_fluid_clear");
                 }
             }
         } else if (block == SimplePipeBlocks.DIAMOND_PIPE_ITEMS) {
             if (face == Direction.DOWN) {
-                return getPipeSprite("diamond_item_down");
+                return getPipeSprite(sprites, "diamond_item_down");
             } else if (face == Direction.UP) {
-                return getPipeSprite("diamond_item_up");
+                return getPipeSprite(sprites, "diamond_item_up");
             } else if (face == Direction.NORTH) {
-                return getPipeSprite("diamond_item_north");
+                return getPipeSprite(sprites, "diamond_item_north");
             } else if (face == Direction.SOUTH) {
-                return getPipeSprite("diamond_item_south");
+                return getPipeSprite(sprites, "diamond_item_south");
             } else if (face == Direction.WEST) {
-                return getPipeSprite("diamond_item_west");
+                return getPipeSprite(sprites, "diamond_item_west");
             } else if (face == Direction.EAST) {
-                return getPipeSprite("diamond_item_east");
+                return getPipeSprite(sprites, "diamond_item_east");
             }
         }
 
-        return getCenterSprite(block);
+        return getCenterSprite(sprites, block);
     }
 
     private static void addQuads(MutableQuad[] from, List<MutableQuad> to, Sprite sprite) {

@@ -5,12 +5,11 @@ import java.util.SortedMap;
 
 import com.google.common.collect.ImmutableSet;
 
-import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtHelper;
 import net.minecraft.state.property.Property;
-import net.minecraft.util.TagHelper;
 import net.minecraft.util.registry.Registry;
 
 import alexiil.mc.lib.net.NetByteBuf;
@@ -20,17 +19,16 @@ public class FacadeBlockStateInfo {
     public final BlockState state;
     public final ItemStack requiredStack;
     public final ImmutableSet<Property<?>> varyingProperties;
-    public final boolean isTransparent;
     public final boolean isVisible;
 
-    public FacadeBlockStateInfo(BlockState state, ItemStack requiredStack, ImmutableSet<Property<
-        ?>> varyingProperties) {
+    public FacadeBlockStateInfo(
+        BlockState state, ItemStack requiredStack, ImmutableSet<Property<?>> varyingProperties
+    ) {
         this.state = Objects.requireNonNull(state, "state must not be null!");
         Objects.requireNonNull(state.getBlock(), "state.getBlock must not be null!");
         Objects.requireNonNull(Registry.BLOCK.getId(state.getBlock()));
         this.requiredStack = requiredStack;
         this.varyingProperties = varyingProperties;
-        this.isTransparent = state.getBlock().getRenderLayer() != BlockRenderLayer.SOLID;
         this.isVisible = !requiredStack.isEmpty();
     }
 
@@ -49,7 +47,7 @@ public class FacadeBlockStateInfo {
     static FacadeBlockStateInfo fromTag(CompoundTag nbt, SortedMap<BlockState, FacadeBlockStateInfo> validStates) {
         try {
             FacadeBlockStateInfo stateInfo = FacadeStateManager.getDefaultState();
-            BlockState blockState = TagHelper.deserializeBlockState(nbt);
+            BlockState blockState = NbtHelper.toBlockState(nbt);
             stateInfo = validStates.get(blockState);
             if (stateInfo == null) {
                 stateInfo = FacadeStateManager.getDefaultState();
@@ -62,11 +60,12 @@ public class FacadeBlockStateInfo {
 
     public CompoundTag toTag() {
         try {
-            return TagHelper.serializeBlockState(state);
+            return NbtHelper.fromBlockState(state);
         } catch (Throwable t) {
             throw new IllegalStateException(
                 "Writing facade block state"//
-                    + "\n\tBlock = " + state.getBlock() + "\n\tBlock Class = " + state.getBlock().getClass(), t
+                    + "\n\tBlock = " + state.getBlock() + "\n\tBlock Class = " + state.getBlock().getClass(),
+                t
             );
         }
     }
@@ -75,8 +74,9 @@ public class FacadeBlockStateInfo {
         return readFromBuffer(buf, FacadeStateManager.getValidFacadeStates());
     }
 
-    static FacadeBlockStateInfo readFromBuffer(NetByteBuf buf, SortedMap<BlockState,
-        FacadeBlockStateInfo> validStates) {
+    static FacadeBlockStateInfo readFromBuffer(
+        NetByteBuf buf, SortedMap<BlockState, FacadeBlockStateInfo> validStates
+    ) {
         BlockState state = MessageUtil.readBlockState(buf);
         FacadeBlockStateInfo info = validStates.get(state);
         if (info == null) {

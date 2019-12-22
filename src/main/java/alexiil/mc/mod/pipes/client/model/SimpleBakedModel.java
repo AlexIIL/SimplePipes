@@ -11,10 +11,12 @@ import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.render.model.json.Transformation;
-import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.math.Direction;
+
+import alexiil.mc.mod.pipes.mixin.impl.BakedQuadAccessor;
+import alexiil.mc.mod.pipes.util.SpriteUtil;
 
 /** Provides a simple way of creating a {@link BakedModel} with just a list of quads. This provides some transforms to
  * use that make it simple to render item models with various different transforms. */
@@ -38,9 +40,8 @@ public class SimpleBakedModel implements BakedModel {
         Transformation gui = def(30, 225, 0, 0, 0, 0, 0.625);
         Transformation ground = def(0, 0, 0, 0, 3, 0, 0.25);
         Transformation fixed = def(0, 0, 0, 0, 0, 0, 0.5);
-        TRANSFORM_BLOCK = new ModelTransformation(
-            thirdp_left, thirdp_right, firstp_left, firstp_right, head, gui, ground, fixed
-        );
+        TRANSFORM_BLOCK
+            = new ModelTransformation(thirdp_left, thirdp_right, firstp_left, firstp_right, head, gui, ground, fixed);
 
         Transformation r_firstp_left = translate(firstp_left, 0, 0.25, 0);
         Transformation r_firstp_right = translate(firstp_right, 0, 0.25, 0);
@@ -64,9 +65,8 @@ public class SimpleBakedModel implements BakedModel {
         firstp_left = def(0, 45, 0, 0, 0, 0, 0.4);
         firstp_right = def(0, 225, 0, 0, 0, 0, 0.4);
         gui = def(30, 135, 0, -3, 1.5, 0, 0.625);
-        TRANSFORM_PLUG_AS_BLOCK = new ModelTransformation(
-            thirdp_left, thirdp_right, firstp_left, firstp_right, head, gui, ground, fixed
-        );
+        TRANSFORM_PLUG_AS_BLOCK
+            = new ModelTransformation(thirdp_left, thirdp_right, firstp_left, firstp_right, head, gui, ground, fixed);
 
         ground = def(0, 0, 0, 0, 2, 0, 0.5);
         head = def(0, 180, 0, 0, 13, 7, 1);
@@ -76,9 +76,8 @@ public class SimpleBakedModel implements BakedModel {
         firstp_left = firstp_right;
         fixed = def(0, 180, 0, 0, 0, 0, 1);
         gui = def(0, 0, 0, 0, 0, 0, 1);
-        TRANSFORM_ITEM = new ModelTransformation(
-            thirdp_left, thirdp_right, firstp_left, firstp_right, head, gui, ground, fixed
-        );
+        TRANSFORM_ITEM
+            = new ModelTransformation(thirdp_left, thirdp_right, firstp_left, firstp_right, head, gui, ground, fixed);
     }
 
     private static ModelTransformation scale(ModelTransformation from, double by) {
@@ -98,14 +97,14 @@ public class SimpleBakedModel implements BakedModel {
     private static Transformation scale(Transformation from, double by) {
 
         float scale = (float) by;
-        Vector3f nScale = new Vector3f(from.scale);
+        Vector3f nScale = from.scale.copy();
         nScale.scale(scale);
 
         return new Transformation(from.rotation, from.translation, nScale);
     }
 
     private static Transformation translate(Transformation from, double dx, double dy, double dz) {
-        Vector3f nTranslation = new Vector3f(from.translation);
+        Vector3f nTranslation = from.translation.copy();
         nTranslation.add((float) dx, (float) dy, (float) dz);
         return new Transformation(from.rotation, nTranslation, from.scale);
     }
@@ -130,9 +129,9 @@ public class SimpleBakedModel implements BakedModel {
         this.quads = quads == null ? ImmutableList.of() : quads;
         this.hasDepthInGui = hasDepthInGui;
         if (this.quads.isEmpty()) {
-            sprite = MissingSprite.getMissingSprite();
+            sprite = SpriteUtil.getMissingSprite();
         } else {
-            sprite = this.quads.get(0).getSprite();
+            sprite = ((BakedQuadAccessor) this.quads.get(0)).simplepipes_getSprite();
             assert sprite != null : "The first quad had a null sprite!";
         }
         this.transformation = transforms;

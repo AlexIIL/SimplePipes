@@ -1,19 +1,24 @@
+/*
+ * Copyright (c) 2019 SpaceToad and the BuildCraft team
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
+ * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
+ */
 package alexiil.mc.mod.pipes.items;
 
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
 import net.minecraft.world.World;
 
 import alexiil.mc.lib.multipart.api.AbstractPart;
+import alexiil.mc.lib.multipart.api.MultipartContainer.MultipartCreator;
 import alexiil.mc.lib.multipart.api.MultipartContainer.PartOffer;
 import alexiil.mc.lib.multipart.api.MultipartHolder;
 import alexiil.mc.lib.multipart.api.MultipartUtil;
 import alexiil.mc.lib.multipart.api.PartDefinition;
 import alexiil.mc.mod.pipes.util.SoundUtil;
 
-public class ItemSimplePart extends Item {
+public class ItemSimplePart extends Item implements IItemPlacmentGhost {
 
     @FunctionalInterface
     public interface PartCreator {
@@ -36,17 +41,37 @@ public class ItemSimplePart extends Item {
             return ActionResult.PASS;
         }
 
-        ItemPlacementContext plCtx = new ItemPlacementContext(ctx);
-        if (!plCtx.canPlace()) {
-            return ActionResult.FAIL;
-        }
-        PartOffer offer = MultipartUtil.offerNewPart(w, plCtx.getBlockPos(), h -> creator.create(definition, h));
+        PartOffer offer = getOffer(ctx);
         if (offer == null) {
             return ActionResult.FAIL;
         }
         offer.apply();
+        offer.getHolder().getPart().onPlacedBy(ctx.getPlayer(), ctx.getHand());
         ctx.getStack().increment(-1);
-        SoundUtil.playBlockPlace(w, plCtx.getBlockPos());
+        SoundUtil.playBlockPlace(w, offer.getHolder().getContainer().getMultipartPos());
         return ActionResult.SUCCESS;
+    }
+
+    private PartOffer getOffer(ItemUsageContext ctx) {
+        MultipartCreator c = h -> creator.create(definition, h);
+        World w = ctx.getWorld();
+        PartOffer offer = MultipartUtil.offerNewPart(w, ctx.getBlockPos(), c);
+        if (offer == null) {
+            offer = MultipartUtil.offerNewPart(w, ctx.getBlockPos().offset(ctx.getSide()), c);
+        }
+        return offer;
+    }
+
+    @Override
+    public GhostPlacement createGhostPlacement(ItemUsageContext ctx) {
+        return new GhostPlacementPart() {
+            @Override
+            public GhostPlacement preRender(ItemUsageContext ctx) {
+                if (ctx.getStack().getItem() != ItemSimplePart.this) {
+                    return null;
+                }
+                return setup(getOffer(ctx)) ? this : null;
+            }
+        };
     }
 }

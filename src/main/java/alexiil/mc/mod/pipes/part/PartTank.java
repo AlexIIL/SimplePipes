@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.shape.VoxelShape;
@@ -70,7 +71,7 @@ public class PartTank extends AbstractPart {
 
     public PartTank(PartDefinition definition, MultipartHolder holder, CompoundTag tag) {
         this(definition, holder);
-        if (tag.containsKey("fluidInv")) {
+        if (tag.contains("fluidInv")) {
             fluidInv.fromTag(tag.getCompound("fluidInv"));
         }
     }
@@ -96,6 +97,11 @@ public class PartTank extends AbstractPart {
     @Override
     public VoxelShape getShape() {
         return SHAPE;
+    }
+
+    @Override
+    public VoxelShape getCullingShape() {
+        return VoxelShapes.empty();
     }
 
     @Override
@@ -143,21 +149,23 @@ public class PartTank extends AbstractPart {
     }
 
     @Override
-    public boolean onActivate(PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (player.getStackInHand(hand).isEmpty()) {
             if (!player.world.isClient) {
                 ContainerProviderRegistry.INSTANCE.openContainer(SimplePipeContainers.TANK, player, (buffer) -> {
                     buffer.writeBlockPos(holder.getContainer().getMultipartPos());
                 });
             }
-            return true;
+            return ActionResult.SUCCESS;
         }
 
         if (player.world.isClient) {
-            return true;
+            return ActionResult.SUCCESS;
         }
         isPlayerInteracting = true;
-        return FluidVolumeUtil.interactWithTank((FixedFluidInv)fluidInv, player, hand);
+        boolean result = FluidVolumeUtil.interactWithTank((FixedFluidInv) fluidInv, player, hand);
+        isPlayerInteracting = false;
+        return result ? ActionResult.SUCCESS : ActionResult.FAIL;
     }
 
     @Override

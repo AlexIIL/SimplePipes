@@ -33,6 +33,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.ConnectedPlantBlock;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.block.GlassBlock;
+import net.minecraft.block.SlabBlock;
 import net.minecraft.block.StainedGlassBlock;
 import net.minecraft.block.enums.Instrument;
 import net.minecraft.item.ItemStack;
@@ -78,9 +79,8 @@ public final class FacadeStateManager {
         if (DEBUG) {
             SimplePipes.LOGGER.info("Debugging enabled for facades. Prepare for log spam!");
         } else {
-            SimplePipes.LOGGER.debug(
-                "Debugging disabled for facades. (Add -Dsimplepipes.debug_facades=true to enable)"
-            );
+            SimplePipes.LOGGER
+                .debug("Debugging disabled for facades. (Add -Dsimplepipes.debug_facades=true to enable)");
         }
 
         limitedProperties.put(Properties.PERSISTENT, false);
@@ -174,7 +174,7 @@ public final class FacadeStateManager {
         // Fixes a bug in extra utilities who doesn't serialise and deserialise properties properly
         {
             RuntimeException ex = null;
-            for (Property<?> property : block.getStateFactory().getProperties()) {
+            for (Property<?> property : block.getStateManager().getProperties()) {
                 try {
                     ensurePropertyConforms(property);
                 } catch (RuntimeException t) {
@@ -194,9 +194,8 @@ public final class FacadeStateManager {
         TypedActionResult<String> result = isValidFacadeBlock(block);
         if (result.getResult() != ActionResult.PASS && result.getResult() != ActionResult.SUCCESS) {
             if (DEBUG) {
-                SimplePipes.LOGGER.info(
-                    ("[silicon.facade] Disallowed block " + blockId) + " because " + result.getValue()
-                );
+                SimplePipes.LOGGER
+                    .info(("[silicon.facade] Disallowed block " + blockId) + " because " + result.getValue());
             }
             return;
         } else if (DEBUG) {
@@ -206,7 +205,7 @@ public final class FacadeStateManager {
         }
         Map<BlockState, ItemStack> usedStates = new HashMap<>();
         Map<ItemStack, Map<Property<?>, Comparable<?>>> varyingProperties = ItemStackCollections.map();
-        for (BlockState state : block.getStateFactory().getStates()) {
+        for (BlockState state : block.getStateManager().getStates()) {
             if (result.getResult() != ActionResult.SUCCESS) {
                 TypedActionResult<String> stateResult = isValidFacadeState(state);
                 if (stateResult.getResult() == ActionResult.SUCCESS) {
@@ -215,9 +214,8 @@ public final class FacadeStateManager {
                     }
                 } else {
                     if (DEBUG) {
-                        SimplePipes.LOGGER.info(
-                            "[silicon.facade] Disallowed state " + state + " because " + stateResult.getValue()
-                        );
+                        SimplePipes.LOGGER
+                            .info("[silicon.facade] Disallowed state " + state + " because " + stateResult.getValue());
                     }
                     continue;
                 }
@@ -225,9 +223,8 @@ public final class FacadeStateManager {
             ItemStack stack = getRequiredStack(state);
             if (stack.isEmpty()) {
                 if (DEBUG) {
-                    SimplePipes.LOGGER.info(
-                        "[silicon.facade] Disallowed state " + state + " because it didn't have an item!"
-                    );
+                    SimplePipes.LOGGER
+                        .info("[silicon.facade] Disallowed state " + state + " because it didn't have an item!");
                 }
                 return;
             }
@@ -325,6 +322,9 @@ public final class FacadeStateManager {
         if (block instanceof GlassBlock || block instanceof StainedGlassBlock) {
             return new TypedActionResult<>(ActionResult.SUCCESS, "");
         }
+        if (block instanceof SlabBlock) {
+            return new TypedActionResult<String>(ActionResult.FAIL, "it is a slab block");
+        }
         return new TypedActionResult<>(ActionResult.PASS, "");
     }
 
@@ -379,7 +379,7 @@ public final class FacadeStateManager {
 
     private static <V extends Comparable<V>> void ensurePropertyConforms(Property<V> property) throws RuntimeException {
         try {
-            property.getValue("");
+            property.parse("");
         } catch (AbstractMethodError error) {
             String message = "Invalid Property object detected!";
             message += "\n  Class = " + property.getClass();
@@ -394,8 +394,8 @@ public final class FacadeStateManager {
         }
 
         for (V value : property.getValues()) {
-            String name = property.getName(value);
-            Optional<V> optional = property.getValue(name);
+            String name = property.name(value);
+            Optional<V> optional = property.parse(name);
             V parsed = optional == null ? null : optional.orElse(null);
             if (!Objects.equals(value, parsed)) {
                 // A property is *wrong*

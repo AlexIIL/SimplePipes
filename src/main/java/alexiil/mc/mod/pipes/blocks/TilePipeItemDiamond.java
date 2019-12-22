@@ -48,10 +48,10 @@ public class TilePipeItemDiamond extends TilePipe {
                     if (emptyRow) {
                         empties.add(dir);
                     }
-
-                    list.add(matches);
-                    list.add(empties);
                 }
+
+                list.add(matches);
+                list.add(empties);
                 return list;
             }
 

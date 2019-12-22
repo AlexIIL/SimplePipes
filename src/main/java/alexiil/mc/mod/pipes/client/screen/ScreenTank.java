@@ -3,21 +3,16 @@ package alexiil.mc.mod.pipes.client.screen;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
-import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 
 import net.fabricmc.fabric.api.client.screen.ContainerScreenFactory;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace;
 import alexiil.mc.lib.attributes.fluid.volume.FluidUnit;
 import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.container.ContainerTank;
@@ -51,18 +46,11 @@ public class ScreenTank extends AbstractContainerScreen<ContainerTank> {
         blit(x, y, 0, 0, this.containerWidth, this.containerHeight);
         FluidStackInterp fluid = container.part.getFluidForRender(partialTicks);
         if (fluid != null && !fluid.fluid.isEmpty() && fluid.amount > 0.1) {
-            double x0 = 0;
-            double y0 = 48 - 48 * fluid.amount / container.part.fluidInv.tankCapacity;
-            double x1 = 16;
-            double y1 = 48;
-            FluidRenderFace face = FluidRenderFace.createFlatFaceZ(x0, y0, 0, x1, y1, 0, 1, false);
-            List<FluidRenderFace> faces = ImmutableList.of(face);
-            bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEX);
-            GlStateManager.enableBlend();
-            GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-            fluid.fluid.render(faces, x + 80, y + 23, blitOffset);
-            GlStateManager.disableLighting();
-            GlStateManager.disableBlend();
+            double x0 = x + 80 + 0;
+            double y0 = y + 23 + 48 - 48 * fluid.amount / container.part.fluidInv.tankCapacity;
+            double x1 = x + 80 + 16;
+            double y1 = y + 23 + 48;
+            fluid.fluid.renderGuiRect(x0, y0, x1, y1);
         }
         bindTexture(TANK_GUI);
         blit(x + 80, y + 23, 176, 0, 16, 48);
@@ -74,8 +62,11 @@ public class ScreenTank extends AbstractContainerScreen<ContainerTank> {
 
     @Override
     protected void drawForeground(int mouseX, int mouseY) {
+        FluidStackInterp fluid = container.part.getFluidForRender(1);
         font.draw(title.asFormattedString(), 8.0F, 6.0F, 0x40_40_40);
         font.draw(playerInventory.getDisplayName().asFormattedString(), 8.0F, containerHeight - 96 + 2, 0x40_40_40);
+        font.draw(fluid == null ? "null" : fluid.fluid.toString(), -12, -24, -1);
+        font.draw(fluid == null ? "null" : fluid.fluid.getAmount_F().toString(), -12, -12, -1);
     }
 
     @Override

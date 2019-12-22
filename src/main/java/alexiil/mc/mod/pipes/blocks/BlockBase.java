@@ -6,6 +6,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
@@ -28,13 +29,13 @@ public abstract class BlockBase extends Block {
     }
 
     @Override
-    public boolean activate(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
         BlockHitResult hit) {
         BlockEntity be = world.getBlockEntity(pos);
         if (be instanceof TileBase) {
-            return ((TileBase) be).activate(player, hand, hit);
+            return ((TileBase) be).onUse(player, hand, hit);
         }
-        return false;
+        return super.onUse(state, world, pos, player, hand, hit);
     }
 
     @Override

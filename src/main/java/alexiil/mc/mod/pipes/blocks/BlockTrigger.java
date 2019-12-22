@@ -5,7 +5,7 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockPlacementEnvironment;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateFactory.Builder;
+import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
@@ -30,7 +30,7 @@ public abstract class BlockTrigger extends BlockBase implements BlockEntityProvi
     }
 
     @Override
-    protected void appendProperties(Builder<Block, BlockState> builder) {
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
         builder.add(FACING, STATE);
     }
