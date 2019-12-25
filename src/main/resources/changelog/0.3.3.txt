@@ -1,0 +1,7 @@
+Changes:
+
+* Added some sound + particle handling
+
+Bug Fixes:
+
+* Fixed a server-sided crash when trying to craft facades.

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import io.netty.buffer.Unpooled;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -12,6 +14,7 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.StonecuttingRecipe;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 
@@ -84,10 +87,11 @@ public final class SimplePipeParts {
         }
     }
 
-    private static void generateBlockToFacadeCuttingRecipes(Consumer<Recipe<?>> recipeAdder, FacadeStateManager facades,
-        ItemStack stack, FacadeBlockStateInfo state) {
+    private static void generateBlockToFacadeCuttingRecipes(
+        Consumer<Recipe<?>> recipeAdder, FacadeStateManager facades, ItemStack stack, FacadeBlockStateInfo state
+    ) {
         Identifier id = new Identifier("buildcraftsilicon:facade_generated");
-        Ingredient ingredient = Ingredient.ofStacks(stack);
+        Ingredient ingredient = createIngredient(stack);
 
         for (FacadeSize size : FacadeSize.values()) {
             for (boolean hollow : new boolean[] { false, true }) {
@@ -132,7 +136,7 @@ public final class SimplePipeParts {
         }
 
         Identifier id = new Identifier("buildcraftsilicon:facade_generated");
-        Ingredient ingredient = Ingredient.ofStacks(stack);
+        Ingredient ingredient = createIngredient(stack);
 
         FacadeShape shape = facade.shape;
         int from = shape.getRecipeMicroVoxelVolume();
@@ -158,5 +162,14 @@ public final class SimplePipeParts {
     private static boolean canCut(RecipeMatchFinder context, BlockState state) {
         // Stone pickaxe (not iron) so that there's actually a reason to upgrade to the laser cutter
         return state.getMaterial().canBreakByHand() || new ItemStack(Items.STONE_PICKAXE).isEffectiveOn(state);
+    }
+
+    private static Ingredient createIngredient(ItemStack stack) {
+        // Ideally we would use Ingredient.ofStacks(stack)
+        // However that's client-side only so we do this instead.
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        buf.writeVarInt(1);
+        buf.writeItemStack(stack);
+        return Ingredient.fromPacket(buf);
     }
 }

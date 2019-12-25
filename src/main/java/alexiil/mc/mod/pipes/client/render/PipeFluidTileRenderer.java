@@ -46,15 +46,15 @@ public class PipeFluidTileRenderer<T extends TilePipe> extends BlockEntityRender
             }
 
             Vec3d center = new Vec3d(0.5, 0.5, 0.5);
-            center = VecUtil.replaceValue(center, side.getAxis(), 0.5 + side.getDirection().offset() * 0.37);
+            center = VecUtil.replaceValue(center, side.getAxis(), 0.5 + side.getDirection().offset() * 0.34375);
 
-            Vec3d radius = new Vec3d(0.24, 0.24, 0.24);
-            radius = VecUtil.replaceValue(radius, side.getAxis(), 0.13);
+            Vec3d radius = new Vec3d(0.1874, 0.1874, 0.1874);
+            radius = VecUtil.replaceValue(radius, side.getAxis(), 0.15625);
 
             double perc = amount / (double) PipeFlowFluid.SECTION_CAPACITY;
             if (side.getAxis() == Axis.Y) {
                 perc = Math.sqrt(perc);
-                radius = new Vec3d(perc * 0.24, radius.y, perc * 0.24);
+                radius = new Vec3d(perc * 0.1874, radius.y, perc * 0.1874);
             }
 
             Vec3d min = center.subtract(radius);
@@ -81,8 +81,8 @@ public class PipeFluidTileRenderer<T extends TilePipe> extends BlockEntityRender
             List<FluidRenderFace> faces = new ArrayList<>();
 
             if (horizontal | !vertical) {
-                Vec3d min = new Vec3d(0.26, 0.26, 0.26);
-                Vec3d max = new Vec3d(0.74, 0.74, 0.74);
+                Vec3d min = new Vec3d(0.3126, 0.3126, 0.3126);
+                Vec3d max = new Vec3d(0.6874, 0.6874, 0.6874);
 
                 EnumSet<Direction> sides = EnumSet.allOf(Direction.class);
                 double max_y = (max.y - min.y) * perc + min.y;
@@ -91,13 +91,13 @@ public class PipeFluidTileRenderer<T extends TilePipe> extends BlockEntityRender
                 horizPos += (max.y - min.y) * center.getAmount() / PipeFlowFluid.SECTION_CAPACITY;
             }
 
-            if (vertical && horizPos < 0.74) {
+            if (vertical && horizPos < 0.6874) {
                 perc = Math.sqrt(perc);
-                double minXZ = 0.5 - 0.24 * perc;
-                double maxXZ = 0.5 + 0.24 * perc;
+                double minXZ = 0.5 - 0.1874 * perc;
+                double maxXZ = 0.5 + 0.1874 * perc;
 
-                double yMin = gas ? 0.26 : horizPos;
-                double yMax = gas ? 1 - horizPos : 0.74;
+                double yMin = gas ? 0.3126 : horizPos;
+                double yMax = gas ? 1 - horizPos : 0.6874;
 
                 Vec3d min = new Vec3d(minXZ, yMin, minXZ);
                 Vec3d max = new Vec3d(maxXZ, yMax, maxXZ);

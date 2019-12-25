@@ -1,5 +1,8 @@
 package alexiil.mc.mod.pipes.part;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.shape.VoxelShape;
@@ -81,5 +84,16 @@ public class FacadePart extends AbstractPart {
     @Override
     public PartModelKey getModelKey() {
         return new FacadePartKey(shape, state.state);
+    }
+
+    @Override
+    protected void playBreakSound() {
+        playBreakSound(state.state);
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    protected void spawnBreakParticles() {
+        spawnBreakParticles(state.state);
     }
 }
