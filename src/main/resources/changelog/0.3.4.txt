@@ -1,0 +1,3 @@
+Changes:
+
+* Added a recipe for the pump (4 iron ingots, 4 blocks of stone, and 1 bucket)

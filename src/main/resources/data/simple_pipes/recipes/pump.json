@@ -1,0 +1,16 @@
+{
+    "type": "crafting_shaped",
+    "result": {
+        "item": "simple_pipes:pump"
+    },
+    "pattern": [
+        "ISI",
+        "SBS",
+        "ISI"
+    ],
+    "key": {
+        "I": { "item": "minecraft:iron_ingot" },
+        "S": { "item": "minecraft:stone" },
+        "B": { "item": "minecraft:bucket" }
+    }
+}
