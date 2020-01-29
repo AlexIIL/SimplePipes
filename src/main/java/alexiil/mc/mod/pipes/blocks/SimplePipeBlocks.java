@@ -192,6 +192,6 @@ public class SimplePipeBlocks {
     }
 
     private static void registerTile(BlockEntityType<?> type, String name) {
-        Registry.register(Registry.BLOCK_ENTITY, SimplePipes.MODID + ":" + name, type);
+        Registry.register(Registry.BLOCK_ENTITY_TYPE, SimplePipes.MODID + ":" + name, type);
     }
 }

@@ -46,8 +46,13 @@ public class PerspAwareModelBase implements BakedModel {
     }
 
     @Override
-    public boolean hasDepthInGui() {
+    public boolean hasDepth() {
         return false;
+    }
+
+    @Override
+    public boolean isSideLit() {
+        return true;
     }
 
     @Override

@@ -38,6 +38,7 @@
         "modmenu:api": true,
         "modmenu:parent": "simple_pipes"
       },
+      "+icon": "assets/simple_pipes/icon_container.png",
       "-entrypoints": {},
       "-mixins": {},
       "~depends": {

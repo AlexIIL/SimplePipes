@@ -38,13 +38,13 @@ public class ContainerPipeSorter extends ContainerTile<TilePipeItemDiamond> {
     @Override 
     public ItemStack transferSlot(PlayerEntity player, int slotIndex){
 		ItemStack stack = ItemStack.EMPTY;
-        Slot slot = slotList.get(slotIndex);
+        Slot slot = slots.get(slotIndex);
         
 		if (slot != null && slot.hasStack()) {
 			ItemStack slotStack = slot.getStack();
 			stack = slotStack.copy();
 			if (slotIndex < tile.filterInv.getInvSize()) { 
-                if (!insertItem(slotStack, tile.filterInv.getInvSize(), slotList.size(), true)) { 
+                if (!insertItem(slotStack, tile.filterInv.getInvSize(), slots.size(), true)) { 
                     return ItemStack.EMPTY; 
                 }
             } else if (!insertItem(slotStack, 0, tile.filterInv.getInvSize(), false)) {

@@ -5,20 +5,19 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.fabric.api.client.screen.ContainerScreenFactory;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.util.Identifier;
 
 import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
 import alexiil.mc.mod.pipes.container.ContainerTriggerInvContains;
 
-public class ScreenTriggerItemInvContains extends AbstractContainerScreen<ContainerTriggerInvContains> {
+public class ScreenTriggerItemInvContains extends ContainerScreen<ContainerTriggerInvContains> {
 
     public static final ContainerScreenFactory<ContainerTriggerInvContains> FACTORY = ScreenTriggerItemInvContains::new;
 
-    private static final Identifier TRIGGER_GUI = new Identifier(
-        SimplePipes.MODID, "textures/gui/trigger_item_inv.png"
-    );
+    private static final Identifier TRIGGER_GUI
+        = new Identifier(SimplePipes.MODID, "textures/gui/trigger_item_inv.png");
 
     public ScreenTriggerItemInvContains(ContainerTriggerInvContains container) {
         super(container, container.player.inventory, SimplePipeBlocks.TRIGGER_ITEM_INV_CONTAINS.getName());

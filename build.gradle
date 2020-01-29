@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.2.6-SNAPSHOT'
+    id 'fabric-loom' version '0.2.7-alex.4'
 }
 
 apply plugin: 'maven-publish' // for uploading to a maven repo
@@ -13,23 +13,23 @@ repositories {
 }
 
 archivesBaseName = "SimplePipes"
-version = "0.3.4-pre.1"
+version = "0.3.4-pre.5"
 
 minecraft {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:1.15.1"
-    mappings "net.fabricmc:yarn:1.15.1+build.6:v2"
-    modCompile "net.fabricmc:fabric-loader:0.7.2+build.175"
+    minecraft "com.mojang:minecraft:1.15.2"
+    mappings "net.fabricmc:yarn:1.15.2+build.7:v2"
+    modCompile "net.fabricmc:fabric-loader:0.7.6+build.179"
 
     //Fabric api
-    modCompile "net.fabricmc.fabric-api:fabric-api:0.4.25+build.282-1.15"
+    modCompile "net.fabricmc.fabric-api:fabric-api:0.4.29+build.290-1.15"
 
     // Silk API
     // modCompile "io.github.prospector.silk:SilkAPI:1.2.3-38"
 
-    modApi "alexiil.mc.lib:libblockattributes-all:$libblockattributes_version"
+    modApi "alexiil.mc.lib:libblockattributes-fatjar_devonly:$libblockattributes_version"
     modApi "alexiil.mc.lib:libnetworkstack-base:$libnetworkstack_version"
     modApi "alexiil.mc.lib:libmultipart-base:$libmultipart_version"
 
@@ -84,8 +84,11 @@ ext.extra_jar_def__fabric_mod_json_replacements = [
   ["\$libmultipart_version", "$libmultipart_version"]
 ];
 
+ext.extra_jar_def__optimised_compression = true;
+ext.extra_jar_def__decompress_external_included = true;
+
 def allIncludes = [
-    "assets/simple_pipes/icon.png"
+    "assets/simple_pipes/icon_container.png"
 ];
 
 def jarDeps = [ 
@@ -96,3 +99,8 @@ def jarDeps = [
 
 generateJar("base", ["**"], [], true);
 generateJar("all", allIncludes, [], false, [], ["base"], [], jarDeps);
+
+tasks.withType(AbstractArchiveTask) {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}

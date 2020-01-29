@@ -323,7 +323,7 @@ public final class FacadeStateManager {
             return new TypedActionResult<>(ActionResult.SUCCESS, "");
         }
         if (block instanceof SlabBlock) {
-            return new TypedActionResult<String>(ActionResult.FAIL, "it is a slab block");
+            return new TypedActionResult<>(ActionResult.FAIL, "it is a slab block");
         }
         return new TypedActionResult<>(ActionResult.PASS, "");
     }

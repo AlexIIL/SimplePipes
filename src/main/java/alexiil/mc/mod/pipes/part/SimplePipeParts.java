@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import io.netty.buffer.Unpooled;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -14,7 +12,6 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.StonecuttingRecipe;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 
@@ -29,6 +26,7 @@ import alexiil.mc.mod.pipes.mixin.api.FindMatchingRecipesEvent;
 import alexiil.mc.mod.pipes.mixin.api.RecipeMatchFinder;
 import alexiil.mc.mod.pipes.util.EnumCuboidCorner;
 import alexiil.mc.mod.pipes.util.EnumCuboidEdge;
+import alexiil.mc.mod.pipes.util.IngredientHelper;
 
 public final class SimplePipeParts {
     private SimplePipeParts() {}
@@ -165,11 +163,6 @@ public final class SimplePipeParts {
     }
 
     private static Ingredient createIngredient(ItemStack stack) {
-        // Ideally we would use Ingredient.ofStacks(stack)
-        // However that's client-side only so we do this instead.
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        buf.writeVarInt(1);
-        buf.writeItemStack(stack);
-        return Ingredient.fromPacket(buf);
+        return IngredientHelper.fromStacks(stack);
     }
 }

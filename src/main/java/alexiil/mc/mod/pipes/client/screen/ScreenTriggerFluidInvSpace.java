@@ -5,20 +5,19 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.fabric.api.client.screen.ContainerScreenFactory;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.util.Identifier;
 
 import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
 import alexiil.mc.mod.pipes.container.ContainerTriggerFluidSpace;
 
-public class ScreenTriggerFluidInvSpace extends AbstractContainerScreen<ContainerTriggerFluidSpace> {
+public class ScreenTriggerFluidInvSpace extends ContainerScreen<ContainerTriggerFluidSpace> {
 
     public static final ContainerScreenFactory<ContainerTriggerFluidSpace> FACTORY = ScreenTriggerFluidInvSpace::new;
 
-    private static final Identifier TRIGGER_GUI = new Identifier(
-        SimplePipes.MODID, "textures/gui/trigger_fluid_inv.png"
-    );
+    private static final Identifier TRIGGER_GUI
+        = new Identifier(SimplePipes.MODID, "textures/gui/trigger_fluid_inv.png");
 
     public ScreenTriggerFluidInvSpace(ContainerTriggerFluidSpace container) {
         super(container, container.player.inventory, SimplePipeBlocks.TRIGGER_FLUID_INV_SPACE.getName());

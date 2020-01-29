@@ -8,7 +8,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.fabric.api.client.screen.ContainerScreenFactory;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -19,7 +19,7 @@ import alexiil.mc.mod.pipes.container.ContainerTank;
 import alexiil.mc.mod.pipes.items.SimplePipeItems;
 import alexiil.mc.mod.pipes.util.FluidSmoother.FluidStackInterp;
 
-public class ScreenTank extends AbstractContainerScreen<ContainerTank> {
+public class ScreenTank extends ContainerScreen<ContainerTank> {
 
     public static final ContainerScreenFactory<ContainerTank> FACTORY = ScreenTank::new;
 

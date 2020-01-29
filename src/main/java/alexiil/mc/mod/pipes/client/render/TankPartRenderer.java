@@ -4,8 +4,13 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.math.Direction;
 
 import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace;
@@ -34,6 +39,15 @@ public class TankPartRenderer implements PartRenderer<PartTank> {
         double x1 = 0.874;
         double y1 = 0.001 + (12 / 16.0 - 0.002) * forRender.amount / part.fluidInv.tankCapacity;
         double z1 = 0.874;
+
+        if (false) {
+            matrices.push();
+            matrices.translate(0.5, 0.25, 0.5);
+            MinecraftClient.getInstance().getItemRenderer().renderItem(
+                new ItemStack(Items.YELLOW_DYE), ModelTransformation.Mode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers
+            );
+            matrices.pop();
+        }
 
         EnumSet<Direction> sides = EnumSet.allOf(Direction.class);
         FluidRenderFace.appendCuboid(x0, y0, z0, x1, y1, z1, 1, sides, faces);

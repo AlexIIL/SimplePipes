@@ -136,7 +136,7 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
         BlockEntity be = world.getBlockEntity(thisPos);
         if (be instanceof TilePipe) {
             TilePipe pipe = (TilePipe) be;
-            pipe.setWorld(world, thisPos);
+            pipe.setLocation(world, thisPos);
             pipe.onNeighbourChange();
         }
     }

@@ -161,8 +161,13 @@ public class SimpleBakedModel implements BakedModel {
     }
 
     @Override
-    public boolean hasDepthInGui() {
+    public boolean hasDepth() {
         return hasDepthInGui;
+    }
+
+    @Override
+    public boolean isSideLit() {
+        return true;
     }
 
     @Override

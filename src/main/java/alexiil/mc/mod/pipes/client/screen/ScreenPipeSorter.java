@@ -5,14 +5,14 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.fabric.api.client.screen.ContainerScreenFactory;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.util.Identifier;
 
 import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
 import alexiil.mc.mod.pipes.container.ContainerPipeSorter;
 
-public class ScreenPipeSorter extends AbstractContainerScreen<ContainerPipeSorter> {
+public class ScreenPipeSorter extends ContainerScreen<ContainerPipeSorter> {
 
     public static final ContainerScreenFactory<ContainerPipeSorter> FACTORY = ScreenPipeSorter::new;
 

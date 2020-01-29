@@ -22,7 +22,7 @@ import alexiil.mc.mod.pipes.items.SimplePipeItems;
 public class FacadePart extends AbstractPart {
 
     public final FacadeBlockStateInfo state;
-    public final FacadeShape shape;
+    private FacadeShape shape;
 
     public FacadePart(
         PartDefinition definition, MultipartHolder holder, FacadeBlockStateInfo states, FacadeShape shape
@@ -78,7 +78,11 @@ public class FacadePart extends AbstractPart {
     @Override
     public boolean canOverlapWith(AbstractPart other) {
         // The "no fully overlapping" rule of PartContainer allows us to do this
-        return other instanceof FacadePart;
+        if (other instanceof FacadePart) {
+            FacadePart o = (FacadePart) other;
+            return this.shape.getSize() != FacadeSize.SLAB || o.shape.getSize() != FacadeSize.SLAB;
+        }
+        return false;
     }
 
     @Override

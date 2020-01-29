@@ -41,7 +41,12 @@ public final class ModelFacadeItem extends SimpleBakedModel {
             FacadeShape shape = inst.shape;
             return new SinglePartBakedModel<FacadePartKey>(new FacadePartKey(shape, state.state), FacadePartKey.class) {
                 @Override
-                public boolean hasDepthInGui() {
+                public boolean hasDepth() {
+                    return true;
+                }
+
+                @Override
+                public boolean isSideLit() {
                     return true;
                 }
 
