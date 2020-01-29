@@ -11,6 +11,7 @@
   },
   "depends": {
     "fabric": "*",
+    "minecraft": "1.15.2",
     "libblockattributes": "*",
     "libnetworkstack": "*",
     "libmultipart": "*"
