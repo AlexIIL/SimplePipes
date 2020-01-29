@@ -1,3 +1,14 @@
 Changes:
 
+* Updated to Minecraft 1.15.2
 * Added a recipe for the pump (4 iron ingots, 4 blocks of stone, and 1 bucket)
+* Prevented "slab" facades from overlapping.
+* The "-all" jar is now 25% smaller (~750 KB rather than 1MB)
+    This is due to an alternative approach to compression:
+    now we decompress the jar-in-jar and just store them, which
+    allows the containing jar to do a better job of compressing
+    the contents.
+
+Bug Fixes:
+
+* Fixed an incompatibility with nbt-crafting.
