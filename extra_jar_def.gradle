@@ -108,7 +108,7 @@ ext.mavenGroupId = "alexiil.mc.lib";
     "description": "Expanding minecraft with item and fluid transportation!"
 }
 
-*/ 
+*/
 
 // If you want to access a set of all resources included by something else you can use "ext.extra_jar_def__taken"
 
@@ -156,7 +156,7 @@ ext.extra_jar_def__fabricModJsonLocation = "src/main/resources/"
 ext.extra_jar_def__clear_implicit_depedencies = true;
 
 // All of the keys changed in fabric.mod.json.
-ext.extra_jar_def__fabric_mod_json_replacements = [["\$version", project.version]]; 
+ext.extra_jar_def__fabric_mod_json_replacements = [["\$version", project.version]];
 
 // Common manifest for all "generateJar" callers to
 // use (if they don't provide their own)
@@ -174,7 +174,7 @@ ext.extra_jar_def__optimised_compression = false;
 // If true then included (externally built) jars will be de-compressed
 // and re-zipped without compression, which tends to make the final
 // (output) jar file smaller.
-// Never enabled by default because of license concerns 
+// Never enabled by default because of license concerns
 ext.extra_jar_def__decompress_external_included = false;
 
 // ==============================
@@ -392,7 +392,7 @@ def generateJarInternal(
     Collection<String> _excludes, boolean hasMixins,
     List<String> required = [], List<String> nestedJars = [],
     List<List<String>> requiredJars = [],
-    List<List<String>> includedJars = [], boolean fat = false, 
+    List<List<String>> includedJars = [], boolean fat = false,
     Map<String, Map<String, String>> _manifest = null
 ) {
     if (_manifest == null) {

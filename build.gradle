@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.2.7-alex.4'
+    id 'fabric-loom' version '0.2.6-nonstrippedjars.10'
 }
 
 apply plugin: 'maven-publish' // for uploading to a maven repo
@@ -13,7 +13,7 @@ repositories {
 }
 
 archivesBaseName = "SimplePipes"
-version = "0.3.4-pre.5"
+version = "0.3.4"
 
 minecraft {
 }
