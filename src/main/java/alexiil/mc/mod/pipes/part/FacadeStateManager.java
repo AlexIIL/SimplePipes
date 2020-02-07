@@ -10,12 +10,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -24,7 +26,6 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.ImmutableSet;
 
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
-import net.fabricmc.fabric.api.event.registry.RegistryEntryRemovedCallback;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -67,6 +68,9 @@ public final class FacadeStateManager {
     private static final SortedMap<BlockState, FacadeBlockStateInfo> validFacadeStates;
     private static final Map<ItemStack, List<FacadeBlockStateInfo>> stackFacades;
     private static FacadeBlockStateInfo previewState;
+
+    private static boolean hasUpdates = false;
+    private static final Set<Block> newBlocks = new HashSet<>();
 
     /** An array containing all mods that fail the {@link #ensurePropertyConforms(Property)} check, and any others.
      * <p>
@@ -112,8 +116,17 @@ public final class FacadeStateManager {
     }
 
     private FacadeStateManager() {
+        scanBlocks(Registry.BLOCK);
+        RegistryEntryAddedCallback.event(Registry.BLOCK).register((rawId, identifier, object) -> {
+            newBlocks.add(object);
+            hasUpdates = true;
+        });
+        previewState = validFacadeStates.get(Blocks.BRICKS.getDefaultState());
+    }
+
+    private static void scanBlocks(Iterable<Block> blockSet) {
         RuntimeException ex = null;
-        for (Block block : Registry.BLOCK) {
+        for (Block block : blockSet) {
             Identifier blockId = Registry.BLOCK.getId(block);
             try {
                 scanBlock(block, blockId);
@@ -127,17 +140,10 @@ public final class FacadeStateManager {
         if (ex != null) {
             throw ex;
         }
-        // FIXME: This doesn't work! (Because the item won't have been registered for the block yet)
-        RegistryEntryAddedCallback.event(Registry.BLOCK).register((rawId, identifier, object) -> {
-            scanBlock(object, identifier);
-        });
-        RegistryEntryRemovedCallback.event(Registry.BLOCK).register((rawId, identifier, object) -> {
-            // TODO: Implement block removal!
-        });
-        previewState = validFacadeStates.get(Blocks.BRICKS.getDefaultState());
     }
 
     public static SortedMap<BlockState, FacadeBlockStateInfo> getValidFacadeStates() {
+        update();
         return validFacadeStates;
     }
 
@@ -146,14 +152,17 @@ public final class FacadeStateManager {
     }
 
     public static FacadeBlockStateInfo getDefaultState() {
+        update();
         return defaultState;
     }
 
     public static FacadeBlockStateInfo getPreviewState() {
+        update();
         return previewState;
     }
 
     public static FacadeBlockStateInfo getInfoForBlock(Block block) {
+        update();
         return getInfoForState(block.getDefaultState());
     }
 
@@ -163,6 +172,19 @@ public final class FacadeStateManager {
 
     public static void load() {
         // Just to call the static init
+    }
+
+    private static void update() {
+        if (hasUpdates) {
+            updateInner();
+            hasUpdates = false;
+        }
+    }
+
+    private static void updateInner() {
+        List<Block> blocks = new ArrayList<>(newBlocks);
+        newBlocks.clear();
+        scanBlocks(blocks);
     }
 
     private static void scanBlock(Block block, Identifier blockId) {

@@ -1,0 +1,4 @@
+Bug Fixes:
+
+* [#36] Fixed the facade loading system scanning blocks too eagerly, which
+   caused odd bugs where several items didn't show up in some creative tabs.
