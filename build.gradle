@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.2.6-nonstrippedjars.10'
+    id 'fabric-loom' version '0.2.7-SNAPSHOT'
 }
 
 apply plugin: 'maven-publish' // for uploading to a maven repo
@@ -13,23 +13,23 @@ repositories {
 }
 
 archivesBaseName = "SimplePipes"
-version = "0.3.6"
+version = "0.4.0-pre.21"
 
 minecraft {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:1.15.2"
-    mappings "net.fabricmc:yarn:1.15.2+build.7:v2"
-    modCompile "net.fabricmc:fabric-loader:0.7.6+build.179"
+    minecraft "com.mojang:minecraft:1.16-pre4"
+    mappings "net.fabricmc:yarn:1.16-pre4+build.1:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.8.7+build.201"
 
     //Fabric api
-    modCompile "net.fabricmc.fabric-api:fabric-api:0.4.29+build.290-1.15"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.12.0+build.360-1.16"
 
     // Silk API
     // modCompile "io.github.prospector.silk:SilkAPI:1.2.3-38"
 
-    modApi "alexiil.mc.lib:libblockattributes-fatjar_devonly:$libblockattributes_version"
+    modApi "alexiil.mc.lib:libblockattributes-all:$libblockattributes_version"
     modApi "alexiil.mc.lib:libnetworkstack-base:$libnetworkstack_version"
     modApi "alexiil.mc.lib:libmultipart-base:$libmultipart_version"
 

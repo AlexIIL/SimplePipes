@@ -23,8 +23,8 @@ public class TilePump extends TileBase implements Tickable {
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);
         stored = FluidVolume.fromTag(tag.getCompound("fluid"));
     }
 

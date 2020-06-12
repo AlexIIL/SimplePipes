@@ -11,7 +11,7 @@
   },
   "depends": {
     "fabric": "*",
-    "minecraft": [ "1.15.2", "1.16-alpha.20.6.a" ],
+    "minecraft": [ ">=1.16- <1.17-" ],
     "libblockattributes": "*",
     "libnetworkstack": "*",
     "libmultipart": "*"

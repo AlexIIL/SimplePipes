@@ -29,9 +29,9 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -43,6 +43,8 @@ import alexiil.mc.lib.multipart.api.MultipartContainer.PartOffer;
 import alexiil.mc.lib.multipart.api.MultipartHolder;
 import alexiil.mc.lib.multipart.api.MultipartUtil;
 import alexiil.mc.mod.pipes.SimplePipes;
+import alexiil.mc.mod.pipes.items.ItemFacade.FacadePlacement;
+import alexiil.mc.mod.pipes.items.ItemFacade.FacadePotentialPlacament;
 import alexiil.mc.mod.pipes.part.FacadeBlockStateInfo;
 import alexiil.mc.mod.pipes.part.FacadePart;
 import alexiil.mc.mod.pipes.part.FacadeShape;
@@ -262,7 +264,7 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
         FacadePotentialPlacament(FacadeShape shape, BlockPos pos) {
             this.shape = shape;
             this.pos = pos;
-            this.centre = new Vec3d(pos).add(shape.centerOfMass);
+            this.centre = Vec3d.of(pos).add(shape.centerOfMass);
         }
     }
 

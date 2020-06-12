@@ -4,17 +4,18 @@ import javax.annotation.Nonnull;
 
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.network.packet.BlockEntityUpdateS2CPacket;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Hand;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -43,7 +44,7 @@ public abstract class TileBase extends BlockEntity implements BlockEntityClientS
     }
 
     protected void sendPacket(ServerWorld w, BlockEntityUpdateS2CPacket packet) {
-        w.getPlayers(player -> player.squaredDistanceTo(new Vec3d(getPos())) < 24 * 24)
+        w.getPlayers(player -> player.squaredDistanceTo(Vec3d.of(getPos())) < 24 * 24)
             .forEach(player -> player.networkHandler.sendPacket(packet));
     }
 

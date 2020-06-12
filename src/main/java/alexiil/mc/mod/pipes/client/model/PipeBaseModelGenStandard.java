@@ -38,7 +38,7 @@ public class PipeBaseModelGenStandard {
         final double colourOffset = 0.01;
         Vec3d[] faceOffset = new Vec3d[6];
         for (Direction face : Direction.values()) {
-            faceOffset[face.ordinal()] = new Vec3d(face.getOpposite().getVector()).multiply(colourOffset);
+            faceOffset[face.ordinal()] = Vec3d.of(face.getOpposite().getVector()).multiply(colourOffset);
         }
 
         // not connected

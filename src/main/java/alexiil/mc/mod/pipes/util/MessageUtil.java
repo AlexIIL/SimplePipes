@@ -2,7 +2,7 @@ package alexiil.mc.mod.pipes.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.util.PacketByteBuf;
+import net.minecraft.network.PacketByteBuf;
 
 public final class MessageUtil {
     private MessageUtil() {}

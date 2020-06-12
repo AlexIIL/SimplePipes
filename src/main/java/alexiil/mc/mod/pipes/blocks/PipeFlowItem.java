@@ -14,8 +14,8 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.util.DefaultedList;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -315,7 +315,7 @@ public class PipeFlowItem extends PipeFlow {
         speed += 0.01;
         speed *= 2;
         ItemEntity ent = new ItemEntity(world(), x, y, z, stack);
-        ent.setVelocity(new Vec3d(motion.getVector()).multiply(speed));
+        ent.setVelocity(Vec3d.of(motion.getVector()).multiply(speed));
 
         world().spawnEntity(ent);
     }

@@ -237,12 +237,22 @@ public class MutableVertex {
             renderAsBlock(bb);
         } else {
             for (VertexFormatElement vfe : vf.getElements()) {
-                if (vfe.isPosition()) renderPosition(bb);
-                else if (vfe.getType() == Type.NORMAL) renderNormal(bb);
-                else if (vfe.getType() == Type.COLOR) renderColour(bb);
-                else if (vfe.getType() == Type.UV) {
-                    if (vfe.getIndex() == 0) renderTex(bb);
-                    else if (vfe.getIndex() == 1) renderLightMap(bb);
+                switch (vfe.getType()) {
+                    case POSITION:
+                        renderPosition(bb);
+                        break;
+                    case NORMAL:
+                        renderNormal(bb);
+                        break;
+                    case COLOR:
+                        renderColour(bb);
+                        break;
+                    case UV:
+                        if (vfe.getIndex() == 0) renderTex(bb);
+                        else if (vfe.getIndex() == 1) renderLightMap(bb);
+                        break;
+                    default:
+                        break;
                 }
             }
             bb.next();

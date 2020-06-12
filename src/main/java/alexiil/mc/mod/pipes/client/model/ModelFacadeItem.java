@@ -3,11 +3,11 @@ package alexiil.mc.mod.pipes.client.model;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
+import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 import alexiil.mc.lib.multipart.impl.client.model.SinglePartBakedModel;
 import alexiil.mc.mod.pipes.client.model.DelayedBakedModel.ModelBakeCtx;
@@ -25,17 +25,17 @@ public final class ModelFacadeItem extends SimpleBakedModel {
     }
 
     @Override
-    public ModelItemPropertyOverrideList getItemPropertyOverrides() {
+    public ModelOverrideList getOverrides() {
         return override;
     }
 
-    public class FacadeOverride extends ModelItemPropertyOverrideList {
+    public class FacadeOverride extends ModelOverrideList {
         private FacadeOverride() {
             super(null, null, null, ImmutableList.of());
         }
 
         @Override
-        public BakedModel apply(BakedModel originalModel, ItemStack stack, World world, LivingEntity entity) {
+        public BakedModel apply(BakedModel originalModel, ItemStack stack, ClientWorld world, LivingEntity entity) {
             FullFacade inst = ItemFacade.getStates(stack);
             FacadeBlockStateInfo state = inst.state;
             FacadeShape shape = inst.shape;

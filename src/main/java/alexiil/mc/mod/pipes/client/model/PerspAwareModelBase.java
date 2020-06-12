@@ -14,7 +14,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
+import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.Direction;
@@ -71,7 +71,7 @@ public class PerspAwareModelBase implements BakedModel {
     }
 
     @Override
-    public ModelItemPropertyOverrideList getItemPropertyOverrides() {
-        return ModelItemPropertyOverrideList.EMPTY;
+    public ModelOverrideList getOverrides() {
+        return ModelOverrideList.EMPTY;
     }
 }

@@ -2,8 +2,8 @@ package alexiil.mc.mod.pipes.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockPlacementEnvironment;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
@@ -36,8 +36,8 @@ public abstract class BlockTrigger extends BlockBase implements BlockEntityProvi
     }
 
     @Override
-    public boolean canPlaceAtSide(BlockState state, BlockView view, BlockPos pos, BlockPlacementEnvironment env) {
-        return super.canPlaceAtSide(state, view, pos, env);
+    public boolean canPathfindThrough(BlockState state, BlockView view, BlockPos pos, NavigationType env) {
+        return super.canPathfindThrough(state, view, pos, env);
     }
 
     @Override

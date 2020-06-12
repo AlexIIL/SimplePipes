@@ -39,7 +39,7 @@ public abstract class BlockBase extends Block {
     }
 
     @Override
-    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState,
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState,
         boolean _unknown_boolean) {
 
         if (this != newState.getBlock()) {
@@ -49,6 +49,6 @@ public abstract class BlockBase extends Block {
             }
         }
 
-        super.onBlockRemoved(state, world, pos, newState, _unknown_boolean);
+        super.onStateReplaced(state, world, pos, newState, _unknown_boolean);
     }
 }

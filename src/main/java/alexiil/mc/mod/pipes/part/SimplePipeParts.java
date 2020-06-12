@@ -56,8 +56,8 @@ public final class SimplePipeParts {
             FacadeStateManager facades = FacadeStateManager.getInstance();
             Set<ItemStack> seen = ItemStackCollections.set();
 
-            for (int i = 0; i < context.inventory.getInvSize(); i++) {
-                ItemStack stack = context.inventory.getInvStack(i);
+            for (int i = 0; i < context.inventory.size(); i++) {
+                ItemStack stack = context.inventory.getStack(i);
                 if (stack.isEmpty()) {
                     continue;
                 }
@@ -159,7 +159,7 @@ public final class SimplePipeParts {
 
     private static boolean canCut(RecipeMatchFinder context, BlockState state) {
         // Stone pickaxe (not iron) so that there's actually a reason to upgrade to the laser cutter
-        return state.getMaterial().canBreakByHand() || new ItemStack(Items.STONE_PICKAXE).isEffectiveOn(state);
+        return !state.isToolRequired() || new ItemStack(Items.STONE_PICKAXE).isEffectiveOn(state);
     }
 
     private static Ingredient createIngredient(ItemStack stack) {

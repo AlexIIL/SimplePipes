@@ -8,16 +8,16 @@ package alexiil.mc.mod.pipes.container;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.container.Container;
-import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.BlockPos;
 
 import alexiil.mc.mod.pipes.blocks.TileTriggerInvSpace;
 
 public class ContainerTriggerInvSpace extends ContainerTile<TileTriggerInvSpace> {
 
-    public static final ContainerFactory<Container> FACTORY = (syncId, id, player, buffer) -> {
+    public static final ContainerFactory<ScreenHandler> FACTORY = (syncId, id, player, buffer) -> {
         BlockPos pos = buffer.readBlockPos();
         BlockEntity be = player.world.getBlockEntity(pos);
         if (be instanceof TileTriggerInvSpace) {

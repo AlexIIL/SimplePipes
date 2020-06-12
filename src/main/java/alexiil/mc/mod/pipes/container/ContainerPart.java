@@ -1,8 +1,8 @@
 package alexiil.mc.mod.pipes.container;
 
-import net.minecraft.container.Container;
-import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import alexiil.mc.lib.multipart.api.AbstractPart;
 import alexiil.mc.lib.multipart.api.MultipartContainer;
 
-public class ContainerPart<P extends AbstractPart> extends Container {
+public class ContainerPart<P extends AbstractPart> extends ScreenHandler {
 
     public final PlayerEntity player;
     public final P part;
@@ -29,7 +29,7 @@ public class ContainerPart<P extends AbstractPart> extends Container {
         MultipartContainer container = part.holder.getContainer();
 
         BlockPos pos = container.getMultipartPos();
-        if (pl.squaredDistanceTo(new Vec3d(pos)) > 8 * 8) {
+        if (pl.squaredDistanceTo(Vec3d.of(pos)) > 8 * 8) {
             return false;
         }
 

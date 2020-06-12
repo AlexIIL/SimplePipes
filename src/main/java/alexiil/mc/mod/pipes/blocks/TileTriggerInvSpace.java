@@ -1,9 +1,10 @@
 package alexiil.mc.mod.pipes.blocks;
 
-import net.minecraft.inventory.BasicInventory;
+import net.minecraft.block.BlockState;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.DefaultedList;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
 
 import alexiil.mc.lib.attributes.item.GroupedItemInvView;
@@ -15,22 +16,22 @@ import alexiil.mc.lib.attributes.item.impl.EmptyGroupedItemInv;
 
 public class TileTriggerInvSpace extends TileTrigger {
 
-    public final BasicInventory filterInv = new BasicInventory(1);
+    public final SimpleInventory filterInv = new SimpleInventory(1);
 
     public TileTriggerInvSpace() {
         super(SimplePipeBlocks.TRIGGER_ITEM_INV_SPACE_TILE);
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
-        filterInv.setInvStack(0, ItemStack.fromTag(tag.getCompound("filterStack")));
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);
+        filterInv.setStack(0, ItemStack.fromTag(tag.getCompound("filterStack")));
     }
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         tag = super.toTag(tag);
-        ItemStack stack = filterInv.getInvStack(0);
+        ItemStack stack = filterInv.getStack(0);
         if (!stack.isEmpty()) {
             tag.put("filterStack", stack.toTag(new CompoundTag()));
         }
@@ -40,7 +41,7 @@ public class TileTriggerInvSpace extends TileTrigger {
     @Override
     public DefaultedList<ItemStack> removeItemsForDrop() {
         DefaultedList<ItemStack> list = super.removeItemsForDrop();
-        list.add(filterInv.removeInvStack(0));
+        list.add(filterInv.removeStack(0));
         return list;
     }
 
@@ -51,7 +52,7 @@ public class TileTriggerInvSpace extends TileTrigger {
             return EnumTriggerState.NO_TARGET;
         }
         final ItemFilter filter;
-        ItemStack stack = filterInv.getInvStack(0);
+        ItemStack stack = filterInv.getStack(0);
         if (stack.isEmpty()) {
             filter = ConstantItemFilter.ANYTHING;
         } else {

@@ -180,7 +180,7 @@ public class ModelUtil {
         UvFaceData uvs = new UvFaceData();
         for (Box box : shape.getBoundingBoxes()) {
             Vec3d center = box.getCenter();
-            Vec3d radius = new Vec3d(box.x2 - box.x1, box.y2 - box.y1, box.z2 - box.z1).multiply(0.5);
+            Vec3d radius = new Vec3d(box.maxX - box.minX, box.maxY - box.minY, box.maxZ - box.minZ).multiply(0.5);
             for (Direction dir : Direction.values()) {
                 mapBoxToUvs(box, dir, uvs);
                 uvs.inSprite(sprite);
@@ -194,45 +194,45 @@ public class ModelUtil {
         // TODO: Fix these!
         switch (side) {
             case WEST: /* -X */ {
-                uvs.minU = (float) box.z1;
-                uvs.maxU = (float) box.z2;
-                uvs.minV = 1 - (float) box.y2;
-                uvs.maxV = 1 - (float) box.y1;
+                uvs.minU = (float) box.minZ;
+                uvs.maxU = (float) box.maxZ;
+                uvs.minV = 1 - (float) box.maxY;
+                uvs.maxV = 1 - (float) box.minY;
                 return;
             }
             case EAST: /* +X */ {
-                uvs.minU = 1 - (float) box.z1;
-                uvs.maxU = 1 - (float) box.z2;
-                uvs.minV = 1 - (float) box.y2;
-                uvs.maxV = 1 - (float) box.y1;
+                uvs.minU = 1 - (float) box.minZ;
+                uvs.maxU = 1 - (float) box.maxZ;
+                uvs.minV = 1 - (float) box.maxY;
+                uvs.maxV = 1 - (float) box.minY;
                 return;
             }
             case DOWN: /* -Y */ {
-                uvs.minU = (float) box.x1;
-                uvs.maxU = (float) box.x2;
-                uvs.minV = 1 - (float) box.z2;
-                uvs.maxV = 1 - (float) box.z1;
+                uvs.minU = (float) box.minX;
+                uvs.maxU = (float) box.maxX;
+                uvs.minV = 1 - (float) box.maxZ;
+                uvs.maxV = 1 - (float) box.minZ;
                 return;
             }
             case UP: /* +Y */ {
-                uvs.minU = (float) box.x1;
-                uvs.maxU = (float) box.x2;
-                uvs.minV = (float) box.z2;
-                uvs.maxV = (float) box.z1;
+                uvs.minU = (float) box.minX;
+                uvs.maxU = (float) box.maxX;
+                uvs.minV = (float) box.maxZ;
+                uvs.maxV = (float) box.minZ;
                 return;
             }
             case NORTH: /* -Z */ {
-                uvs.minU = 1 - (float) box.x1;
-                uvs.maxU = 1 - (float) box.x2;
-                uvs.minV = 1 - (float) box.y2;
-                uvs.maxV = 1 - (float) box.y1;
+                uvs.minU = 1 - (float) box.minX;
+                uvs.maxU = 1 - (float) box.maxX;
+                uvs.minV = 1 - (float) box.maxY;
+                uvs.maxV = 1 - (float) box.minY;
                 return;
             }
             case SOUTH: /* +Z */ {
-                uvs.minU = (float) box.x1;
-                uvs.maxU = (float) box.x2;
-                uvs.minV = 1 - (float) box.y2;
-                uvs.maxV = 1 - (float) box.y1;
+                uvs.minU = (float) box.minX;
+                uvs.maxU = (float) box.maxX;
+                uvs.minV = 1 - (float) box.maxY;
+                uvs.maxV = 1 - (float) box.minY;
                 return;
             }
             default: {

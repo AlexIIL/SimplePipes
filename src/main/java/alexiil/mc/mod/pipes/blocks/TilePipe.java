@@ -11,14 +11,15 @@ import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Tickable;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
@@ -47,8 +48,8 @@ public abstract class TilePipe extends TileBase implements Tickable {
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);
         connections = tag.getByte("c");
         flow.fromTag(tag.getCompound("flow"));
     }
@@ -173,7 +174,7 @@ public abstract class TilePipe extends TileBase implements Tickable {
         } else if (w != null) {
             // air -> pipe
             // (This just forces the world to re-render us)
-            w.checkBlockRerender(getPos(), Blocks.AIR.getDefaultState(), getCachedState());
+            w.scheduleBlockRerenderIfNeeded(getPos(), Blocks.AIR.getDefaultState(), getCachedState());
         }
     }
 

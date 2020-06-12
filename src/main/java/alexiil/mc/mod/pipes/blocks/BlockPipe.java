@@ -8,9 +8,9 @@ package alexiil.mc.mod.pipes.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -19,16 +19,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.FluidTags;
-import net.minecraft.util.BooleanBiFunction;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-
+import net.minecraft.world.WorldAccess;
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
@@ -92,7 +91,7 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
 
     @Override
     public BlockState getStateForNeighborUpdate(
-        BlockState blockState_1, Direction direction_1, BlockState blockState_2, IWorld iWorld_1, BlockPos blockPos_1,
+        BlockState blockState_1, Direction direction_1, BlockState blockState_2, WorldAccess iWorld_1, BlockPos blockPos_1,
         BlockPos blockPos_2
     ) {
         if (blockState_1.get(Properties.WATERLOGGED)) {
@@ -115,7 +114,7 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
     public abstract TilePipe createBlockEntity(BlockView var1);
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext entityPos) {
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext entityPos) {
         BlockEntity be = view.getBlockEntity(pos);
         if (be instanceof TilePipe) {
             TilePipe pipe = (TilePipe) be;

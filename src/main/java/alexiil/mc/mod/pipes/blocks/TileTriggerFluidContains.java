@@ -1,5 +1,6 @@
 package alexiil.mc.mod.pipes.blocks;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.Direction;
 
@@ -20,8 +21,8 @@ public class TileTriggerFluidContains extends TileTrigger {
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);
         filter = FluidKey.fromTag(tag.getCompound("filter"));
     }
 

@@ -5,10 +5,10 @@ import com.google.gson.JsonSyntaxException;
 
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
 import net.minecraft.world.World;
 
 import alexiil.mc.mod.pipes.SimplePipes;
@@ -32,8 +32,8 @@ public enum FacadeCraftingRecipe implements CraftingRecipe, RecipeSerializer<Fac
         int microVoxelCount = 0;
         int seenFacades = 0;
 
-        for (int i = 0; i < inv.getInvSize(); i++) {
-            ItemStack stack = inv.getInvStack(i);
+        for (int i = 0; i < inv.size(); i++) {
+            ItemStack stack = inv.getStack(i);
             if (stack.isEmpty()) {
                 continue;
             }

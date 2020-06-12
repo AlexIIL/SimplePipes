@@ -2,8 +2,7 @@ package alexiil.mc.mod.pipes.client.screen;
 
 import net.fabricmc.fabric.api.client.screen.ContainerScreenFactory;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
-
-import net.minecraft.container.Container;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.Identifier;
 
 import alexiil.mc.mod.pipes.container.SimplePipeContainers;
@@ -20,7 +19,7 @@ public class SimplePipeScreens {
         register(SimplePipeContainers.TANK, ScreenTank.FACTORY);
     }
 
-    private static void register(Identifier id, ContainerScreenFactory<? extends Container> factory) {
+    private static void register(Identifier id, ContainerScreenFactory<? extends ScreenHandler> factory) {
         ScreenProviderRegistry.INSTANCE.registerFactory(id, factory);
     }
 }

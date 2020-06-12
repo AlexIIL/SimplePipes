@@ -31,7 +31,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.ConnectedPlantBlock;
+import net.minecraft.block.ConnectingBlock;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.block.GlassBlock;
 import net.minecraft.block.SlabBlock;
@@ -43,9 +43,9 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.BooleanBiFunction;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -374,9 +374,9 @@ public final class FacadeStateManager {
             }
         }
 
-        if (state.getProperties().containsAll(ConnectedPlantBlock.FACING_PROPERTIES.values())) {
-            boolean val = state.get(ConnectedPlantBlock.DOWN);
-            for (BooleanProperty prop : ConnectedPlantBlock.FACING_PROPERTIES.values()) {
+        if (state.getProperties().containsAll(ConnectingBlock.FACING_PROPERTIES.values())) {
+            boolean val = state.get(ConnectingBlock.DOWN);
+            for (BooleanProperty prop : ConnectingBlock.FACING_PROPERTIES.values()) {
                 if (state.get(prop) != val) {
                     return new TypedActionResult<>(ActionResult.FAIL, "it is a mushroom with non-matching properties!");
                 }

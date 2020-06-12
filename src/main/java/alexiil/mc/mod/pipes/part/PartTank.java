@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
+import alexiil.mc.lib.attributes.fluid.FluidInvUtil;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.lib.multipart.api.AbstractPart;
@@ -162,10 +162,12 @@ public class PartTank extends AbstractPart {
         if (player.world.isClient) {
             return ActionResult.SUCCESS;
         }
-        isPlayerInteracting = true;
-        boolean result = FluidVolumeUtil.interactWithTank((FixedFluidInv) fluidInv, player, hand);
-        isPlayerInteracting = false;
-        return result ? ActionResult.SUCCESS : ActionResult.FAIL;
+        try {
+            isPlayerInteracting = true;
+            return FluidInvUtil.interactHandWithTank((FixedFluidInv) fluidInv, player, hand).asActionResult();
+        } finally {
+            isPlayerInteracting = false;
+        }
     }
 
     @Override

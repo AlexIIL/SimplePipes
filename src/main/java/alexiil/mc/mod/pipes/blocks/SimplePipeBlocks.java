@@ -72,7 +72,7 @@ public class SimplePipeBlocks {
     public static final BlockEntityType<TilePump> PUMP_TILE;
 
     static {
-        Block.Settings pipeSettings = FabricBlockSettings.of(Material.PART)//
+        Block.Settings pipeSettings = FabricBlockSettings.of(Material.SUPPORTED)//
             .strength(0.5f, 1f)//
             .build();
 

@@ -185,9 +185,9 @@ public class TravellingItem {
         float interp = (afterTick + partialTicks) / diff;
         interp = Math.max(0, Math.min(1, interp));
 
-        Vec3d center = new Vec3d(pos).add(0.5, 0.5, 0.5);
+        Vec3d center = Vec3d.of(pos).add(0.5, 0.5, 0.5);
         Vec3d vecSide =
-            side == null ? center : center.add(new Vec3d(side.getVector()).multiply(pipe.getPipeLength(side)));
+            side == null ? center : center.add(Vec3d.of(side.getVector()).multiply(pipe.getPipeLength(side)));
 
         Vec3d vecFrom;
         Vec3d vecTo;

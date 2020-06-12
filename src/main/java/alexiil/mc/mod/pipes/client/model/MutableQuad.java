@@ -94,7 +94,7 @@ public class MutableQuad {
         vertex_1.toBakedBlock(data, 8 * 1);
         vertex_2.toBakedBlock(data, 8 * 2);
         vertex_3.toBakedBlock(data, 8 * 3);
-        return new BakedQuad(data, colourIndex, face, sprite);
+        return new BakedQuad(data, colourIndex, face, sprite, false);
     }
 
     public BakedQuad toBakedItem() {
@@ -103,7 +103,7 @@ public class MutableQuad {
         vertex_1.toBakedItem(data, 7);
         vertex_2.toBakedItem(data, 14);
         vertex_3.toBakedItem(data, 21);
-        return new BakedQuad(data, colourIndex, face, sprite);
+        return new BakedQuad(data, colourIndex, face, sprite, false);
     }
 
     public MutableQuad fromBakedBlock(BakedQuad quad) {

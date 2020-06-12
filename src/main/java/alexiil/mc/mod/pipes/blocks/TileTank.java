@@ -1,5 +1,6 @@
 package alexiil.mc.mod.pipes.blocks;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 
@@ -30,8 +31,8 @@ public class TileTank extends TileBase implements Tickable {
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);
         if (tag.contains("fluid")) {
             FluidVolume fluid = FluidVolume.fromTag(tag.getCompound("fluid"));
             fluidInv.setInvFluid(0, fluid, Simulation.ACTION);

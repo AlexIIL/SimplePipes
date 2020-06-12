@@ -8,15 +8,15 @@ package alexiil.mc.mod.pipes.container;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.math.BlockPos;
 
 import alexiil.mc.mod.pipes.blocks.TileTriggerFluidSpace;
 
 public class ContainerTriggerFluidSpace extends ContainerTile<TileTriggerFluidSpace> {
 
-    public static final ContainerFactory<Container> FACTORY = (syncId, id, player, buffer) -> {
+    public static final ContainerFactory<ScreenHandler> FACTORY = (syncId, id, player, buffer) -> {
         BlockPos pos = buffer.readBlockPos();
         BlockEntity be = player.world.getBlockEntity(pos);
         if (be instanceof TileTriggerFluidSpace) {

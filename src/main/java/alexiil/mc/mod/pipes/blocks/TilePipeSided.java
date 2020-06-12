@@ -12,6 +12,7 @@ import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.CompoundTag;
@@ -33,8 +34,8 @@ public abstract class TilePipeSided extends TilePipe {
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);
         byte b = tag.getByte("dir");
         if (b >= 0 && b < 6) {
             currentDirection = Direction.byId(b);

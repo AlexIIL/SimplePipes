@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.BooleanBiFunction;
+import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -180,7 +180,7 @@ public abstract class FacadeShape {
         }
 
         private static Vec3d makeCentreOfMass(Direction side, FacadeSize size) {
-            Vec3d sideVec = new Vec3d(side.getVector());
+            Vec3d sideVec = Vec3d.of(side.getVector());
             return VecUtil.VEC_HALF.add(sideVec.multiply(0.5 - size.microVoxelSize / 32.0));
         }
 
