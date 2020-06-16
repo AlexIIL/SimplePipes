@@ -3,6 +3,7 @@ package alexiil.mc.mod.pipes.part;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.shape.VoxelShape;
@@ -73,6 +74,11 @@ public class FacadePart extends AbstractPart {
     @Override
     public ItemStack getPickStack() {
         return SimplePipeItems.FACADE.createItemStack(new FullFacade(state, shape));
+    }
+
+    @Override
+    public float calculateBreakingDelta(PlayerEntity player) {
+        return calculateBreakingDelta(player, state.state);
     }
 
     @Override

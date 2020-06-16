@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -133,6 +134,11 @@ public class PartTank extends AbstractPart {
     @Override
     public ItemStack getPickStack() {
         return new ItemStack(SimplePipeItems.TANK);
+    }
+
+    @Override
+    public float calculateBreakingDelta(PlayerEntity player) {
+        return calculateBreakingDelta(player, Blocks.GLASS);
     }
 
     protected void onTick() {
