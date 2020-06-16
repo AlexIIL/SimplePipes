@@ -34,7 +34,7 @@
     "base": {},
     "all": {
       "+id": "simple_pipes_dep_container",
-      "+name": "SimplePipeTest (Depedency Container)",
+      "+name": "SimplePipeTest (Dependency Container)",
       "+custom": { 
         "modmenu:api": true,
         "modmenu:parent": "simple_pipes"
