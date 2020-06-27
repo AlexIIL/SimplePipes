@@ -20,6 +20,12 @@ public final class BlockUtil {
 
     public static Comparator<BlockState> blockStateComparator() {
         return (blockStateA, blockStateB) -> {
+            if (blockStateA == null) {
+                return blockStateB == null ? 0 : 1;
+            }
+            if (blockStateB == null) {
+                return -1;
+            }
             Block blockA = blockStateA.getBlock();
             Block blockB = blockStateB.getBlock();
             if (blockA != blockB) {
