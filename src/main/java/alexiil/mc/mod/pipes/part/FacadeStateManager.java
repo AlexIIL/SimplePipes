@@ -89,7 +89,7 @@ public final class FacadeStateManager {
 
         limitedProperties.put(Properties.PERSISTENT, false);
         limitedProperties.put(Properties.DISTANCE_0_7, 0);
-        limitedProperties.put(Properties.DISTANCE_1_7, 0);
+        limitedProperties.put(Properties.DISTANCE_1_7, 1);
         limitedProperties.put(Properties.AGE_1, 0);
         limitedProperties.put(Properties.AGE_2, 0);
         limitedProperties.put(Properties.AGE_3, 0);
@@ -162,7 +162,6 @@ public final class FacadeStateManager {
     }
 
     public static FacadeBlockStateInfo getInfoForBlock(Block block) {
-        update();
         return getInfoForState(block.getDefaultState());
     }
 

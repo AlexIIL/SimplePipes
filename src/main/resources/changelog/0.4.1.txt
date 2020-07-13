@@ -1,0 +1,3 @@
+Bug Fixes:
+
+* [#45] Diamond Pipes only drop item in first filter slot when broken.

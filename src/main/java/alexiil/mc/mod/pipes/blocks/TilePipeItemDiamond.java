@@ -85,7 +85,7 @@ public class TilePipeItemDiamond extends TilePipe {
     @Override
     public DefaultedList<ItemStack> removeItemsForDrop() {
         DefaultedList<ItemStack> list = super.removeItemsForDrop();
-        list.add(filterInv.removeStack(0));
+        list.addAll(filterInv.clearToList());
         return list;
     }
 }
