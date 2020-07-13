@@ -7,6 +7,7 @@ package alexiil.mc.mod.pipes.blocks;
 
 import java.util.function.Function;
 
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.Direction;
 
@@ -18,6 +19,11 @@ public abstract class TilePipeIron extends TilePipeSided {
 
     @Override
     protected boolean canFaceDirection(Direction dir) {
-        return isConnected(dir);
+        BlockEntity other = world.getBlockEntity(getPos().offset(dir));
+        if (other instanceof TilePipe) {
+            return (flow instanceof PipeFlowItem) == (((TilePipe) other).flow instanceof PipeFlowItem);
+        }
+
+        return flow.canConnect(dir);
     }
 }
