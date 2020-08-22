@@ -10,7 +10,7 @@ public class TilePipeFluidWood extends TilePipeWood {
     }
 
     @Override
-    protected void tryExtract(Direction dir) {
+    public void tryExtract(Direction dir, int pulses) {
         ((PipeFlowFluid) flow).tryExtract(dir);
     }
 

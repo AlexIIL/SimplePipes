@@ -22,9 +22,9 @@ public class TilePipeItemWood extends TilePipeWood {
     }
 
     @Override
-    protected void tryExtract(Direction dir) {
+    public void tryExtract(Direction dir, int pulses) {
         ItemExtractable extractable = getItemExtractable(dir);
-        ItemStack stack = extractable.attemptAnyExtraction(1, Simulation.ACTION);
+        ItemStack stack = extractable.attemptAnyExtraction(pulses, Simulation.ACTION);
 
         if (!stack.isEmpty()) {
             ((PipeFlowItem) flow).insertItemsForce(stack, dir, null, EXTRACT_SPEED);

@@ -1,3 +1,7 @@
+Changes:
+
+* Exposed "TilePipeWood.tryExtract(int redstone_pulses)" for addon devs to use for more powerful engines.
+
 Bug Fixes:
 
 * [#42] Iron pipes didn't face inventories (Kneelawk)

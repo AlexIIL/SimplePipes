@@ -32,12 +32,21 @@ public abstract class TilePipeWood extends TilePipeSided {
         if (world.isReceivingRedstonePower(getPos())) {
             if (!lastRecv) {
                 lastRecv = true;
-                tryExtract(dir);
+                tryExtract(dir, 1);
             }
         } else {
             lastRecv = false;
         }
     }
 
-    protected abstract void tryExtract(Direction dir);
+    /** @param pulses The number of redstone pulses to send. For item pipes this extracts up to the pulse count of
+     *            items, has no effect on fluids. */
+    public final void tryExtract(int pulses) {
+        Direction dir = currentDirection();
+        if (dir != null) {
+            tryExtract(dir, pulses);
+        }
+    }
+
+    protected abstract void tryExtract(Direction dir, int pulses);
 }
