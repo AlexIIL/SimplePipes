@@ -1,3 +1,0 @@
-Bug Fixes:
-
-* Iron pipes didn't face inventories (Kneelawk)
