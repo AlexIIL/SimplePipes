@@ -20,13 +20,15 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import alexiil.mc.mod.pipes.util.DelayedList;
+import alexiil.mc.mod.pipes.util.TagUtil;
+
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.ItemInsertable;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable;
 import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable;
-import alexiil.mc.mod.pipes.util.DelayedList;
-import alexiil.mc.mod.pipes.util.TagUtil;
 
 public class PipeFlowItem extends PipeFlow {
 
@@ -42,7 +44,10 @@ public class PipeFlowItem extends PipeFlow {
             insertables[dir.getOpposite().ordinal()] = new ItemInsertable() {
                 @Override
                 public ItemStack attemptInsertion(ItemStack stack, Simulation simulation) {
-                    return stack;
+                    if (stack.isEmpty()) {
+                        return stack;
+                    }
+                    return injectItem(stack, simulation.isAction(), dir, null, 0.04);
                 }
 
                 @Override
@@ -108,8 +113,13 @@ public class PipeFlowItem extends PipeFlow {
     }
 
     @Override
-    protected boolean canConnect(Direction dir) {
+    protected boolean hasInsertable(Direction dir) {
         return pipe.getItemInsertable(dir) != RejectingItemInsertable.NULL;
+    }
+
+    @Override
+    protected boolean hasExtractable(Direction dir) {
+        return pipe.getItemExtractable(dir) != EmptyItemExtractable.NULL;
     }
 
     @Override

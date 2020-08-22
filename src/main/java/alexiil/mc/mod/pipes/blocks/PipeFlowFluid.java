@@ -22,12 +22,10 @@ import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.ExactFluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
+import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
 import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alexiil.mc.mod.pipes.blocks.PipeFlowFluid.CenterSection;
-import alexiil.mc.mod.pipes.blocks.PipeFlowFluid.Section;
-import alexiil.mc.mod.pipes.blocks.PipeFlowFluid.SideSection;
 
 public class PipeFlowFluid extends PipeFlow {
 
@@ -127,8 +125,13 @@ public class PipeFlowFluid extends PipeFlow {
     }
 
     @Override
-    protected boolean canConnect(Direction dir) {
+    protected boolean hasInsertable(Direction dir) {
         return pipe.getFluidInsertable(dir) != RejectingFluidInsertable.NULL;
+    }
+
+    @Override
+    protected boolean hasExtractable(Direction dir) {
+        return pipe.getFluidExtractable(dir) != EmptyFluidExtractable.NULL;
     }
 
     @Override
@@ -160,9 +163,8 @@ public class PipeFlowFluid extends PipeFlow {
         if (max <= 0) {
             return;
         }
-        FluidFilter filter = section.fluid.isEmpty() ? ConstantFluidFilter.ANYTHING : new ExactFluidFilter(
-            section.fluid.getFluidKey()
-        );
+        FluidFilter filter = section.fluid.isEmpty() ? ConstantFluidFilter.ANYTHING
+            : new ExactFluidFilter(section.fluid.getFluidKey());
         FluidVolume extracted = from.attemptExtraction(filter, max, Simulation.SIMULATE);
         int extractedAmount = extracted.getAmount();
         if (extractedAmount < 0) {
@@ -360,8 +362,9 @@ public class PipeFlowFluid extends PipeFlow {
                                 throw new IllegalStateException(
                                     "The fluid " + fluidCopy.getClass() + " and " + leftover.getClass()
                                         + " didn't merge again after they were split!\n"
-                                        + "This is either a bug in that fluid volume class, or a bug in " + insertable
-                                            .getClass() + "for returning an invalid result from attemptInsertion"
+                                        + "This is either a bug in that fluid volume class, or a bug in "
+                                        + insertable.getClass()
+                                        + "for returning an invalid result from attemptInsertion"
                                 );
                             }
                             fluid = merged;

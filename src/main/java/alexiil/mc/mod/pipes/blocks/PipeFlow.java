@@ -31,7 +31,9 @@ public abstract class PipeFlow {
         // nothing by default
     }
 
-    protected abstract boolean canConnect(Direction dir);
+    protected abstract boolean hasExtractable(Direction dir);
+
+    protected abstract boolean hasInsertable(Direction dir);
 
     protected abstract void tick();
 

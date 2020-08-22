@@ -107,7 +107,7 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         FluidState fluidState_1 = ctx.getWorld().getFluidState(ctx.getBlockPos());
         return this.getDefaultState()
-            .with(Properties.WATERLOGGED, fluidState_1.matches(FluidTags.WATER) && fluidState_1.getLevel() == 8);
+            .with(Properties.WATERLOGGED, fluidState_1.isIn(FluidTags.WATER) && fluidState_1.getLevel() == 8);
     }
 
     @Override

@@ -23,7 +23,6 @@ public abstract class TilePipeIron extends TilePipeSided {
         if (other instanceof TilePipe) {
             return (flow instanceof PipeFlowItem) == (((TilePipe) other).flow instanceof PipeFlowItem);
         }
-
-        return flow.canConnect(dir);
+        return flow.hasInsertable(dir);
     }
 }

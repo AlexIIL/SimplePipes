@@ -104,7 +104,7 @@ public abstract class TilePipe extends TileBase implements Tickable {
     }
 
     protected boolean canConnect(Direction dir) {
-        return flow.canConnect(dir);
+        return flow.hasExtractable(dir) || flow.hasInsertable(dir);
     }
 
     @Nullable

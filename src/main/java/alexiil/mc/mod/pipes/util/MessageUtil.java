@@ -9,7 +9,7 @@ public final class MessageUtil {
 
     /** Writes a block state using the block ID and its metadata. Not suitable for full states. */
     public static void writeBlockState(PacketByteBuf buf, BlockState state) {
-        buf.writeInt(Block.STATE_IDS.getId(state));
+        buf.writeInt(Block.STATE_IDS.getRawId(state));
     }
 
     public static BlockState readBlockState(PacketByteBuf buf) {

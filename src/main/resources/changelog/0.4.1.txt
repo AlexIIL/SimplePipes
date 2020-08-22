@@ -1,4 +1,4 @@
 Bug Fixes:
 
+* [#42] Iron pipes didn't face inventories (Kneelawk)
 * [#45] Diamond Pipes only drop item in first filter slot when broken.
-* Iron pipes didn't face inventories (Kneelawk)
