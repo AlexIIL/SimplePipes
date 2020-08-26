@@ -10,6 +10,7 @@
     "block.simple_pipes.pipe_iron_fluid": "Simple Iron Fluid Pipe",
     "block.simple_pipes.pipe_clay_fluid": "Simple Clay Fluid Pipe",
     "block.simple_pipes.pipe_stone_fluid": "Simple Stone Fluid Pipe",
+    "block.simple_pipes.pipe_sponge_fluid": "Simple Sponge Fluid Pipe",
 
     "block.simple_pipes.trigger_item_inv_empty": "Item Inventory Empty Trigger",
     "block.simple_pipes.trigger_item_inv_full": "Item Inventory Full Trigger",

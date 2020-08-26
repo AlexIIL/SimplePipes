@@ -33,7 +33,7 @@ public class PipeFlowFluid extends PipeFlow {
     public static final int SECTION_CAPACITY = FluidVolume.BUCKET / 2;
 
     private final Map<Direction, SideSection> sideSections = new EnumMap<>(Direction.class);
-    private final CenterSection centerSection = new CenterSection();
+    final CenterSection centerSection = new CenterSection();
 
     final FluidInsertable[] insertables;
     long lastTickTime;

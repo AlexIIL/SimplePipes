@@ -17,8 +17,6 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 
-import alexiil.mc.lib.multipart.api.render.PartDynamicModelRegisterEvent;
-import alexiil.mc.lib.multipart.api.render.PartStaticModelRegisterEvent;
 import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
 import alexiil.mc.mod.pipes.blocks.TilePipe;
 import alexiil.mc.mod.pipes.client.model.SimplePipeModels;
@@ -32,6 +30,9 @@ import alexiil.mc.mod.pipes.client.render.PipeItemTileRenderer;
 import alexiil.mc.mod.pipes.client.render.TankPartRenderer;
 import alexiil.mc.mod.pipes.client.screen.SimplePipeScreens;
 import alexiil.mc.mod.pipes.part.PartTank;
+
+import alexiil.mc.lib.multipart.api.render.PartDynamicModelRegisterEvent;
+import alexiil.mc.lib.multipart.api.render.PartStaticModelRegisterEvent;
 
 public class SimplePipesClient implements ClientModInitializer {
 
@@ -53,6 +54,7 @@ public class SimplePipesClient implements ClientModInitializer {
         registerFluidPipeRender(SimplePipeBlocks.STONE_PIPE_FLUID_TILE);
         registerFluidPipeRender(SimplePipeBlocks.CLAY_PIPE_FLUID_TILE);
         registerFluidPipeRender(SimplePipeBlocks.IRON_PIPE_FLUID_TILE);
+        registerFluidPipeRender(SimplePipeBlocks.SPONGE_PIPE_FLUID_TILE);
 
         setCutoutLayer(SimplePipeBlocks.WOODEN_PIPE_ITEMS);
         setCutoutLayer(SimplePipeBlocks.STONE_PIPE_ITEMS);
@@ -65,6 +67,7 @@ public class SimplePipesClient implements ClientModInitializer {
         setCutoutLayer(SimplePipeBlocks.STONE_PIPE_FLUIDS);
         setCutoutLayer(SimplePipeBlocks.CLAY_PIPE_FLUIDS);
         setCutoutLayer(SimplePipeBlocks.IRON_PIPE_FLUIDS);
+        setCutoutLayer(SimplePipeBlocks.SPONGE_PIPE_FLUIDS);
 
         PartStaticModelRegisterEvent.EVENT.register(model -> {
             model.register(TankPartModelKey.class, TankPartBaker.INSTANCE);
@@ -111,5 +114,6 @@ public class SimplePipesClient implements ClientModInitializer {
         registry.register(SimplePipes.id("pipe_diamond_item_south"));
         registry.register(SimplePipes.id("pipe_diamond_item_west"));
         registry.register(SimplePipes.id("pipe_diamond_item_east"));
+        registry.register(SimplePipes.id("pipe_sponge_fluid"));
     }
 }

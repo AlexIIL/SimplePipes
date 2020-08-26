@@ -35,6 +35,7 @@ public class SimplePipeItems {
     public static final BlockItem STONE_PIPE_FLUIDS;
     public static final BlockItem CLAY_PIPE_FLUIDS;
     public static final BlockItem IRON_PIPE_FLUIDS;
+    public static final BlockItem SPONGE_PIPE_FLUIDS;
 
     public static final ItemSimplePart TANK;
     public static final BlockItem PUMP;
@@ -51,9 +52,8 @@ public class SimplePipeItems {
 
     static {
         ItemGroup mainGroup = FabricItemGroupBuilder.build(SimplePipes.id("main"), SimplePipeItems::getMainGroupStack);
-        ItemGroup facadeGroup = FabricItemGroupBuilder.build(
-            SimplePipes.id("facades"), SimplePipeItems::getFacadeGroupStack
-        );
+        ItemGroup facadeGroup
+            = FabricItemGroupBuilder.build(SimplePipes.id("facades"), SimplePipeItems::getFacadeGroupStack);
 
         Item.Settings pipes = new Item.Settings();
         pipes.group(mainGroup);
@@ -70,6 +70,7 @@ public class SimplePipeItems {
         STONE_PIPE_FLUIDS = new BlockItem(SimplePipeBlocks.STONE_PIPE_FLUIDS, pipes);
         CLAY_PIPE_FLUIDS = new BlockItem(SimplePipeBlocks.CLAY_PIPE_FLUIDS, pipes);
         IRON_PIPE_FLUIDS = new BlockItem(SimplePipeBlocks.IRON_PIPE_FLUIDS, pipes);
+        SPONGE_PIPE_FLUIDS = new BlockItem(SimplePipeBlocks.SPONGE_PIPE_FLUIDS, pipes);
 
         Item.Settings triggers = new Item.Settings();
         triggers.group(mainGroup);
@@ -110,6 +111,7 @@ public class SimplePipeItems {
         registerItem(STONE_PIPE_FLUIDS, "pipe_stone_fluid");
         registerItem(CLAY_PIPE_FLUIDS, "pipe_clay_fluid");
         registerItem(IRON_PIPE_FLUIDS, "pipe_iron_fluid");
+        registerItem(SPONGE_PIPE_FLUIDS, "pipe_sponge_fluid");
 
         registerItem(TANK, "tank");
         registerItem(PUMP, "pump");

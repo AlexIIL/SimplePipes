@@ -42,6 +42,7 @@ public class SimplePipeBlocks {
     public static final BlockPipeFluidStone STONE_PIPE_FLUIDS;
     public static final BlockPipeFluidClay CLAY_PIPE_FLUIDS;
     public static final BlockPipeFluidIron IRON_PIPE_FLUIDS;
+    public static final BlockPipeFluidSponge SPONGE_PIPE_FLUIDS;
 
     public static final BlockTank TANK;
     public static final BlockPump PUMP;
@@ -57,6 +58,7 @@ public class SimplePipeBlocks {
     public static final BlockEntityType<TilePipeFluidStone> STONE_PIPE_FLUID_TILE;
     public static final BlockEntityType<TilePipeFluidClay> CLAY_PIPE_FLUID_TILE;
     public static final BlockEntityType<TilePipeFluidIron> IRON_PIPE_FLUID_TILE;
+    public static final BlockEntityType<TilePipeFluidSponge> SPONGE_PIPE_FLUID_TILE;
 
     public static final BlockEntityType<TileTriggerInvEmpty> TRIGGER_ITEM_INV_EMPTY_TILE;
     public static final BlockEntityType<TileTriggerInvFull> TRIGGER_ITEM_INV_FULL_TILE;
@@ -87,6 +89,7 @@ public class SimplePipeBlocks {
         STONE_PIPE_FLUIDS = new BlockPipeFluidStone(pipeSettings);
         CLAY_PIPE_FLUIDS = new BlockPipeFluidClay(pipeSettings);
         IRON_PIPE_FLUIDS = new BlockPipeFluidIron(pipeSettings);
+        SPONGE_PIPE_FLUIDS = new BlockPipeFluidSponge(pipeSettings);
 
         Block.Settings triggerSettings = FabricBlockSettings.of(Material.STONE)//
             .strength(1.5F, 6.0F)//
@@ -116,6 +119,7 @@ public class SimplePipeBlocks {
         STONE_PIPE_FLUID_TILE = create(TilePipeFluidStone::new, STONE_PIPE_FLUIDS);
         CLAY_PIPE_FLUID_TILE = create(TilePipeFluidClay::new, CLAY_PIPE_FLUIDS);
         IRON_PIPE_FLUID_TILE = create(TilePipeFluidIron::new, IRON_PIPE_FLUIDS);
+        SPONGE_PIPE_FLUID_TILE = create(TilePipeFluidSponge::new, SPONGE_PIPE_FLUIDS);
 
         TRIGGER_ITEM_INV_EMPTY_TILE = create(TileTriggerInvEmpty::new, TRIGGER_ITEM_INV_EMPTY);
         TRIGGER_ITEM_INV_FULL_TILE = create(TileTriggerInvFull::new, TRIGGER_ITEM_INV_FULL);
@@ -157,6 +161,7 @@ public class SimplePipeBlocks {
         registerBlock(STONE_PIPE_FLUIDS, "pipe_stone_fluid");
         registerBlock(CLAY_PIPE_FLUIDS, "pipe_clay_fluid");
         registerBlock(IRON_PIPE_FLUIDS, "pipe_iron_fluid");
+        registerBlock(SPONGE_PIPE_FLUIDS, "pipe_sponge_fluid");
 
         registerBlock(TANK, "tank");
         registerBlock(PUMP, "pump");
@@ -172,6 +177,7 @@ public class SimplePipeBlocks {
         registerTile(STONE_PIPE_FLUID_TILE, "pipe_stone_fluid");
         registerTile(CLAY_PIPE_FLUID_TILE, "pipe_clay_fluid");
         registerTile(IRON_PIPE_FLUID_TILE, "pipe_iron_fluid");
+        registerTile(SPONGE_PIPE_FLUID_TILE, "pipe_sponge_fluid");
 
         registerTile(TRIGGER_ITEM_INV_EMPTY_TILE, "trigger_item_inv_empty");
         registerTile(TRIGGER_ITEM_INV_FULL_TILE, "trigger_item_inv_full");

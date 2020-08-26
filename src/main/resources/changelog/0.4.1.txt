@@ -1,6 +1,10 @@
 Changes:
 
 * Exposed "TilePipeWood.tryExtract(int redstone_pulses)" for addon devs to use for more powerful engines.
+* Added sponge pipes!
+    * These filter out impurities in water, leaving it a clear light-blue.
+    * Filtered water is functionally identical to unfiltered water.
+    * Mods may add machines which require filtered water however, but this isn't the default behaviour.
 
 Bug Fixes:
 

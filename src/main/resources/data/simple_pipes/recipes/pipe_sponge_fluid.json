@@ -1,0 +1,14 @@
+{
+    "type": "crafting_shaped",
+    "result": {
+        "item": "simple_pipes:pipe_sponge_fluid",
+        "count": 8
+    },
+    "pattern": [ "dOd", "SGS", "d d" ],
+    "key": {
+        "S": { "item": "minecraft:sponge" },
+        "G": { "item": "minecraft:glass" },
+        "O": { "item": "minecraft:gold_ingot" },
+        "d": { "item": "minecraft:green_dye"}
+    }
+}

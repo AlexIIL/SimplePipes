@@ -185,6 +185,8 @@ public class PipeBaseModelGenStandard {
             return getPipeSprite(sprites, "iron_fluid_filled");
         } else if (block == SimplePipeBlocks.CLAY_PIPE_FLUIDS) {
             return getPipeSprite(sprites, "clay_fluid");
+        } else if (block == SimplePipeBlocks.SPONGE_PIPE_FLUIDS) {
+            return getPipeSprite(sprites, "sponge_fluid");
         } else {
             return sprites.getMissingBlockSprite();
         }
