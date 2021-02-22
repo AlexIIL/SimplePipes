@@ -1,24 +1,23 @@
 package alexiil.mc.mod.pipes.part;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
-import alexiil.mc.lib.multipart.api.AbstractPart;
-import alexiil.mc.lib.multipart.api.MultipartHolder;
-import alexiil.mc.lib.multipart.api.PartDefinition;
-import alexiil.mc.lib.multipart.api.render.PartModelKey;
+import alexiil.mc.mod.pipes.client.model.part.FacadePartKey;
+import alexiil.mc.mod.pipes.items.SimplePipeItems;
+
 import alexiil.mc.lib.net.IMsgReadCtx;
 import alexiil.mc.lib.net.IMsgWriteCtx;
 import alexiil.mc.lib.net.InvalidInputDataException;
 import alexiil.mc.lib.net.NetByteBuf;
-import alexiil.mc.mod.pipes.client.model.part.FacadePartKey;
-import alexiil.mc.mod.pipes.items.SimplePipeItems;
+
+import alexiil.mc.lib.multipart.api.AbstractPart;
+import alexiil.mc.lib.multipart.api.MultipartHolder;
+import alexiil.mc.lib.multipart.api.PartDefinition;
+import alexiil.mc.lib.multipart.api.render.PartModelKey;
 
 public class FacadePart extends AbstractPart {
 
@@ -77,8 +76,8 @@ public class FacadePart extends AbstractPart {
     }
 
     @Override
-    public float calculateBreakingDelta(PlayerEntity player) {
-        return calculateBreakingDelta(player, state.state);
+    protected BlockState getClosestBlockState() {
+        return state.state;
     }
 
     @Override
@@ -94,16 +93,5 @@ public class FacadePart extends AbstractPart {
     @Override
     public PartModelKey getModelKey() {
         return new FacadePartKey(shape, state.state);
-    }
-
-    @Override
-    protected void playBreakSound() {
-        playBreakSound(state.state);
-    }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    protected void spawnBreakParticles() {
-        spawnBreakParticles(state.state);
     }
 }

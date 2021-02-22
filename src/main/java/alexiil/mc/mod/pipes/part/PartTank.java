@@ -4,41 +4,49 @@ import javax.annotation.Nullable;
 
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 
-import alexiil.mc.lib.attributes.AttributeList;
-import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
-import alexiil.mc.lib.attributes.fluid.FluidInvUtil;
-import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alexiil.mc.lib.multipart.api.AbstractPart;
-import alexiil.mc.lib.multipart.api.MultipartEventBus;
-import alexiil.mc.lib.multipart.api.MultipartHolder;
-import alexiil.mc.lib.multipart.api.PartDefinition;
-import alexiil.mc.lib.multipart.api.event.PartTickEvent;
-import alexiil.mc.lib.multipart.api.render.PartModelKey;
-import alexiil.mc.lib.net.IMsgReadCtx;
-import alexiil.mc.lib.net.IMsgWriteCtx;
-import alexiil.mc.lib.net.NetByteBuf;
-import alexiil.mc.lib.net.NetIdDataK;
-import alexiil.mc.lib.net.ParentNetIdSingle;
+import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.client.model.part.TankPartModelKey;
 import alexiil.mc.mod.pipes.container.SimplePipeContainers;
 import alexiil.mc.mod.pipes.items.SimplePipeItems;
 import alexiil.mc.mod.pipes.util.FluidSmoother;
 import alexiil.mc.mod.pipes.util.FluidSmoother.FluidStackInterp;
 
+import alexiil.mc.lib.net.IMsgReadCtx;
+import alexiil.mc.lib.net.IMsgWriteCtx;
+import alexiil.mc.lib.net.NetByteBuf;
+import alexiil.mc.lib.net.NetIdDataK;
+import alexiil.mc.lib.net.ParentNetIdSingle;
+
+import alexiil.mc.lib.attributes.AttributeList;
+import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
+import alexiil.mc.lib.attributes.fluid.FluidInvUtil;
+import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+
+import alexiil.mc.lib.multipart.api.AbstractPart;
+import alexiil.mc.lib.multipart.api.MultipartEventBus;
+import alexiil.mc.lib.multipart.api.MultipartHolder;
+import alexiil.mc.lib.multipart.api.PartDefinition;
+import alexiil.mc.lib.multipart.api.event.PartTickEvent;
+import alexiil.mc.lib.multipart.api.render.PartModelKey;
+
 public class PartTank extends AbstractPart {
 
+    private static final Identifier SPRITE_ID = SimplePipes.id("blocks/tank/side");
     public static final ParentNetIdSingle<PartTank> NET_TANK;
     public static final NetIdDataK<PartTank> SMOOTHED_TANK_DATA;
 
@@ -106,6 +114,27 @@ public class PartTank extends AbstractPart {
     }
 
     @Override
+    protected BlockState getClosestBlockState() {
+        return Blocks.GLASS.getDefaultState();
+    }
+
+    @Override
+    protected void playBreakSound() {
+        playBreakSound(Blocks.STONE.getDefaultState());
+    }
+
+    @Override
+    public boolean spawnHitParticle(Direction side) {
+        spawnHitParticle(side, getClosestBlockState(), SPRITE_ID);
+        return true;
+    }
+
+    @Override
+    protected void spawnBreakParticles() {
+        spawnBreakParticles(getClosestBlockState(), SPRITE_ID);
+    }
+
+    @Override
     public PartModelKey getModelKey() {
         return TankPartModelKey.INSTANCE;
     }
@@ -134,11 +163,6 @@ public class PartTank extends AbstractPart {
     @Override
     public ItemStack getPickStack() {
         return new ItemStack(SimplePipeItems.TANK);
-    }
-
-    @Override
-    public float calculateBreakingDelta(PlayerEntity player) {
-        return calculateBreakingDelta(player, Blocks.GLASS);
     }
 
     protected void onTick() {
