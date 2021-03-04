@@ -7,12 +7,13 @@
   "environment": "*",
   "entrypoints": {
     "main": ["alexiil.mc.mod.pipes.SimplePipes"],
-    "client": ["alexiil.mc.mod.pipes.SimplePipesClient"]
+    "client": ["alexiil.mc.mod.pipes.SimplePipesClient"],
+    "rei_plugins": ["alexiil.mc.mod.pipes.compat.rei.ReiFacadeHider"]
   },
   "depends": {
     "fabric": "*",
     "minecraft": [ ">=1.16-rc.4 <1.17-" ],
-    "libblockattributes": "*",
+    "libblockattributes": ">=0.8.0 <0.9-",
     "libnetworkstack": "*",
     "libmultipart": "*"
   },

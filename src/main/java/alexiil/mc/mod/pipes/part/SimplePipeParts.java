@@ -15,10 +15,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 
-import alexiil.mc.lib.attributes.item.ItemStackCollections;
-import alexiil.mc.lib.multipart.api.PartDefinition;
-import alexiil.mc.lib.multipart.api.PartDefinition.IPartNbtReader;
-import alexiil.mc.lib.multipart.api.PartDefinition.IPartNetLoader;
 import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.items.ItemFacade;
 import alexiil.mc.mod.pipes.items.SimplePipeItems;
@@ -27,6 +23,12 @@ import alexiil.mc.mod.pipes.mixin.api.RecipeMatchFinder;
 import alexiil.mc.mod.pipes.util.EnumCuboidCorner;
 import alexiil.mc.mod.pipes.util.EnumCuboidEdge;
 import alexiil.mc.mod.pipes.util.IngredientHelper;
+
+import alexiil.mc.lib.attributes.item.ItemStackCollections;
+
+import alexiil.mc.lib.multipart.api.PartDefinition;
+import alexiil.mc.lib.multipart.api.PartDefinition.IPartNbtReader;
+import alexiil.mc.lib.multipart.api.PartDefinition.IPartNetLoader;
 
 public final class SimplePipeParts {
     private SimplePipeParts() {}
@@ -68,7 +70,7 @@ public final class SimplePipeParts {
                 }
 
                 if (stack.getItem() instanceof ItemFacade) {
-                    generateFacadeToFacadeCuttingRecipes(context, stack);
+                    generateFacadeToFacadeCuttingRecipes(context.consumer, stack);
                     continue;
                 }
 
@@ -76,8 +78,9 @@ public final class SimplePipeParts {
                 if (states == null) {
                     continue;
                 }
+
                 for (FacadeBlockStateInfo state : states) {
-                    if (canCut(context, state.state)) {
+                    if (canCut(state.state)) {
                         generateBlockToFacadeCuttingRecipes(context.consumer, facades, stack, state);
                     }
                 }
@@ -85,7 +88,7 @@ public final class SimplePipeParts {
         }
     }
 
-    private static void generateBlockToFacadeCuttingRecipes(
+    public static void generateBlockToFacadeCuttingRecipes(
         Consumer<Recipe<?>> recipeAdder, FacadeStateManager facades, ItemStack stack, FacadeBlockStateInfo state
     ) {
         Identifier id = new Identifier("buildcraftsilicon:facade_generated");
@@ -122,14 +125,14 @@ public final class SimplePipeParts {
         }
     }
 
-    private static void generateFacadeToFacadeCuttingRecipes(RecipeMatchFinder context, ItemStack stack) {
+    public static void generateFacadeToFacadeCuttingRecipes(Consumer<Recipe<?>> consumer, ItemStack stack) {
         ItemFacade facadeItem = (ItemFacade) stack.getItem();
         FullFacade facade = ItemFacade.getStates(stack);
         if (facade == null) {
             return;
         }
         FacadeBlockStateInfo state = facade.state;
-        if (!canCut(context, state.state)) {
+        if (!canCut(state.state)) {
             return;
         }
 
@@ -153,11 +156,11 @@ public final class SimplePipeParts {
             FullFacade newFacade = new FullFacade(state, oShape);
             ItemStack output = facadeItem.createItemStack(newFacade);
             output.setCount(ratio);
-            context.consumer.accept(new StonecuttingRecipe(id, "", ingredient, output));
+            consumer.accept(new StonecuttingRecipe(id, "", ingredient, output));
         }
     }
 
-    private static boolean canCut(RecipeMatchFinder context, BlockState state) {
+    public static boolean canCut(BlockState state) {
         // Stone pickaxe (not iron) so that there's actually a reason to upgrade to the laser cutter
         return !state.isToolRequired() || new ItemStack(Items.STONE_PICKAXE).isEffectiveOn(state);
     }
