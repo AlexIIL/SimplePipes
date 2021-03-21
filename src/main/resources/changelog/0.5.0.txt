@@ -1,0 +1,7 @@
+Changes:
+
+* Added (partial) support for facades in Roughly Enough Items (REI).
+* Blacklisted facades by default from showing in REI.
+* Updated LibBlockAttributes from 0.8.4 to 0.8.8
+* Updated LibNetworkStack from 0.4.1 to 0.4.7.
+* Updated LibMultiPart from 0.4.2 to 0.5.0.
