@@ -24,18 +24,18 @@ public class SimplePipeItems {
 
     public static final ItemFacade FACADE;
 
-    public static final BlockItem WOODEN_PIPE_ITEMS;
-    public static final BlockItem STONE_PIPE_ITEMS;
-    public static final BlockItem CLAY_PIPE_ITEMS;
-    public static final BlockItem IRON_PIPE_ITEMS;
-    public static final BlockItem GOLD_PIPE_ITEMS;
-    public static final BlockItem DIAMOND_PIPE_ITEMS;
+    public static final BlockItemPipe WOODEN_PIPE_ITEMS;
+    public static final BlockItemPipe STONE_PIPE_ITEMS;
+    public static final BlockItemPipe CLAY_PIPE_ITEMS;
+    public static final BlockItemPipe IRON_PIPE_ITEMS;
+    public static final BlockItemPipe GOLD_PIPE_ITEMS;
+    public static final BlockItemPipe DIAMOND_PIPE_ITEMS;
 
-    public static final BlockItem WOODEN_PIPE_FLUIDS;
-    public static final BlockItem STONE_PIPE_FLUIDS;
-    public static final BlockItem CLAY_PIPE_FLUIDS;
-    public static final BlockItem IRON_PIPE_FLUIDS;
-    public static final BlockItem SPONGE_PIPE_FLUIDS;
+    public static final BlockItemPipe WOODEN_PIPE_FLUIDS;
+    public static final BlockItemPipe STONE_PIPE_FLUIDS;
+    public static final BlockItemPipe CLAY_PIPE_FLUIDS;
+    public static final BlockItemPipe IRON_PIPE_FLUIDS;
+    public static final BlockItemPipe SPONGE_PIPE_FLUIDS;
 
     public static final ItemSimplePart TANK;
     public static final BlockItem PUMP;
@@ -59,18 +59,18 @@ public class SimplePipeItems {
         pipes.group(mainGroup);
         FACADE = new ItemFacade(new Item.Settings().group(facadeGroup));
 
-        WOODEN_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.WOODEN_PIPE_ITEMS, pipes);
-        STONE_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.STONE_PIPE_ITEMS, pipes);
-        CLAY_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.CLAY_PIPE_ITEMS, pipes);
-        IRON_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.IRON_PIPE_ITEMS, pipes);
-        GOLD_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.GOLD_PIPE_ITEMS, pipes);
-        DIAMOND_PIPE_ITEMS = new BlockItem(SimplePipeBlocks.DIAMOND_PIPE_ITEMS, pipes);
+        WOODEN_PIPE_ITEMS = new BlockItemPipe(SimplePipeBlocks.WOODEN_PIPE_ITEMS, pipes);
+        STONE_PIPE_ITEMS = new BlockItemPipe(SimplePipeBlocks.STONE_PIPE_ITEMS, pipes);
+        CLAY_PIPE_ITEMS = new BlockItemPipe(SimplePipeBlocks.CLAY_PIPE_ITEMS, pipes);
+        IRON_PIPE_ITEMS = new BlockItemPipe(SimplePipeBlocks.IRON_PIPE_ITEMS, pipes);
+        GOLD_PIPE_ITEMS = new BlockItemPipe(SimplePipeBlocks.GOLD_PIPE_ITEMS, pipes);
+        DIAMOND_PIPE_ITEMS = new BlockItemPipe(SimplePipeBlocks.DIAMOND_PIPE_ITEMS, pipes);
 
-        WOODEN_PIPE_FLUIDS = new BlockItem(SimplePipeBlocks.WOODEN_PIPE_FLUIDS, pipes);
-        STONE_PIPE_FLUIDS = new BlockItem(SimplePipeBlocks.STONE_PIPE_FLUIDS, pipes);
-        CLAY_PIPE_FLUIDS = new BlockItem(SimplePipeBlocks.CLAY_PIPE_FLUIDS, pipes);
-        IRON_PIPE_FLUIDS = new BlockItem(SimplePipeBlocks.IRON_PIPE_FLUIDS, pipes);
-        SPONGE_PIPE_FLUIDS = new BlockItem(SimplePipeBlocks.SPONGE_PIPE_FLUIDS, pipes);
+        WOODEN_PIPE_FLUIDS = new BlockItemPipe(SimplePipeBlocks.WOODEN_PIPE_FLUIDS, pipes);
+        STONE_PIPE_FLUIDS = new BlockItemPipe(SimplePipeBlocks.STONE_PIPE_FLUIDS, pipes);
+        CLAY_PIPE_FLUIDS = new BlockItemPipe(SimplePipeBlocks.CLAY_PIPE_FLUIDS, pipes);
+        IRON_PIPE_FLUIDS = new BlockItemPipe(SimplePipeBlocks.IRON_PIPE_FLUIDS, pipes);
+        SPONGE_PIPE_FLUIDS = new BlockItemPipe(SimplePipeBlocks.SPONGE_PIPE_FLUIDS, pipes);
 
         Item.Settings triggers = new Item.Settings();
         triggers.group(mainGroup);

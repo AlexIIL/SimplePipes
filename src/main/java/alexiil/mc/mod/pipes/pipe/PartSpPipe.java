@@ -1,7 +1,10 @@
 package alexiil.mc.mod.pipes.pipe;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
@@ -19,6 +22,8 @@ import alexiil.mc.lib.net.IMsgReadCtx;
 import alexiil.mc.lib.net.IMsgWriteCtx;
 import alexiil.mc.lib.net.InvalidInputDataException;
 import alexiil.mc.lib.net.NetByteBuf;
+import alexiil.mc.lib.net.NetIdDataK;
+import alexiil.mc.lib.net.ParentNetIdSingle;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.CombinableAttribute;
@@ -40,6 +45,9 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
     public static final VoxelShape[] FACE_SHAPES;
     public static final VoxelShape[] FACE_CENTER_SHAPES;
     public static final VoxelShape[] SHAPES;
+
+    public static final ParentNetIdSingle<PartSpPipe> NET_PARENT;
+    public static final NetIdDataK<PartSpPipe> ID_FLOW;
 
     static {
         CENTER_SHAPE = VoxelShapes.cuboid(0.25, 0.25, 0.25, 0.75, 0.75, 0.75);
@@ -67,6 +75,10 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
             }
             SHAPES[c] = shape.simplify();
         }
+
+        NET_PARENT = AbstractPart.NET_ID.subType(PartSpPipe.class, "simple_pipes:pipe_part");
+        ID_FLOW = NET_PARENT.idData("flow").toClientOnly();
+        ID_FLOW.setReceiver(PartSpPipe::receiveFlow);
     }
 
     public final PipeSpDef definition;
@@ -128,6 +140,32 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
     }
 
     @Override
+    protected BlockState getClosestBlockState() {
+        return Blocks.STONE.getDefaultState();
+    }
+
+    @Override
+    public float calculateBreakingDelta(PlayerEntity player) {
+        return calcBreakingDelta(player, Blocks.GLASS.getDefaultState(), 0.5f);
+    }
+
+    @Override
+    public ItemStack getPickStack() {
+        return new ItemStack(definition.pipeBlock.asItem());
+    }
+
+    @Override
+    protected void spawnBreakParticles() {
+        spawnBreakParticles(definition.pipeBlock.getDefaultState());
+    }
+
+    @Override
+    public boolean spawnHitParticle(Direction side) {
+        spawnHitParticle(side, definition.pipeBlock.getDefaultState());
+        return true;
+    }
+
+    @Override
     public void addAllAttributes(AttributeList<?> list) {
         super.addAllAttributes(list);
 
@@ -178,7 +216,7 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
             if (definition.isExtraction && oPipe != null && oPipe.getDefinition().isExtraction) {
                 disconnect(dir);
             } else if (oPipe != null) {
-                if ((getFlow() instanceof PipeFlowItem) == (oPipe.getFlow() instanceof PipeFlowItem)) {
+                if ((getFlow() instanceof PipeSpFlowItem) == (oPipe.getFlow() instanceof PipeSpFlowItem)) {
                     connect(dir);
                 } else {
                     disconnect(dir);
@@ -199,6 +237,8 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
     @Override
     public void addDrops(ItemDropTarget target, LootContext context) {
         super.addDrops(target, context);
+        flow.addDrops(target, context);
+        behaviour.addDrops(target, context);
     }
 
     @Override
@@ -305,7 +345,13 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
     }
 
     @Override
-    public void sendFlowPacket(NbtCompound tag) {
+    public void sendFlowPacket(NbtCompound nbt) {
+        this.sendNetworkUpdate(this, ID_FLOW, (obj, buf, ctx) -> {
+            buf.writeNbt(nbt);
+        });
+    }
 
+    private void receiveFlow(NetByteBuf buffer, IMsgReadCtx ctx) {
+        flow.fromClientTag(buffer.readNbt());
     }
 }

@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 
 import alexiil.mc.mod.pipes.pipe.ISimplePipe;
 import alexiil.mc.mod.pipes.pipe.PartSpPipe;
-import alexiil.mc.mod.pipes.pipe.PipeFlowItem;
+import alexiil.mc.mod.pipes.pipe.PipeSpFlowItem;
 import alexiil.mc.mod.pipes.pipe.PipeSpBehaviour;
 import alexiil.mc.mod.pipes.pipe.PipeSpDef;
 import alexiil.mc.mod.pipes.pipe.PipeSpFlow;
@@ -56,12 +56,8 @@ public abstract class TilePipe extends TileBase implements ISimplePipe {
         PartSpPipe pipe = new PartSpPipe(pipeBlock.pipeDef, holder);
         pipe.connections = connections;
         pipe.flow.fromTag(flow.toTag());
-        saveToBehaviour(pipe.behaviour);
+        pipe.behaviour.copyFrom(this);
         return pipe;
-    }
-
-    protected void saveToBehaviour(PipeSpBehaviour behaviour) {
-
     }
 
     @Override
@@ -121,7 +117,7 @@ public abstract class TilePipe extends TileBase implements ISimplePipe {
             if (this instanceof TilePipeWood && oTile instanceof TilePipeWood) {
                 disconnect(dir);
             } else if (oTile instanceof TilePipe) {
-                if ((getFlow() instanceof PipeFlowItem) == (((ISimplePipe) oTile).getFlow() instanceof PipeFlowItem)) {
+                if ((getFlow() instanceof PipeSpFlowItem) == (((ISimplePipe) oTile).getFlow() instanceof PipeSpFlowItem)) {
                     connect(dir);
                 } else {
                     disconnect(dir);

@@ -14,7 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 import alexiil.mc.mod.pipes.pipe.ISimplePipe;
-import alexiil.mc.mod.pipes.pipe.PipeFlowItem;
+import alexiil.mc.mod.pipes.pipe.PipeSpFlowItem;
 import alexiil.mc.mod.pipes.pipe.PipeSpFlow;
 
 public abstract class TilePipeIron extends TilePipeSided {
@@ -30,7 +30,7 @@ public abstract class TilePipeIron extends TilePipeSided {
     protected boolean canFaceDirection(Direction dir) {
         BlockEntity other = world.getBlockEntity(getPos().offset(dir));
         if (other instanceof ISimplePipe) {
-            return (getFlow() instanceof PipeFlowItem) == (((ISimplePipe) other).getFlow() instanceof PipeFlowItem);
+            return (getFlow() instanceof PipeSpFlowItem) == (((ISimplePipe) other).getFlow() instanceof PipeSpFlowItem);
         }
         return getFlow().hasInsertable(dir);
     }

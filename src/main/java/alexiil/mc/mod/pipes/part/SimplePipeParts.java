@@ -1,5 +1,7 @@
 package alexiil.mc.mod.pipes.part;
 
+import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -16,16 +18,20 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 
 import alexiil.mc.mod.pipes.SimplePipes;
+import alexiil.mc.mod.pipes.blocks.TilePipeSided;
 import alexiil.mc.mod.pipes.items.ItemFacade;
 import alexiil.mc.mod.pipes.items.SimplePipeItems;
 import alexiil.mc.mod.pipes.mixin.api.FindMatchingRecipesEvent;
 import alexiil.mc.mod.pipes.mixin.api.RecipeMatchFinder;
 import alexiil.mc.mod.pipes.pipe.PartSpPipe;
 import alexiil.mc.mod.pipes.pipe.PipeSpBehaviour;
+import alexiil.mc.mod.pipes.pipe.PipeSpBehaviourSponge;
 import alexiil.mc.mod.pipes.pipe.PipeSpBehaviourWood;
 import alexiil.mc.mod.pipes.pipe.PipeSpDef;
 import alexiil.mc.mod.pipes.pipe.PipeSpDef.PipeDefFluid;
 import alexiil.mc.mod.pipes.pipe.PipeSpDef.PipeDefItem;
+import alexiil.mc.mod.pipes.pipe.PipeSpFlowItem;
+import alexiil.mc.mod.pipes.pipe.TravellingItem;
 import alexiil.mc.mod.pipes.util.EnumCuboidCorner;
 import alexiil.mc.mod.pipes.util.EnumCuboidEdge;
 import alexiil.mc.mod.pipes.util.IngredientHelper;
@@ -67,9 +73,57 @@ public final class SimplePipeParts {
         };
         STONE_PIPE_ITEMS = new PipeDefItem(id("stone_pipe_items"), false, false, 1);
         CLAY_PIPE_ITEMS = new PipeDefItem(id("clay_pipe_items"), false, false, 1);
-        IRON_PIPE_ITEMS = new PipeDefItem(id("iron_pipe_items"), false, false, 1);
+        IRON_PIPE_ITEMS = new PipeDefItem(id("iron_pipe_items"), false, true, 1) {
+            @Override
+            public PipeSpBehaviour createBehaviour(PartSpPipe pipe) {
+                return new PipeSpBehaviourIron(pipe);
+            }
+
+            @Override
+            public PipeSpFlowItem createFlow(PartSpPipe pipe) {
+                return new PipeSpFlowItem(pipe) {
+                    @Override
+                    protected List<EnumSet<Direction>> getOrderForItem(
+                        TravellingItem item, EnumSet<Direction> validDirections
+                    ) {
+                        List<EnumSet<Direction>> order = super.getOrderForItem(item, validDirections);
+                        Direction currentDirection = ((TilePipeSided) pipe).currentDirection();
+                        Iterator<EnumSet<Direction>> iterator = order.iterator();
+                        while (iterator.hasNext()) {
+                            EnumSet<Direction> set = iterator.next();
+                            if (set.contains(currentDirection)) {
+                                set.clear();
+                                set.add(currentDirection);
+                            } else {
+                                iterator.remove();
+                            }
+                        }
+                        return order;
+                    }
+                };
+            }
+        };
         GOLD_PIPE_ITEMS = new PipeDefItem(id("gold_pipe_items"), false, false, 6);
-        DIAMOND_PIPE_ITEMS = new PipeDefItem(id("diamond_pipe_items"), false, false, 1);
+        DIAMOND_PIPE_ITEMS = new PipeDefItem(id("diamond_pipe_items"), false, true, 1) {
+
+            @Override
+            public PipeSpFlowItem createFlow(PartSpPipe part) {
+                return new PipeSpFlowItem(part) {
+
+                    @Override
+                    protected List<EnumSet<Direction>> getOrderForItem(
+                        TravellingItem item, EnumSet<Direction> validDirections
+                    ) {
+                        return ((PipeSpBehaviourDiamond) part.behaviour).getOrderForItem(item, validDirections);
+                    }
+                };
+            }
+
+            @Override
+            public PipeSpBehaviour createBehaviour(PartSpPipe pipe) {
+                return new PipeSpBehaviourDiamond(pipe);
+            }
+        };
 
         WOODEN_PIPE_FLUIDS = new PipeDefFluid(id("wooden_pipe_fluids"), true) {
             @Override
@@ -79,8 +133,18 @@ public final class SimplePipeParts {
         };
         STONE_PIPE_FLUIDS = new PipeDefFluid(id("stone_pipe_fluids"), false);
         CLAY_PIPE_FLUIDS = new PipeDefFluid(id("clay_pipe_fluids"), false);
-        IRON_PIPE_FLUIDS = new PipeDefFluid(id("iron_pipe_fluids"), false);
-        SPONGE_PIPE_FLUIDS = new PipeDefFluid(id("sponge_pipe_fluids"), false);
+        IRON_PIPE_FLUIDS = new PipeDefFluid(id("iron_pipe_fluids"), false) {
+            @Override
+            public PipeSpBehaviour createBehaviour(PartSpPipe pipe) {
+                return new PipeSpBehaviourIron(pipe);
+            }
+        };
+        SPONGE_PIPE_FLUIDS = new PipeDefFluid(id("sponge_pipe_fluids"), false) {
+            @Override
+            public PipeSpBehaviour createBehaviour(PartSpPipe pipe) {
+                return new PipeSpBehaviourSponge(pipe);
+            }
+        };
     }
 
     private static Identifier id(String path) {

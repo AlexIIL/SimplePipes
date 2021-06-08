@@ -1,16 +1,12 @@
 package alexiil.mc.mod.pipes.client.render;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Quaternion;
@@ -19,7 +15,8 @@ import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 
 import alexiil.mc.mod.pipes.blocks.TilePipe;
-import alexiil.mc.mod.pipes.pipe.PipeFlowItem;
+import alexiil.mc.mod.pipes.pipe.ISimplePipe;
+import alexiil.mc.mod.pipes.pipe.PipeSpFlowItem;
 import alexiil.mc.mod.pipes.pipe.TravellingItem;
 
 public class PipeItemTileRenderer<T extends TilePipe> implements BlockEntityRenderer<T> {
@@ -43,20 +40,23 @@ public class PipeItemTileRenderer<T extends TilePipe> implements BlockEntityRend
     public void render(
         T pipe, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay
     ) {
+        render(tickDelta, matrices, vertexConsumers, light, overlay, (PipeSpFlowItem) pipe.getFlow());
+    }
+
+    public static void render(
+        float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay,
+        PipeSpFlowItem flow
+    ) {
+        ISimplePipe pipe = flow.pipe;
         World world = pipe.getWorld();
         long now = world == null ? 0 : world.getTime();
-        PipeFlowItem itemFlow = (PipeFlowItem) pipe.getFlow();
 
-        Iterable<TravellingItem> toRender = itemFlow.getAllItemsForRender();
-
-        boolean sawWool = false;
+        Iterable<TravellingItem> toRender = flow.getAllItemsForRender();
 
         for (TravellingItem item : toRender) {
             Vec3d pos = item.getRenderPosition(BlockPos.ORIGIN, now, tickDelta, pipe);
             ItemStack stack = item.stack;
             if (!stack.isEmpty()) {
-                sawWool |= stack.getItem() == Items.WHITE_WOOL;
-
                 Direction renderDirection = item.getRenderDirection(now, tickDelta);
 
                 matrices.push();
@@ -73,33 +73,6 @@ public class PipeItemTileRenderer<T extends TilePipe> implements BlockEntityRend
                     .renderItem(stack, ModelTransformation.Mode.FIXED, light, overlay, matrices, vertexConsumers, 42);
                 matrices.pop();
             }
-        }
-
-        if (sawWool) {
-            GL11.glPushMatrix();
-            Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
-            GL11.glRotated(camera.getPitch(), 1, 0, 0);
-            GL11.glRotated(camera.getYaw() + 180, 0, 1, 0);
-            GL11.glTranslated(
-                pipe.getPos().getX() - camera.getPos().x, pipe.getPos().getY() - camera.getPos().y,
-                pipe.getPos().getZ() - camera.getPos().z
-            );
-
-            GL11.glColor3f(1, 1, 1);
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GL11.glBegin(GL11.GL_LINE_STRIP);
-            double max = 0.1;
-            GL11.glVertex3d(max, max, max);
-            GL11.glVertex3d(0, max, max);
-            GL11.glVertex3d(0, max, 0);
-            GL11.glVertex3d(max, max, 0);
-            GL11.glVertex3d(max, 0, max);
-            GL11.glVertex3d(max, 0, max);
-            GL11.glVertex3d(max, 0, max);
-            GL11.glVertex3d(max, max, max);
-            GL11.glEnd();
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
-            GL11.glPopMatrix();
         }
     }
 }

@@ -22,7 +22,7 @@ public class PipeSpBehaviourWood extends PipeSpBehaviourSided {
         if (pipe.getNeighbourPipe(dir) != null) {
             return false;
         }
-        return pipe.flow instanceof PipeFlowItem //
+        return pipe.flow instanceof PipeSpFlowItem //
             ? pipe.getItemExtractable(dir) != EmptyItemExtractable.NULL //
             : pipe.getFluidExtractable(dir) != EmptyFluidExtractable.NULL;
     }
@@ -50,7 +50,7 @@ public class PipeSpBehaviourWood extends PipeSpBehaviourSided {
     }
 
     private void tryExtract(Direction dir) {
-        if (pipe.flow instanceof PipeFlowItem) {
+        if (pipe.flow instanceof PipeSpFlowItem) {
             tryExtractItems(dir, 1);
         } else {
             tryExtractFluids(dir);
@@ -62,11 +62,11 @@ public class PipeSpBehaviourWood extends PipeSpBehaviourSided {
         ItemStack stack = extractable.attemptAnyExtraction(1, Simulation.ACTION);
 
         if (!stack.isEmpty()) {
-            ((PipeFlowItem) pipe.getFlow()).insertItemsForce(stack, dir, null, 0.08);
+            ((PipeSpFlowItem) pipe.getFlow()).insertItemsForce(stack, dir, null, 0.08);
         }
     }
 
     public void tryExtractFluids(Direction dir) {
-        ((PipeFlowFluid) pipe.getFlow()).tryExtract(dir);
+        ((PipeSpFlowFluid) pipe.getFlow()).tryExtract(dir);
     }
 }

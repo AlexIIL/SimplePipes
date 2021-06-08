@@ -7,6 +7,7 @@ package alexiil.mc.mod.pipes.container;
 
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.Identifier;
 
@@ -18,6 +19,7 @@ public class SimplePipeContainers {
     public static final Identifier TRIGGER_FLUID_INV_SPACE = id("trigger_fluid_inv_space");
     public static final Identifier TRIGGER_FLUID_INV_CONTAINS = id("trigger_fluid_inv_contains");
     public static final Identifier PIPE_DIAMOND_ITEM = id("pipe_diamond_item");
+    public static final Identifier PIPE_PART_DIAMOND_ITEM = id("pipe_part_diamond_item");
     public static final Identifier TANK = id("tank");
 
     private static Identifier id(String name) {
@@ -30,6 +32,7 @@ public class SimplePipeContainers {
         register(TRIGGER_FLUID_INV_SPACE, ContainerTriggerFluidSpace.FACTORY);
         register(TRIGGER_FLUID_INV_CONTAINS, ContainerTriggerFluidContains.FACTORY);
         register(PIPE_DIAMOND_ITEM, ContainerPipeSorter.FACTORY);
+        register(PIPE_PART_DIAMOND_ITEM, ContainerPipeDiamondItem.FACTORY);
         register(TANK, ContainerTank.FACTORY);
     }
 

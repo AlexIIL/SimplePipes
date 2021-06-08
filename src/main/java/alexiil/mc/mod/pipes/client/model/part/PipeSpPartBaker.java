@@ -25,8 +25,11 @@ public class PipeSpPartBaker implements PartModelBaker<PipeBlockModelState> {
     @Override
     public void emitQuads(PipeBlockModelState key, PartRenderContext ctx) {
         QuadEmitter emitter = ctx.getEmitter();
-        RenderMaterial cutout
-            = RendererAccess.INSTANCE.getRenderer().materialFinder().blendMode(0, BlendMode.CUTOUT).find();
+        RenderMaterial cutout = RendererAccess.INSTANCE.getRenderer().materialFinder()//
+            .disableAo(0, true)//
+            .blendMode(0, BlendMode.CUTOUT)//
+            .find();
+
         for (BakedQuad quad : PipeBaseModelGenStandard.generateCutout(sprites, key)) {
             emitter.fromVanilla(quad, cutout, null);
             emitter.emit();

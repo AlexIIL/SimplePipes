@@ -3,6 +3,8 @@ package alexiil.mc.mod.pipes.pipe;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
+import alexiil.mc.mod.pipes.blocks.BlockPipe;
+
 import alexiil.mc.lib.net.IMsgReadCtx;
 import alexiil.mc.lib.net.InvalidInputDataException;
 import alexiil.mc.lib.net.NetByteBuf;
@@ -17,6 +19,8 @@ import alexiil.mc.lib.multipart.api.PartDefinition;
 public abstract class PipeSpDef extends PartDefinition {
 
     public final boolean isExtraction;
+
+    public BlockPipe pipeBlock;
 
     public PipeSpDef(Identifier identifier, boolean isExtraction) {
         super(identifier);
@@ -58,8 +62,8 @@ public abstract class PipeSpDef extends PartDefinition {
         }
 
         @Override
-        public PipeSpFlow createFlow(PartSpPipe pipe) {
-            return new PipeFlowItem(pipe);
+        public PipeSpFlowItem createFlow(PartSpPipe pipe) {
+            return new PipeSpFlowItem(pipe);
         }
 
         @Override
@@ -75,8 +79,8 @@ public abstract class PipeSpDef extends PartDefinition {
         }
 
         @Override
-        public PipeSpFlow createFlow(PartSpPipe pipe) {
-            return new PipeFlowFluid(pipe);
+        public PipeSpFlowFluid createFlow(PartSpPipe pipe) {
+            return new PipeSpFlowFluid(pipe);
         }
 
         @Override

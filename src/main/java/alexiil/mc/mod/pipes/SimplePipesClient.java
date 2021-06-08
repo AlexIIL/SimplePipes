@@ -29,9 +29,11 @@ import alexiil.mc.mod.pipes.client.model.part.TankPartModelKey;
 import alexiil.mc.mod.pipes.client.render.ItemPlacemenentGhostRenderer;
 import alexiil.mc.mod.pipes.client.render.PipeFluidTileRenderer;
 import alexiil.mc.mod.pipes.client.render.PipeItemTileRenderer;
+import alexiil.mc.mod.pipes.client.render.PipePartRenderer;
 import alexiil.mc.mod.pipes.client.render.TankPartRenderer;
 import alexiil.mc.mod.pipes.client.screen.SimplePipeScreens;
 import alexiil.mc.mod.pipes.part.PartTank;
+import alexiil.mc.mod.pipes.pipe.PartSpPipe;
 
 import alexiil.mc.lib.multipart.api.render.PartDynamicModelRegisterEvent;
 import alexiil.mc.lib.multipart.api.render.PartStaticModelRegisterEvent;
@@ -78,6 +80,7 @@ public class SimplePipesClient implements ClientModInitializer {
         });
         PartDynamicModelRegisterEvent.EVENT.register(renderer -> {
             renderer.register(PartTank.class, new TankPartRenderer());
+            renderer.register(PartSpPipe.class, new PipePartRenderer());
         });
         SimplePipeScreens.load();
         // RenderMatrixType.FROM_WORLD_ORIGIN.addRenderer(ItemPlacemenentGhostRenderer::render);

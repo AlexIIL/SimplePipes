@@ -11,6 +11,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Direction;
 
+import alexiil.mc.mod.pipes.blocks.TilePipe;
+import alexiil.mc.mod.pipes.blocks.TilePipeSided;
 import alexiil.mc.mod.pipes.blocks.TilePipeSided.PipeBlockModelStateSided;
 
 public abstract class PipeSpBehaviourSided extends PipeSpBehaviour {
@@ -38,6 +40,12 @@ public abstract class PipeSpBehaviourSided extends PipeSpBehaviour {
         NbtCompound nbt = super.toNbt();
         nbt.putByte("dir", (byte) (currentDirection == null ? 0xFF : currentDirection.getId()));
         return nbt;
+    }
+
+    @Override
+    public void copyFrom(TilePipe oldTile) {
+        super.copyFrom(oldTile);
+        currentDirection = ((TilePipeSided) oldTile).currentDirection();
     }
 
     public Direction currentDirection() {

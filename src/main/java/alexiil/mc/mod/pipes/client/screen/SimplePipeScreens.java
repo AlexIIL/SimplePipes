@@ -2,6 +2,7 @@ package alexiil.mc.mod.pipes.client.screen;
 
 import net.fabricmc.fabric.api.client.screen.ContainerScreenFactory;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
+
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.Identifier;
 
@@ -15,6 +16,7 @@ public class SimplePipeScreens {
         register(SimplePipeContainers.TRIGGER_FLUID_INV_SPACE, ScreenTriggerFluidInvSpace.FACTORY);
         register(SimplePipeContainers.TRIGGER_FLUID_INV_CONTAINS, ScreenTriggerFluidInvContains.FACTORY);
         register(SimplePipeContainers.PIPE_DIAMOND_ITEM, ScreenPipeSorter.FACTORY);
+        register(SimplePipeContainers.PIPE_PART_DIAMOND_ITEM, ScreenPipeDiamondItem.FACTORY);
 
         register(SimplePipeContainers.TANK, ScreenTank.FACTORY);
     }

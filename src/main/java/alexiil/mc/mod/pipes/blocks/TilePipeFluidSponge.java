@@ -3,7 +3,7 @@ package alexiil.mc.mod.pipes.blocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 
-import alexiil.mc.mod.pipes.pipe.PipeFlowFluid;
+import alexiil.mc.mod.pipes.pipe.PipeSpFlowFluid;
 
 import alexiil.mc.lib.attributes.fluid.volume.ColouredFluidVolume;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
@@ -11,10 +11,10 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 
 public class TilePipeFluidSponge extends TilePipe {
 
-    private static final float RED = 0.625f;
-    private static final float GREEN = 0.8125f;
-    private static final float BLUE = 1f;
-    private static final float ALPHA = 0.75f;
+    public static final float RED = 0.625f;
+    public static final float GREEN = 0.8125f;
+    public static final float BLUE = 1f;
+    public static final float ALPHA = 0.75f;
 
     private static final float RED_SQ = RED * RED;
     private static final float GREEN_SQ = GREEN * GREEN;
@@ -23,15 +23,18 @@ public class TilePipeFluidSponge extends TilePipe {
 
     public TilePipeFluidSponge(BlockPos pos, BlockState state) {
         super(
-            SimplePipeBlocks.SPONGE_PIPE_FLUID_TILE, pos, state, SimplePipeBlocks.SPONGE_PIPE_FLUIDS, PipeFlowFluid::new
+            SimplePipeBlocks.SPONGE_PIPE_FLUID_TILE, pos, state, SimplePipeBlocks.SPONGE_PIPE_FLUIDS,
+            PipeSpFlowFluid::new
         );
     }
 
     @Override
     public void tick() {
         super.tick();
-        PipeFlowFluid f = (PipeFlowFluid) getFlow();
+        tickFluid((PipeSpFlowFluid) getFlow());
+    }
 
+    public static void tickFluid(PipeSpFlowFluid f) {
         FluidVolume fluid = f.centerSection.getFluid();
         if (fluid.isEmpty()) {
             return;

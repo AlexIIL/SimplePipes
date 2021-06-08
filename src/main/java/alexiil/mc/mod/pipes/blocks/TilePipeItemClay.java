@@ -8,10 +8,10 @@ package alexiil.mc.mod.pipes.blocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 
-import alexiil.mc.mod.pipes.pipe.PipeFlowItem;
+import alexiil.mc.mod.pipes.pipe.PipeSpFlowItem;
 
 public class TilePipeItemClay extends TilePipe {
     public TilePipeItemClay(BlockPos pos, BlockState state) {
-        super(SimplePipeBlocks.CLAY_PIPE_ITEM_TILE, pos, state, SimplePipeBlocks.CLAY_PIPE_ITEMS, PipeFlowItem::new);
+        super(SimplePipeBlocks.CLAY_PIPE_ITEM_TILE, pos, state, SimplePipeBlocks.CLAY_PIPE_ITEMS, PipeSpFlowItem::new);
     }
 }

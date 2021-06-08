@@ -56,6 +56,7 @@ public abstract class BlockPipe extends BlockBase
     public BlockPipe(Settings settings, PipeSpDef pipeDef) {
         super(settings);
         this.pipeDef = pipeDef;
+        pipeDef.pipeBlock = this;
     }
 
     @Override

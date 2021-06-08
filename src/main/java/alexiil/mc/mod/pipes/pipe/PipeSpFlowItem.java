@@ -22,7 +22,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import alexiil.mc.mod.pipes.blocks.TilePipeItemClay;
+import alexiil.mc.mod.pipes.part.SimplePipeParts;
 import alexiil.mc.mod.pipes.pipe.PipeSpDef.PipeDefItem;
 import alexiil.mc.mod.pipes.util.DelayedList;
 import alexiil.mc.mod.pipes.util.TagUtil;
@@ -36,13 +36,13 @@ import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable;
 
 import alexiil.mc.lib.multipart.api.AbstractPart.ItemDropTarget;
 
-public class PipeFlowItem extends PipeSpFlow {
+public class PipeSpFlowItem extends PipeSpFlow {
 
     final ItemInsertable[] insertables;
 
     private final DelayedList<TravellingItem> items = new DelayedList<>();
 
-    public PipeFlowItem(ISimplePipe pipe) {
+    public PipeSpFlowItem(ISimplePipe pipe) {
         super(pipe);
 
         this.insertables = new ItemInsertable[6];
@@ -151,8 +151,6 @@ public class PipeFlowItem extends PipeSpFlow {
                 continue;
             }
             if (w.isClient) {
-                // TODO: Client item advancing/intelligent stuffs
-
                 continue;
             }
             if (item.toCenter) {
@@ -211,7 +209,10 @@ public class PipeFlowItem extends PipeSpFlow {
     protected List<EnumSet<Direction>> getOrderForItem(TravellingItem item, EnumSet<Direction> validDirections) {
         List<EnumSet<Direction>> list = new ArrayList<>();
 
-        if (pipe instanceof TilePipeItemClay) {
+        if (
+            pipe.getDefinition() == SimplePipeParts.CLAY_PIPE_FLUIDS
+                || pipe.getDefinition() == SimplePipeParts.CLAY_PIPE_ITEMS
+        ) {
             EnumSet<Direction> invs = EnumSet.noneOf(Direction.class);
             EnumSet<Direction> others = EnumSet.noneOf(Direction.class);
             for (Direction dir : validDirections) {
@@ -319,9 +320,9 @@ public class PipeFlowItem extends PipeSpFlow {
             Direction oppositeSide = item.side.getOpposite();
             ISimplePipe oPipe = pipe.getNeighbourPipe(item.side);
 
-            if (oPipe != null && oPipe.getFlow() instanceof PipeFlowItem) {
+            if (oPipe != null && oPipe.getFlow() instanceof PipeSpFlowItem) {
                 excess
-                    = ((PipeFlowItem) oPipe.getFlow()).injectItem(excess, true, oppositeSide, item.colour, item.speed);
+                    = ((PipeSpFlowItem) oPipe.getFlow()).injectItem(excess, true, oppositeSide, item.colour, item.speed);
             } else {
                 excess = ins.attemptInsertion(excess, Simulation.ACTION);
             }

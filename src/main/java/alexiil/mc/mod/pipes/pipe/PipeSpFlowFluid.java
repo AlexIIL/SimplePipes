@@ -17,6 +17,8 @@ import net.minecraft.util.math.Direction;
 import alexiil.mc.mod.pipes.blocks.TilePipeFluidIron;
 import alexiil.mc.mod.pipes.blocks.TilePipeFluidWood;
 import alexiil.mc.mod.pipes.blocks.TilePipeSided;
+import alexiil.mc.mod.pipes.part.PipeSpBehaviourIron;
+import alexiil.mc.mod.pipes.part.SimplePipeParts;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
@@ -31,7 +33,7 @@ import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
 import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 
-public class PipeFlowFluid extends PipeSpFlow {
+public class PipeSpFlowFluid extends PipeSpFlow {
 
     // Think about fluid packets? (Maybe not for this or even soon but for bc at some point?)
     public static final FluidAmount SECTION_CAPACITY = FluidAmount.BUCKET.div(2);
@@ -43,7 +45,7 @@ public class PipeFlowFluid extends PipeSpFlow {
     final FluidInsertable[] insertables;
     long lastTickTime;
 
-    public PipeFlowFluid(ISimplePipe pipe) {
+    public PipeSpFlowFluid(ISimplePipe pipe) {
         super(pipe);
 
         for (Direction dir : Direction.values()) {
@@ -235,6 +237,17 @@ public class PipeFlowFluid extends PipeSpFlow {
             if (pipe instanceof TilePipeFluidWood) {
                 return to != ((TilePipeSided) pipe).currentDirection();
             }
+
+            if (pipe instanceof PartSpPipe) {
+                PartSpPipe part = (PartSpPipe) pipe;
+                if (part.behaviour instanceof PipeSpBehaviourIron) {
+                    return to == ((PipeSpBehaviourIron) part.behaviour).currentDirection();
+                }
+                if (part.behaviour instanceof PipeSpBehaviourWood) {
+                    return to != ((PipeSpBehaviourWood) part.behaviour).currentDirection();
+                }
+            }
+
             return true;
         }
         if (to == null) {
@@ -252,6 +265,15 @@ public class PipeFlowFluid extends PipeSpFlow {
         }
         if (pipe instanceof TilePipeFluidWood) {
             return to != ((TilePipeSided) pipe).currentDirection();
+        }
+        if (pipe instanceof PartSpPipe) {
+            PartSpPipe part = (PartSpPipe) pipe;
+            if (part.behaviour instanceof PipeSpBehaviourIron) {
+                return to == ((PipeSpBehaviourIron) part.behaviour).currentDirection();
+            }
+            if (part.behaviour instanceof PipeSpBehaviourWood) {
+                return to != ((PipeSpBehaviourWood) part.behaviour).currentDirection();
+            }
         }
         return true;
     }
@@ -311,8 +333,8 @@ public class PipeFlowFluid extends PipeSpFlow {
             }
             if (canGoInDirection(side, side)) {
                 ISimplePipe oPipe = pipe.getNeighbourPipe(side);
-                if (oPipe != null && oPipe.getFlow() instanceof PipeFlowFluid) {
-                    PipeFlowFluid oFlow = (PipeFlowFluid) oPipe.getFlow();
+                if (oPipe != null && oPipe.getFlow() instanceof PipeSpFlowFluid) {
+                    PipeSpFlowFluid oFlow = (PipeSpFlowFluid) oPipe.getFlow();
                     SideSection other = oFlow.sideSections.get(side.getOpposite());
                     FluidAmount movable
                         = lastTickAmount.sub(other.lastTickAmount.sub(AMOUNT_OVERFLOW).max(FluidAmount.ZERO));
@@ -362,8 +384,8 @@ public class PipeFlowFluid extends PipeSpFlow {
                     }
                 } else {
                     ISimplePipe oPipe = pipe.getNeighbourPipe(side);
-                    if (oPipe != null && oPipe.getFlow() instanceof PipeFlowFluid) {
-                        PipeFlowFluid oFlow = (PipeFlowFluid) oPipe.getFlow();
+                    if (oPipe != null && oPipe.getFlow() instanceof PipeSpFlowFluid) {
+                        PipeSpFlowFluid oFlow = (PipeSpFlowFluid) oPipe.getFlow();
                         SideSection other = oFlow.sideSections.get(side.getOpposite());
                         FluidAmount movable = getMoveable(other, max);
                         if (!movable.isPositive()) {

@@ -13,7 +13,8 @@ import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3d;
 
 import alexiil.mc.mod.pipes.blocks.TilePipe;
-import alexiil.mc.mod.pipes.pipe.PipeFlowFluid;
+import alexiil.mc.mod.pipes.pipe.ISimplePipe;
+import alexiil.mc.mod.pipes.pipe.PipeSpFlowFluid;
 import alexiil.mc.mod.pipes.util.VecUtil;
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
@@ -30,14 +31,18 @@ public class PipeFluidTileRenderer<T extends TilePipe> implements BlockEntityRen
     public void render(
         T pipe, float tickDelta, MatrixStack matrices, VertexConsumerProvider vcp, int light, int overlay
     ) {
-        PipeFlowFluid fluidFlow = (PipeFlowFluid) pipe.getFlow();
+        render(matrices, vcp, (PipeSpFlowFluid) pipe.getFlow());
+    }
+
+    public static void render(MatrixStack matrices, VertexConsumerProvider vcp, PipeSpFlowFluid flow) {
+        ISimplePipe pipe = flow.pipe;
 
         boolean gas = false;// TODO!
         boolean horizontal = false;
         boolean vertical = pipe.isConnected(gas ? Direction.DOWN : Direction.UP);
 
         for (Direction side : Direction.values()) {
-            FluidVolume fluid = fluidFlow.getClientSideFluid(side);
+            FluidVolume fluid = flow.getClientSideFluid(side);
             FluidAmount amount = fluid.amount();
             if (!amount.isPositive()) {
                 continue;
@@ -53,7 +58,7 @@ public class PipeFluidTileRenderer<T extends TilePipe> implements BlockEntityRen
             Vec3d radius = new Vec3d(0.1874, 0.1874, 0.1874);
             radius = VecUtil.replaceValue(radius, side.getAxis(), 0.15625);
 
-            double perc = amount.asInexactDouble() / PipeFlowFluid.SECTION_CAPACITY.asInexactDouble();
+            double perc = amount.asInexactDouble() / PipeSpFlowFluid.SECTION_CAPACITY.asInexactDouble();
             if (side.getAxis() == Axis.Y) {
                 perc = Math.sqrt(perc);
                 radius = new Vec3d(perc * 0.1874, radius.y, perc * 0.1874);
@@ -75,11 +80,11 @@ public class PipeFluidTileRenderer<T extends TilePipe> implements BlockEntityRen
             fluid.render(faces, vcp, matrices);
         }
 
-        FluidVolume center = fluidFlow.getClientCenterFluid();
+        FluidVolume center = flow.getClientCenterFluid();
         if (!center.isEmpty()) {
 
             double horizPos = 0.26;
-            double perc = center.amount().asInexactDouble() / PipeFlowFluid.SECTION_CAPACITY.asInexactDouble();
+            double perc = center.amount().asInexactDouble() / PipeSpFlowFluid.SECTION_CAPACITY.asInexactDouble();
             List<FluidRenderFace> faces = new ArrayList<>();
 
             if (horizontal | !vertical) {
