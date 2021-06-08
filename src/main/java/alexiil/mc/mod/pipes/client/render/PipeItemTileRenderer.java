@@ -48,7 +48,7 @@ public class PipeItemTileRenderer<T extends TilePipe> implements BlockEntityRend
         PipeSpFlowItem flow
     ) {
         ISimplePipe pipe = flow.pipe;
-        World world = pipe.getWorld();
+        World world = pipe.getPipeWorld();
         long now = world == null ? 0 : world.getTime();
 
         Iterable<TravellingItem> toRender = flow.getAllItemsForRender();

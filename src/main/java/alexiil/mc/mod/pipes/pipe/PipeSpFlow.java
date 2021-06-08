@@ -17,7 +17,7 @@ public abstract class PipeSpFlow {
     }
 
     protected World world() {
-        return pipe.getWorld();
+        return pipe.getPipeWorld();
     }
 
     public abstract void fromTag(NbtCompound tag);

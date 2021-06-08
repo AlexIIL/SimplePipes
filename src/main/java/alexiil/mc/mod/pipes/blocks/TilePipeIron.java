@@ -28,7 +28,7 @@ public abstract class TilePipeIron extends TilePipeSided {
 
     @Override
     protected boolean canFaceDirection(Direction dir) {
-        BlockEntity other = world.getBlockEntity(getPos().offset(dir));
+        BlockEntity other = world.getBlockEntity(getPipePos().offset(dir));
         if (other instanceof ISimplePipe) {
             return (getFlow() instanceof PipeSpFlowItem) == (((ISimplePipe) other).getFlow() instanceof PipeSpFlowItem);
         }

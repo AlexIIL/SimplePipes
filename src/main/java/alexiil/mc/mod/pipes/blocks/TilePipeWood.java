@@ -36,7 +36,7 @@ public abstract class TilePipeWood extends TilePipeSided {
             return;
         }
 
-        if (world.isReceivingRedstonePower(getPos())) {
+        if (world.isReceivingRedstonePower(getPipePos())) {
             if (!lastRecv) {
                 lastRecv = true;
                 tryExtract(dir, 1);

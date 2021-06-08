@@ -115,7 +115,7 @@ public class PipeSpBehaviourDiamond extends PipeSpBehaviour {
         if (!player.world.isClient) {
             ContainerProviderRegistry.INSTANCE
                 .openContainer(SimplePipeContainers.PIPE_PART_DIAMOND_ITEM, player, (buffer) -> {
-                    buffer.writeBlockPos(pipe.getPos());
+                    buffer.writeBlockPos(pipe.getPipePos());
                 });
         }
         return ActionResult.SUCCESS;

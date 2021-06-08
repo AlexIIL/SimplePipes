@@ -130,7 +130,7 @@ public class PipeSpFlowItem extends PipeSpFlow {
 
     @Override
     public void tick() {
-        World w = pipe.getWorld();
+        World w = pipe.getPipeWorld();
         if (w == null) {
             return;
         }
@@ -163,7 +163,7 @@ public class PipeSpFlowItem extends PipeSpFlow {
 
     @Override
     public void addDrops(ItemDropTarget target, LootContext context) {
-        BlockPos pos = pipe.getPos();
+        BlockPos pos = pipe.getPipePos();
         long tick = pipe.getWorldTime();
         for (Iterable<TravellingItem> list : this.items.getAllElements()) {
             if (list == null) {
@@ -343,9 +343,9 @@ public class PipeSpFlowItem extends PipeSpFlow {
             return;
         }
 
-        double x = pipe.getPos().getX() + 0.5 + motion.getOffsetX() * 0.5;
-        double y = pipe.getPos().getY() + 0.5 + motion.getOffsetY() * 0.5;
-        double z = pipe.getPos().getZ() + 0.5 + motion.getOffsetZ() * 0.5;
+        double x = pipe.getPipePos().getX() + 0.5 + motion.getOffsetX() * 0.5;
+        double y = pipe.getPipePos().getY() + 0.5 + motion.getOffsetY() * 0.5;
+        double z = pipe.getPipePos().getZ() + 0.5 + motion.getOffsetZ() * 0.5;
         speed += 0.01;
         speed *= 2;
         ItemEntity ent = new ItemEntity(world(), x, y, z, stack);

@@ -22,10 +22,9 @@ import net.minecraft.world.World;
 
 import alexiil.mc.mod.pipes.pipe.ISimplePipe;
 import alexiil.mc.mod.pipes.pipe.PartSpPipe;
-import alexiil.mc.mod.pipes.pipe.PipeSpFlowItem;
-import alexiil.mc.mod.pipes.pipe.PipeSpBehaviour;
 import alexiil.mc.mod.pipes.pipe.PipeSpDef;
 import alexiil.mc.mod.pipes.pipe.PipeSpFlow;
+import alexiil.mc.mod.pipes.pipe.PipeSpFlowItem;
 
 import alexiil.mc.lib.multipart.api.MultipartContainer;
 import alexiil.mc.lib.multipart.api.MultipartHolder;
@@ -111,13 +110,25 @@ public abstract class TilePipe extends TileBase implements ISimplePipe {
         return flow;
     }
 
+    @Override
+    public BlockPos getPipePos() {
+        return getPos();
+    }
+
+    @Override
+    public World getPipeWorld() {
+        return world;
+    }
+
     protected void onNeighbourChange() {
         for (Direction dir : Direction.values()) {
-            BlockEntity oTile = world.getBlockEntity(getPos().offset(dir));
+            BlockEntity oTile = world.getBlockEntity(getPipePos().offset(dir));
             if (this instanceof TilePipeWood && oTile instanceof TilePipeWood) {
                 disconnect(dir);
             } else if (oTile instanceof TilePipe) {
-                if ((getFlow() instanceof PipeSpFlowItem) == (((ISimplePipe) oTile).getFlow() instanceof PipeSpFlowItem)) {
+                if (
+                    (getFlow() instanceof PipeSpFlowItem) == (((ISimplePipe) oTile).getFlow() instanceof PipeSpFlowItem)
+                ) {
                     connect(dir);
                 } else {
                     disconnect(dir);
@@ -141,15 +152,15 @@ public abstract class TilePipe extends TileBase implements ISimplePipe {
 
     @Override
     public final ISimplePipe getNeighbourPipe(Direction dir) {
-        World w = getWorld();
+        World w = getPipeWorld();
         if (w == null) {
             return null;
         }
-        BlockEntity be = w.getBlockEntity(getPos().offset(dir));
+        BlockEntity be = w.getBlockEntity(getPipePos().offset(dir));
         if (be instanceof TilePipe || be == null) {
             return (ISimplePipe) be;
         }
-        MultipartContainer container = MultipartContainer.ATTRIBUTE.getFirstOrNull(getWorld(), be.getPos());
+        MultipartContainer container = MultipartContainer.ATTRIBUTE.getFirstOrNull(getPipeWorld(), be.getPos());
         if (container == null || PartSpPipe.hasConnectionOverlap(dir.getOpposite(), container)) {
             return null;
         }
@@ -187,13 +198,13 @@ public abstract class TilePipe extends TileBase implements ISimplePipe {
             return;
         }
         blockModelState = newState;
-        World w = getWorld();
+        World w = getPipeWorld();
         if (w instanceof ServerWorld) {
             sendPacket((ServerWorld) w, this.toUpdatePacket());
         } else if (w != null) {
             // air -> pipe
             // (This just forces the world to re-render us)
-            w.scheduleBlockRerenderIfNeeded(getPos(), Blocks.AIR.getDefaultState(), getCachedState());
+            w.scheduleBlockRerenderIfNeeded(getPipePos(), Blocks.AIR.getDefaultState(), getCachedState());
         }
     }
 
@@ -256,11 +267,11 @@ public abstract class TilePipe extends TileBase implements ISimplePipe {
         flow.tick();
         World w = world;
         if (w != null) {
-            w.markDirty(getPos());
+            w.markDirty(getPipePos());
         }
 
         if (false) {
-            MultipartUtil.turnIntoMultipart(w, getPos());
+            MultipartUtil.turnIntoMultipart(w, getPipePos());
         }
     }
 

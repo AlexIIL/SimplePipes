@@ -30,7 +30,7 @@ public class PipeSpBehaviourWood extends PipeSpBehaviourSided {
     @Override
     public void tick() {
         super.tick();
-        World world = pipe.getWorld();
+        World world = pipe.getPipeWorld();
         if (world.isClient) {
             return;
         }
@@ -39,7 +39,7 @@ public class PipeSpBehaviourWood extends PipeSpBehaviourSided {
             return;
         }
 
-        if (world.isReceivingRedstonePower(pipe.getPos())) {
+        if (world.isReceivingRedstonePower(pipe.getPipePos())) {
             if (!lastRecv) {
                 lastRecv = true;
                 tryExtract(dir);

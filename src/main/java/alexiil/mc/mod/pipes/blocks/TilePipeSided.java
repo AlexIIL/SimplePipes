@@ -121,7 +121,7 @@ public abstract class TilePipeSided extends TilePipe {
                 currentDirection = dir;
                 connectedToAny = true;
             } else if (isConnected(dir)) {
-                BlockEntity oTile = world.getBlockEntity(getPos().offset(dir));
+                BlockEntity oTile = world.getBlockEntity(getPipePos().offset(dir));
                 if (!(oTile instanceof ISimplePipe) && !canConnect(dir)) {
                     disconnect(dir);
                 }

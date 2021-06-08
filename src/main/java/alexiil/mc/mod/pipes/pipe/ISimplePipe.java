@@ -21,12 +21,12 @@ public interface ISimplePipe {
 
     PipeSpFlow getFlow();
 
-    BlockPos getPos();
+    BlockPos getPipePos();
 
-    World getWorld();
+    World getPipeWorld();
 
     default long getWorldTime() {
-        World w = getWorld();
+        World w = getPipeWorld();
         return w == null ? 0 : w.getTime();
     }
 

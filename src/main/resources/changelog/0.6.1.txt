@@ -1,0 +1,3 @@
+Bug Fixes:
+
+* Fixed ISimplePipe.getPos() and getWorld() relying on the (obfuscated) methods in BlockEntity for their implementation. 

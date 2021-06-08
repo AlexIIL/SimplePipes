@@ -200,9 +200,9 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
     public void tick() {
         behaviour.tick();
         flow.tick();
-        World w = getWorld();
+        World w = getPipeWorld();
         if (w != null) {
-            w.markDirty(getPos());
+            w.markDirty(getPipePos());
         }
     }
 
@@ -242,12 +242,12 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
     }
 
     @Override
-    public BlockPos getPos() {
+    public BlockPos getPipePos() {
         return holder.getContainer().getMultipartPos();
     }
 
     @Override
-    public World getWorld() {
+    public World getPipeWorld() {
         return holder.getContainer().getMultipartWorld();
     }
 
@@ -271,7 +271,7 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
         if (neighbour instanceof ISimplePipe || neighbour == null) {
             return (ISimplePipe) neighbour;
         }
-        MultipartContainer container = MultipartContainer.ATTRIBUTE.getFirstOrNull(getWorld(), neighbour.getPos());
+        MultipartContainer container = MultipartContainer.ATTRIBUTE.getFirstOrNull(getPipeWorld(), neighbour.getPos());
         if (container == null || hasConnectionOverlap(dir.getOpposite(), container)) {
             return null;
         }
@@ -293,7 +293,7 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
         }
 
         VoxelShape shape = SHAPES[(1 << dir.ordinal()) | (1 << dir.getOpposite().ordinal())];
-        return attr.get(getWorld(), getPos().offset(dir), SearchOptions.inDirectionalVoxel(dir, shape));
+        return attr.get(getPipeWorld(), getPipePos().offset(dir), SearchOptions.inDirectionalVoxel(dir, shape));
     }
 
     protected final byte encodeConnectedSides() {
