@@ -23,8 +23,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -83,13 +83,13 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
     @Nonnull
     public ItemStack createItemStack(FullFacade state) {
         ItemStack item = new ItemStack(this);
-        CompoundTag nbt = TagUtil.getItemData(item);
+        NbtCompound nbt = TagUtil.getItemData(item);
         nbt.put("facade", state.toTag());
         return item;
     }
 
     public static FullFacade getStates(ItemStack item) {
-        CompoundTag nbt = TagUtil.getItemData(item);
+        NbtCompound nbt = TagUtil.getItemData(item);
 
         String strPreview = nbt.getString("preview");
         if ("basic".equalsIgnoreCase(strPreview)) {
@@ -97,11 +97,11 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
         }
 
         if (!nbt.contains("facade") && nbt.contains("states")) {
-            ListTag states = nbt.getList("states", new CompoundTag().getType());
+            NbtList states = nbt.getList("states", new NbtCompound().getType());
             if (states.size() > 0) {
                 // Only migrate if we actually have a facade to migrate.
                 boolean isHollow = states.getCompound(0).getBoolean("isHollow");
-                CompoundTag tagFacade = new CompoundTag();
+                NbtCompound tagFacade = new NbtCompound();
                 tagFacade.putBoolean("isHollow", isHollow);
                 tagFacade.put("states", states);
                 nbt.put("facade", tagFacade);

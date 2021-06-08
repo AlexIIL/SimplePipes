@@ -7,22 +7,31 @@ package alexiil.mc.mod.pipes.blocks;
 
 import java.util.function.Function;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+
+import alexiil.mc.mod.pipes.pipe.ISimplePipe;
+import alexiil.mc.mod.pipes.pipe.PipeFlowItem;
+import alexiil.mc.mod.pipes.pipe.PipeSpFlow;
 
 public abstract class TilePipeIron extends TilePipeSided {
 
-    public TilePipeIron(BlockEntityType<?> type, BlockPipe pipeBlock, Function<TilePipe, PipeFlow> flowConstructor) {
-        super(type, pipeBlock, flowConstructor);
+    public TilePipeIron(
+        BlockEntityType<?> type, BlockPos pos, BlockState state, BlockPipe pipeBlock,
+        Function<TilePipe, PipeSpFlow> flowConstructor
+    ) {
+        super(type, pos, state, pipeBlock, flowConstructor);
     }
 
     @Override
     protected boolean canFaceDirection(Direction dir) {
         BlockEntity other = world.getBlockEntity(getPos().offset(dir));
-        if (other instanceof TilePipe) {
-            return (flow instanceof PipeFlowItem) == (((TilePipe) other).flow instanceof PipeFlowItem);
+        if (other instanceof ISimplePipe) {
+            return (getFlow() instanceof PipeFlowItem) == (((ISimplePipe) other).getFlow() instanceof PipeFlowItem);
         }
-        return flow.hasInsertable(dir);
+        return getFlow().hasInsertable(dir);
     }
 }

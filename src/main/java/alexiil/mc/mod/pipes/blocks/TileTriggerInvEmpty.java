@@ -1,5 +1,7 @@
 package alexiil.mc.mod.pipes.blocks;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 import alexiil.mc.lib.attributes.item.GroupedItemInvView;
@@ -7,8 +9,8 @@ import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.impl.EmptyGroupedItemInv;
 
 public class TileTriggerInvEmpty extends TileTrigger {
-    public TileTriggerInvEmpty() {
-        super(SimplePipeBlocks.TRIGGER_ITEM_INV_EMPTY_TILE);
+    public TileTriggerInvEmpty(BlockPos pos, BlockState state) {
+        super(SimplePipeBlocks.TRIGGER_ITEM_INV_EMPTY_TILE, pos, state);
     }
 
     @Override

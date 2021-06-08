@@ -46,11 +46,11 @@ public class ContainerPart<P extends AbstractPart> extends ScreenHandler {
     protected void addPlayerInventory(int startY) {
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; ++x) {
-                addSlot(new Slot(player.inventory, x + y * 9 + 9, 8 + x * 18, startY + y * 18));
+                addSlot(new Slot(player.getInventory(), x + y * 9 + 9, 8 + x * 18, startY + y * 18));
             }
         }
         for (int x = 0; x < 9; x++) {
-            addSlot(new Slot(player.inventory, x, 8 + x * 18, startY + 58));
+            addSlot(new Slot(player.getInventory(), x, 8 + x * 18, startY + 58));
         }
     }
 }

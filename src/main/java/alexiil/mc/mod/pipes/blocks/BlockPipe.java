@@ -5,12 +5,17 @@
  */
 package alexiil.mc.mod.pipes.blocks;
 
+import java.util.Collections;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -19,57 +24,48 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.FluidTags;
-import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+
+import alexiil.mc.mod.pipes.pipe.ISimplePipe;
+import alexiil.mc.mod.pipes.pipe.PartSpPipe;
+import alexiil.mc.mod.pipes.pipe.PipeSpDef;
+
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
 import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable;
 
-public abstract class BlockPipe extends BlockBase implements BlockEntityProvider, AttributeProvider, Waterloggable {
+import alexiil.mc.lib.multipart.api.MultipartContainer.MultipartCreator;
+import alexiil.mc.lib.multipart.api.NativeMultipart;
 
-    public static final VoxelShape CENTER_SHAPE;
-    private static final VoxelShape[] FACE_SHAPES;
-    private static final VoxelShape[] FACE_CENTER_SHAPES;
-    private static final VoxelShape[] SHAPES;
+public abstract class BlockPipe extends BlockBase
+    implements BlockEntityProvider, AttributeProvider, Waterloggable, NativeMultipart {
 
-    static {
-        CENTER_SHAPE = VoxelShapes.cuboid(0.25, 0.25, 0.25, 0.75, 0.75, 0.75);
-        FACE_SHAPES = new VoxelShape[6];
-        FACE_CENTER_SHAPES = new VoxelShape[6];
-        for (Direction dir : Direction.values()) {
-            double x = 0.5 + dir.getOffsetX() * 0.375;
-            double y = 0.5 + dir.getOffsetY() * 0.375;
-            double z = 0.5 + dir.getOffsetZ() * 0.375;
-            double rx = dir.getAxis() == Axis.X ? 0.125 : 0.25;
-            double ry = dir.getAxis() == Axis.Y ? 0.125 : 0.25;
-            double rz = dir.getAxis() == Axis.Z ? 0.125 : 0.25;
-            VoxelShape faceShape = VoxelShapes.cuboid(x - rx, y - ry, z - rz, x + rx, y + ry, z + rz);
-            FACE_SHAPES[dir.ordinal()] = faceShape;
-            FACE_CENTER_SHAPES[dir.ordinal()] = VoxelShapes.union(faceShape, CENTER_SHAPE);
-        }
+    public static final VoxelShape CENTER_SHAPE = PartSpPipe.CENTER_SHAPE;
+    private static final VoxelShape[] FACE_SHAPES = PartSpPipe.FACE_SHAPES;
+    private static final VoxelShape[] FACE_CENTER_SHAPES = PartSpPipe.FACE_CENTER_SHAPES;
+    private static final VoxelShape[] SHAPES = PartSpPipe.SHAPES;
 
-        SHAPES = new VoxelShape[2 * 2 * 2 * 2 * 2 * 2];
-        for (int c = 0; c <= 0b111_111; c++) {
-            VoxelShape shape = CENTER_SHAPE;
-            for (Direction dir : Direction.values()) {
-                if ((c & (1 << dir.ordinal())) != 0) {
-                    shape = VoxelShapes.combine(shape, FACE_SHAPES[dir.ordinal()], BooleanBiFunction.OR);
-                }
-            }
-            SHAPES[c] = shape.simplify();
-        }
+    public final PipeSpDef pipeDef;
+
+    public BlockPipe(Settings settings, PipeSpDef pipeDef) {
+        super(settings);
+        this.pipeDef = pipeDef;
     }
 
-    public BlockPipe(Settings settings) {
-        super(settings);
+    @Override
+    public List<MultipartCreator> getMultipartConversion(World world, BlockPos pos, BlockState state) {
+        BlockEntity be = world.getBlockEntity(pos);
+        if (be instanceof TilePipe) {
+            return Collections.singletonList(((TilePipe) be)::getMultipartConversion);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     @Override
@@ -91,8 +87,8 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
 
     @Override
     public BlockState getStateForNeighborUpdate(
-        BlockState blockState_1, Direction direction_1, BlockState blockState_2, WorldAccess iWorld_1, BlockPos blockPos_1,
-        BlockPos blockPos_2
+        BlockState blockState_1, Direction direction_1, BlockState blockState_2, WorldAccess iWorld_1,
+        BlockPos blockPos_1, BlockPos blockPos_2
     ) {
         if (blockState_1.get(Properties.WATERLOGGED)) {
             iWorld_1.getFluidTickScheduler().schedule(blockPos_1, Fluids.WATER, Fluids.WATER.getTickRate(iWorld_1));
@@ -111,17 +107,24 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
     }
 
     @Override
-    public abstract TilePipe createBlockEntity(BlockView var1);
+    public abstract TilePipe createBlockEntity(BlockPos pos, BlockState state);
+
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
+        World world, BlockState state, BlockEntityType<T> type
+    ) {
+        return (w, p, s, e) -> ((TilePipe) e).tick();
+    }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext entityPos) {
         BlockEntity be = view.getBlockEntity(pos);
-        if (be instanceof TilePipe) {
+        if (be instanceof ISimplePipe) {
             TilePipe pipe = (TilePipe) be;
-            if (pipe.connections == 0) {
+            if (pipe.getConnections() == 0) {
                 return CENTER_SHAPE;
             }
-            return SHAPES[pipe.connections & 0b111111];
+            return SHAPES[pipe.getConnections() & 0b111111];
         }
 
         return CENTER_SHAPE;
@@ -133,9 +136,9 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
         BlockState state, World world, BlockPos thisPos, Block neighbourBlock, BlockPos neighbourPos, boolean idunno
     ) {
         BlockEntity be = world.getBlockEntity(thisPos);
-        if (be instanceof TilePipe) {
+        if (be instanceof ISimplePipe) {
             TilePipe pipe = (TilePipe) be;
-            pipe.setLocation(world, thisPos);
+            pipe.setWorld(world);
             pipe.onNeighbourChange();
         }
     }
@@ -144,7 +147,7 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity entity, ItemStack stack) {
         super.onPlaced(world, pos, state, entity, stack);
         BlockEntity be = world.getBlockEntity(pos);
-        if (be instanceof TilePipe) {
+        if (be instanceof ISimplePipe) {
             TilePipe pipe = (TilePipe) be;
             pipe.onNeighbourChange();
         }
@@ -159,18 +162,18 @@ public abstract class BlockPipe extends BlockBase implements BlockEntityProvider
             return;
         }
         BlockEntity be = world.getBlockEntity(pos);
-        if (!(be instanceof TilePipe)) {
+        if (!(be instanceof ISimplePipe)) {
             return;
         }
         Direction pipeSide = searchDirection.getOpposite();
-        TilePipe pipe = (TilePipe) be;
+        ISimplePipe pipe = (ISimplePipe) be;
         VoxelShape pipeShape = pipe.isConnected(pipeSide) ? FACE_CENTER_SHAPES[pipeSide.ordinal()] : CENTER_SHAPE;
 
         boolean isItems = this instanceof BlockPipeItem;
         assert isItems != this instanceof BlockPipeFluid;
 
         if (isExtractionPipe() && be instanceof TilePipeSided && ((TilePipeSided) be).currentDirection() == pipeSide) {
-            to.offer(pipe.flow.getInsertable(searchDirection), pipeShape);
+            to.offer(pipe.getFlow().getInsertable(searchDirection), pipeShape);
         } else {
             to.offer(isItems ? EmptyItemExtractable.SUPPLIER : EmptyFluidExtractable.SUPPLIER, pipeShape);
         }

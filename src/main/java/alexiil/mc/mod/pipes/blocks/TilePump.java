@@ -1,44 +1,43 @@
 package alexiil.mc.mod.pipes.blocks;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Tickable;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.FluidInsertable;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
+import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.lib.attributes.fluid.world.FluidWorldUtil;
 
-public class TilePump extends TileBase implements Tickable {
+public class TilePump extends TileBase {
 
     // private FluidKey fluidKey;
-    private FluidVolume stored = FluidKeys.EMPTY.withAmount(0);
+    private FluidVolume stored = FluidVolumeUtil.EMPTY;
 
-    public TilePump() {
-        super(SimplePipeBlocks.PUMP_TILE);
+    public TilePump(BlockPos pos, BlockState state) {
+        super(SimplePipeBlocks.PUMP_TILE, pos, state);
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         stored = FluidVolume.fromTag(tag.getCompound("fluid"));
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        tag = super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        tag = super.writeNbt(tag);
         tag.put("fluid", stored.toTag());
         return tag;
     }
 
-    @Override
-    public void tick() {
+    public void serverTick() {
         final World w = world;
-        if (w == null || w.isClient) {
+        if (w == null) {
             return;
         }
         BlockState state = getCachedState();

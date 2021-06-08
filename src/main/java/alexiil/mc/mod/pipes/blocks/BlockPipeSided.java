@@ -12,13 +12,14 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+
+import alexiil.mc.mod.pipes.pipe.PipeSpDef;
 
 public abstract class BlockPipeSided extends BlockPipe {
 
-    public BlockPipeSided(Settings settings) {
-        super(settings);
+    public BlockPipeSided(Settings settings, PipeSpDef pipeDef) {
+        super(settings, pipeDef);
     }
 
     @Override
@@ -38,6 +39,6 @@ public abstract class BlockPipeSided extends BlockPipe {
     }
 
     @Override
-    public abstract TilePipeSided createBlockEntity(BlockView view);
+    public abstract TilePipeSided createBlockEntity(BlockPos pos, BlockState state);
 
 }

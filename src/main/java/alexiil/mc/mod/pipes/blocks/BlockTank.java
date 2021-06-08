@@ -8,6 +8,8 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -19,6 +21,7 @@ import net.minecraft.world.World;
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
 import alexiil.mc.lib.multipart.api.MultipartContainer.MultipartCreator;
+import alexiil.mc.lib.multipart.api.MultipartUtil;
 import alexiil.mc.lib.multipart.api.NativeMultipart;
 import alexiil.mc.mod.pipes.part.PartTank;
 import alexiil.mc.mod.pipes.part.SimplePipeParts;
@@ -32,8 +35,15 @@ public class BlockTank extends BlockBase implements BlockEntityProvider, Attribu
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView var1) {
-        return new TileTank();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new TileTank(pos, state);
+    }
+
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
+        World world, BlockState state, BlockEntityType<T> type
+    ) {
+        return world.isClient ? null : (w, p, s, e) -> MultipartUtil.turnIntoMultipart(w, p);
     }
 
     @Override

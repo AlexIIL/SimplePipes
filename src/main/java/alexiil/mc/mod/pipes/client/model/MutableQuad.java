@@ -17,10 +17,10 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.math.Vec3i;
 
 import alexiil.mc.mod.pipes.mixin.impl.BakedQuadAccessor;
@@ -169,11 +169,11 @@ public class MutableQuad {
         vertex_3.putData(3, emitter);
     }
 
-    public Vector3f getCalculatedNormal() {
-        Vector3f a = vertex_1.positionvf().copy();
+    public Vec3f getCalculatedNormal() {
+        Vec3f a = vertex_1.positionvf().copy();
         a.subtract(vertex_0.positionvf());
 
-        Vector3f b = vertex_2.positionvf().copy();
+        Vec3f b = vertex_2.positionvf().copy();
         b.subtract(vertex_0.positionvf());
 
         a.cross(b);
@@ -184,7 +184,7 @@ public class MutableQuad {
         normalvf(getCalculatedNormal());
     }
 
-    public static float diffuseLight(Vector3f normal) {
+    public static float diffuseLight(Vec3f normal) {
         return diffuseLight(normal.getX(), normal.getY(), normal.getZ());
     }
 
@@ -209,7 +209,7 @@ public class MutableQuad {
         return diffuseLight(getCalculatedNormal());
     }
 
-    public void setDiffuse(Vector3f normal) {
+    public void setDiffuse(Vec3f normal) {
         float diffuse = diffuseLight(normal);
         colourf(diffuse, diffuse, diffuse, 1);
     }
@@ -296,7 +296,7 @@ public class MutableQuad {
     }
 
     /** Sets the normal for all vertices to the specified {@link Vector3f}. */
-    public MutableQuad normalvf(Vector3f vec) {
+    public MutableQuad normalvf(Vec3f vec) {
         return normalf(vec.getX(), vec.getY(), vec.getZ());
     }
 
@@ -313,8 +313,8 @@ public class MutableQuad {
 
     /** @return A new {@link Vector3f} with the normal of the first vertex. Only useful if the normal is expected to be
      *         the same for every vertex. */
-    public Vector3f normalvf() {
-        return new Vector3f(vertex_0.normal_x, vertex_0.normal_y, vertex_0.normal_z);
+    public Vec3f normalvf() {
+        return new Vec3f(vertex_0.normal_x, vertex_0.normal_y, vertex_0.normal_z);
     }
 
     /** @return A new {@link Vec3d} with the normal of the first vertex. Only useful if the normal is expected to be the
@@ -474,7 +474,7 @@ public class MutableQuad {
         return translatei(vec.getX(), vec.getY(), vec.getZ());
     }
 
-    public MutableQuad translatevf(Vector3f vec) {
+    public MutableQuad translatevf(Vec3f vec) {
         return translatef(vec.getX(), vec.getY(), vec.getZ());
     }
 

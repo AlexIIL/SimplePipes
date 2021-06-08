@@ -8,29 +8,31 @@ package alexiil.mc.mod.pipes.blocks;
 import java.util.Objects;
 import java.util.function.Function;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Tickable;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import alexiil.mc.lib.attributes.fluid.FluidAttributes;
-import alexiil.mc.lib.attributes.fluid.FluidExtractable;
-import alexiil.mc.lib.attributes.fluid.FluidInsertable;
-import alexiil.mc.lib.attributes.item.ItemAttributes;
-import alexiil.mc.lib.attributes.item.ItemExtractable;
-import alexiil.mc.lib.attributes.item.ItemInsertable;
+import alexiil.mc.mod.pipes.pipe.ISimplePipe;
+import alexiil.mc.mod.pipes.pipe.PartSpPipe;
+import alexiil.mc.mod.pipes.pipe.PipeFlowItem;
+import alexiil.mc.mod.pipes.pipe.PipeSpBehaviour;
+import alexiil.mc.mod.pipes.pipe.PipeSpDef;
+import alexiil.mc.mod.pipes.pipe.PipeSpFlow;
 
-public abstract class TilePipe extends TileBase implements Tickable {
+import alexiil.mc.lib.multipart.api.MultipartContainer;
+import alexiil.mc.lib.multipart.api.MultipartHolder;
+import alexiil.mc.lib.multipart.api.MultipartUtil;
+import alexiil.mc.lib.multipart.api.render.PartModelKey;
+
+public abstract class TilePipe extends TileBase implements ISimplePipe {
 
     protected static final double EXTRACT_SPEED = 0.08;
 
@@ -38,46 +40,79 @@ public abstract class TilePipe extends TileBase implements Tickable {
     public volatile PipeBlockModelState blockModelState;
     byte connections;
 
-    public final PipeFlow flow;
+    private final PipeSpFlow flow;
 
-    public TilePipe(BlockEntityType<?> type, BlockPipe pipeBlock, Function<TilePipe, PipeFlow> flowConstructor) {
-        super(type);
+    public TilePipe(
+        BlockEntityType<?> type, BlockPos pos, BlockState state, BlockPipe pipeBlock,
+        Function<TilePipe, PipeSpFlow> flowConstructor
+    ) {
+        super(type, pos, state);
         this.pipeBlock = pipeBlock;
         this.blockModelState = createModelState();
         this.flow = flowConstructor.apply(this);
     }
 
-    @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
-        connections = tag.getByte("c");
-        flow.fromTag(tag.getCompound("flow"));
+    public final PartSpPipe getMultipartConversion(MultipartHolder holder) {
+        PartSpPipe pipe = new PartSpPipe(pipeBlock.pipeDef, holder);
+        pipe.connections = connections;
+        pipe.flow.fromTag(flow.toTag());
+        saveToBehaviour(pipe.behaviour);
+        return pipe;
+    }
+
+    protected void saveToBehaviour(PipeSpBehaviour behaviour) {
+
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        tag = super.toTag(tag);
+    public PipeSpDef getDefinition() {
+        return pipeBlock.pipeDef;
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        connections = nbt.getByte("c");
+        getFlow().fromTag(nbt.getCompound("flow"));
+    }
+
+    @Override
+    public NbtCompound writeNbt(NbtCompound tag) {
+        tag = super.writeNbt(tag);
         tag.putByte("c", connections);
-        tag.put("flow", flow.toTag());
+        tag.put("flow", getFlow().toTag());
         return tag;
     }
 
     @Override
-    public void fromClientTag(CompoundTag tag) {
+    public void fromClientTag(NbtCompound tag) {
         if (tag.getBoolean("f")) {
-            flow.fromClientTag(tag);
+            getFlow().fromClientTag(tag);
         } else {
             connections = tag.getByte("c");
-            flow.fromInitialClientTag(tag);
+            getFlow().fromInitialClientTag(tag);
             refreshModel();
         }
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
+    public NbtCompound toClientTag(NbtCompound tag) {
         tag.putByte("c", connections);
-        flow.toInitialClientTag(tag);
+        getFlow().toInitialClientTag(tag);
         return tag;
+    }
+
+    public PipeBlockModelState getBlockModelState() {
+        return blockModelState;
+    }
+
+    byte getConnections() {
+        return connections;
+    }
+
+    @Override
+    public PipeSpFlow getFlow() {
+        return flow;
     }
 
     protected void onNeighbourChange() {
@@ -86,7 +121,7 @@ public abstract class TilePipe extends TileBase implements Tickable {
             if (this instanceof TilePipeWood && oTile instanceof TilePipeWood) {
                 disconnect(dir);
             } else if (oTile instanceof TilePipe) {
-                if ((flow instanceof PipeFlowItem) == (((TilePipe) oTile).flow instanceof PipeFlowItem)) {
+                if ((getFlow() instanceof PipeFlowItem) == (((ISimplePipe) oTile).getFlow() instanceof PipeFlowItem)) {
                     connect(dir);
                 } else {
                     disconnect(dir);
@@ -99,64 +134,52 @@ public abstract class TilePipe extends TileBase implements Tickable {
         }
     }
 
+    @Override
     public long getWorldTime() {
         return world != null ? world.getTime() : 0;
     }
 
     protected boolean canConnect(Direction dir) {
-        return flow.hasExtractable(dir) || flow.hasInsertable(dir);
+        return getFlow().hasExtractable(dir) || getFlow().hasInsertable(dir);
     }
 
-    @Nullable
-    public final TilePipe getNeighbourPipe(Direction dir) {
+    @Override
+    public final ISimplePipe getNeighbourPipe(Direction dir) {
         World w = getWorld();
         if (w == null) {
             return null;
         }
         BlockEntity be = w.getBlockEntity(getPos().offset(dir));
-        if (be instanceof TilePipe) {
-            return (TilePipe) be;
+        if (be instanceof TilePipe || be == null) {
+            return (ISimplePipe) be;
         }
-        return null;
-    }
-
-    @Nonnull
-    public final ItemExtractable getItemExtractable(Direction dir) {
-        return getNeighbourAttribute(ItemAttributes.EXTRACTABLE, dir);
-    }
-
-    @Nonnull
-    public final ItemInsertable getItemInsertable(Direction dir) {
-        return getNeighbourAttribute(ItemAttributes.INSERTABLE, dir);
-    }
-
-    @Nonnull
-    public final FluidExtractable getFluidExtractable(Direction dir) {
-        return getNeighbourAttribute(FluidAttributes.EXTRACTABLE, dir);
-    }
-
-    @Nonnull
-    public final FluidInsertable getFluidInsertable(Direction dir) {
-        return getNeighbourAttribute(FluidAttributes.INSERTABLE, dir);
+        MultipartContainer container = MultipartContainer.ATTRIBUTE.getFirstOrNull(getWorld(), be.getPos());
+        if (container == null || PartSpPipe.hasConnectionOverlap(dir.getOpposite(), container)) {
+            return null;
+        }
+        return container.getFirstPart(ISimplePipe.class);
     }
 
     protected PipeBlockModelState createModelState() {
-        return new PipeBlockModelState(pipeBlock, encodeConnectedSides());
+        return new PipeBlockModelState(pipeBlock.pipeDef, encodeConnectedSides());
     }
 
     protected final byte encodeConnectedSides() {
         return connections;
     }
 
+    @Override
     public boolean isConnected(Direction dir) {
         return (connections & (1 << dir.ordinal())) != 0;
     }
 
+    @Override
     public void connect(Direction dir) {
         connections |= 1 << dir.ordinal();
         refreshModel();
     }
 
+    @Override
     public void disconnect(Direction dir) {
         connections &= ~(1 << dir.ordinal());
         refreshModel();
@@ -164,7 +187,7 @@ public abstract class TilePipe extends TileBase implements Tickable {
 
     protected void refreshModel() {
         PipeBlockModelState newState = createModelState();
-        if (newState.equals(blockModelState)) {
+        if (newState.equals(getBlockModelState())) {
             return;
         }
         blockModelState = newState;
@@ -178,17 +201,18 @@ public abstract class TilePipe extends TileBase implements Tickable {
         }
     }
 
-    protected void sendFlowPacket(CompoundTag tag) {
+    @Override
+    public void sendFlowPacket(NbtCompound tag) {
         tag.putBoolean("f", true);
         sendPacket((ServerWorld) world, tag);
     }
 
-    public static class PipeBlockModelState {
-        public final BlockPipe block;
+    public static class PipeBlockModelState extends PartModelKey {
+        public final PipeSpDef def;
         final byte connections;
 
-        public PipeBlockModelState(BlockPipe block, byte isConnected) {
-            this.block = block;
+        public PipeBlockModelState(PipeSpDef def, byte isConnected) {
+            this.def = def;
             this.connections = isConnected;
         }
 
@@ -198,12 +222,12 @@ public abstract class TilePipe extends TileBase implements Tickable {
 
         @Override
         public String toString() {
-            return "PipeBlockModel{" + block + ", " + connections + "}";
+            return "PipeBlockModel{" + def + ", " + connections + "}";
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(block, connections);
+            return Objects.hash(def, connections);
         }
 
         @Override
@@ -212,14 +236,11 @@ public abstract class TilePipe extends TileBase implements Tickable {
             if (obj == null) return false;
             if (getClass() != obj.getClass()) return false;
             PipeBlockModelState other = (PipeBlockModelState) obj;
-            if (block == null) {
-                if (other.block != null) return false;
-            } else if (!block.equals(other.block)) return false;
-            if (connections != other.connections) return false;
-            return true;
+            return connections == other.connections && Objects.equals(def, other.def);
         }
     }
 
+    @Override
     public double getPipeLength(Direction side) {
         if (side == null) {
             return 0;
@@ -235,19 +256,22 @@ public abstract class TilePipe extends TileBase implements Tickable {
         }
     }
 
-    @Override
     public void tick() {
         flow.tick();
         World w = world;
         if (w != null) {
-            w.markDirty(getPos(), this);
+            w.markDirty(getPos());
+        }
+
+        if (false) {
+            MultipartUtil.turnIntoMultipart(w, getPos());
         }
     }
 
     @Override
     public DefaultedList<ItemStack> removeItemsForDrop() {
         DefaultedList<ItemStack> all = super.removeItemsForDrop();
-        flow.removeItemsForDrop(all);
+        getFlow().removeItemsForDrop(all);
         return all;
     }
 }

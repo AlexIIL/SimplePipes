@@ -1,8 +1,7 @@
 package alexiil.mc.mod.pipes.part;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-
+import net.minecraft.nbt.NbtCompound;
 import alexiil.mc.lib.net.InvalidInputDataException;
 import alexiil.mc.lib.net.NetByteBuf;
 
@@ -16,15 +15,15 @@ public final class FullFacade {
         this.shape = shape;
     }
 
-    public FullFacade(CompoundTag tag) {
+    public FullFacade(NbtCompound tag) {
         this.state = FacadeBlockStateInfo.fromTag(tag.getCompound("state"));
         this.shape = FacadeShape.fromTag(tag.getCompound("shape"));
     }
 
-    public CompoundTag toTag() {
-        CompoundTag tag = new CompoundTag();
+    public NbtCompound toTag() {
+        NbtCompound tag = new NbtCompound();
         tag.put("state", state.toTag());
-        CompoundTag shapeTag = shape.toTag();
+        NbtCompound shapeTag = shape.toTag();
         // Remove all unnecessary information
         shapeTag.remove("side");
         shapeTag.remove("edge");

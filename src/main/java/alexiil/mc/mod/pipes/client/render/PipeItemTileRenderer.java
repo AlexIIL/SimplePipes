@@ -5,38 +5,38 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 
-import alexiil.mc.mod.pipes.blocks.PipeFlowItem;
 import alexiil.mc.mod.pipes.blocks.TilePipe;
-import alexiil.mc.mod.pipes.blocks.TravellingItem;
+import alexiil.mc.mod.pipes.pipe.PipeFlowItem;
+import alexiil.mc.mod.pipes.pipe.TravellingItem;
 
-public class PipeItemTileRenderer<T extends TilePipe> extends BlockEntityRenderer<T> {
+public class PipeItemTileRenderer<T extends TilePipe> implements BlockEntityRenderer<T> {
 
     private static final Quaternion[] ROTATIONS = new Quaternion[6];
 
     static {
         ROTATIONS[Direction.SOUTH.ordinal()] = null;
-        ROTATIONS[Direction.NORTH.ordinal()] = new Quaternion(new Vector3f(0, 1, 0), 180, true);
-        ROTATIONS[Direction.EAST.ordinal()] = new Quaternion(new Vector3f(0, 1, 0), 90, true);
-        ROTATIONS[Direction.WEST.ordinal()] = new Quaternion(new Vector3f(0, 1, 0), 270, true);
-        ROTATIONS[Direction.UP.ordinal()] = new Quaternion(new Vector3f(1, 0, 0), 270, true);
-        ROTATIONS[Direction.DOWN.ordinal()] = new Quaternion(new Vector3f(1, 0, 0), 90, true);
+        ROTATIONS[Direction.NORTH.ordinal()] = new Quaternion(new Vec3f(0, 1, 0), 180, true);
+        ROTATIONS[Direction.EAST.ordinal()] = new Quaternion(new Vec3f(0, 1, 0), 90, true);
+        ROTATIONS[Direction.WEST.ordinal()] = new Quaternion(new Vec3f(0, 1, 0), 270, true);
+        ROTATIONS[Direction.UP.ordinal()] = new Quaternion(new Vec3f(1, 0, 0), 270, true);
+        ROTATIONS[Direction.DOWN.ordinal()] = new Quaternion(new Vec3f(1, 0, 0), 90, true);
     }
 
-    public PipeItemTileRenderer(BlockEntityRenderDispatcher dispatcher) {
-        super(dispatcher);
+    public PipeItemTileRenderer(BlockEntityRendererFactory.Context ctx) {
+
     }
 
     @Override
@@ -45,7 +45,7 @@ public class PipeItemTileRenderer<T extends TilePipe> extends BlockEntityRendere
     ) {
         World world = pipe.getWorld();
         long now = world == null ? 0 : world.getTime();
-        PipeFlowItem itemFlow = (PipeFlowItem) pipe.flow;
+        PipeFlowItem itemFlow = (PipeFlowItem) pipe.getFlow();
 
         Iterable<TravellingItem> toRender = itemFlow.getAllItemsForRender();
 
@@ -70,7 +70,7 @@ public class PipeItemTileRenderer<T extends TilePipe> extends BlockEntityRendere
                     }
                 }
                 MinecraftClient.getInstance().getItemRenderer()
-                    .renderItem(stack, ModelTransformation.Mode.FIXED, light, overlay, matrices, vertexConsumers);
+                    .renderItem(stack, ModelTransformation.Mode.FIXED, light, overlay, matrices, vertexConsumers, 42);
                 matrices.pop();
             }
         }

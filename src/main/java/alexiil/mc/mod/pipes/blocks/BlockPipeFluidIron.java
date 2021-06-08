@@ -5,16 +5,19 @@
  */
 package alexiil.mc.mod.pipes.blocks;
 
-import net.minecraft.world.BlockView;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
+
+import alexiil.mc.mod.pipes.part.SimplePipeParts;
 
 public class BlockPipeFluidIron extends BlockPipeSided implements BlockPipeFluid {
 
     public BlockPipeFluidIron(Settings settings) {
-        super(settings);
+        super(settings, SimplePipeParts.IRON_PIPE_FLUIDS);
     }
 
     @Override
-    public TilePipeSided createBlockEntity(BlockView view) {
-        return new TilePipeFluidIron();
+    public TilePipeSided createBlockEntity(BlockPos pos, BlockState state) {
+        return new TilePipeFluidIron(pos, state);
     }
 }

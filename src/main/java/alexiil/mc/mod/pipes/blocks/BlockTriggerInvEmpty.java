@@ -1,7 +1,8 @@
 package alexiil.mc.mod.pipes.blocks;
 
 import net.minecraft.block.Block;
-import net.minecraft.world.BlockView;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
 
 public class BlockTriggerInvEmpty extends BlockTriggerItemInv {
 
@@ -10,7 +11,7 @@ public class BlockTriggerInvEmpty extends BlockTriggerItemInv {
     }
 
     @Override
-    public TileTrigger createBlockEntity(BlockView view) {
-        return new TileTriggerInvEmpty();
+    public TileTrigger createBlockEntity(BlockPos pos, BlockState state) {
+        return new TileTriggerInvEmpty(pos, state);
     }
 }

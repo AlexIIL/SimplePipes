@@ -3,6 +3,9 @@ package alexiil.mc.mod.pipes.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -67,7 +70,14 @@ public abstract class BlockTrigger extends BlockBase implements BlockEntityProvi
     }
 
     @Override
-    public abstract TileTrigger createBlockEntity(BlockView view);
+    public abstract TileTrigger createBlockEntity(BlockPos pos, BlockState state);
+
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
+        World world, BlockState state, BlockEntityType<T> type
+    ) {
+        return world.isClient ? null : (w, p, s, be) -> ((TileTrigger) be).serverTick();
+    }
 
     /** @param pos This position
      * @param dir the direction to look in. */

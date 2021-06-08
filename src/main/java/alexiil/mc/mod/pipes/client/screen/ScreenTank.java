@@ -3,24 +3,26 @@ package alexiil.mc.mod.pipes.client.screen;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.fabricmc.fabric.api.client.screen.ContainerScreenFactory;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+
+import alexiil.mc.mod.pipes.SimplePipes;
+import alexiil.mc.mod.pipes.container.ContainerTank;
+import alexiil.mc.mod.pipes.items.SimplePipeItems;
+import alexiil.mc.mod.pipes.util.FluidSmoother.FluidStackInterp;
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidTooltipContext;
 import alexiil.mc.lib.attributes.fluid.volume.FluidUnit;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alexiil.mc.mod.pipes.SimplePipes;
-import alexiil.mc.mod.pipes.container.ContainerTank;
-import alexiil.mc.mod.pipes.items.SimplePipeItems;
-import alexiil.mc.mod.pipes.util.FluidSmoother.FluidStackInterp;
 
 public class ScreenTank extends HandledScreen<ContainerTank> {
 
@@ -29,7 +31,7 @@ public class ScreenTank extends HandledScreen<ContainerTank> {
     private static final Identifier TANK_GUI = new Identifier(SimplePipes.MODID, "textures/gui/tank.png");
 
     public ScreenTank(ContainerTank container) {
-        super(container, container.player.inventory, SimplePipeItems.TANK.getName());
+        super(container, container.player.getInventory(), SimplePipeItems.TANK.getName());
         backgroundHeight = 176;
     }
 
@@ -42,20 +44,23 @@ public class ScreenTank extends HandledScreen<ContainerTank> {
 
     @Override
     protected void drawBackground(MatrixStack matrices, float partialTicks, int mouseX, int mouseY) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        bindTexture(TANK_GUI);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, TANK_GUI);
         int x = (this.width - this.backgroundWidth) / 2;
         int y = (this.height - this.backgroundHeight) / 2;
         drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         FluidStackInterp fluid = handler.part.getFluidForRender(partialTicks);
         if (fluid != null && !fluid.fluid.isEmpty() && fluid.amount > 0.1) {
             double x0 = x + 80 + 0;
-            double y0 = y + 23 + 48 - 48 * fluid.amount / handler.part.fluidInv.tankCapacity;
+            double y0 = y + 23 + 48 - 48 * fluid.amount / handler.part.fluidInv.tankCapacity_F.asInexactDouble();
             double x1 = x + 80 + 16;
             double y1 = y + 23 + 48;
             fluid.fluid.renderGuiRect(x0, y0, x1, y1);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderTexture(0, TANK_GUI);
         }
-        bindTexture(TANK_GUI);
         drawTexture(matrices, x + 80, y + 23, 176, 0, 16, 48);
     }
 
@@ -66,7 +71,9 @@ public class ScreenTank extends HandledScreen<ContainerTank> {
     @Override
     protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
         textRenderer.draw(matrices, title, 8.0F, 6.0F, 0x40_40_40);
-        textRenderer.draw(matrices, playerInventory.getDisplayName(), 8.0F, backgroundHeight - 96 + 2, 0x40_40_40);
+        textRenderer.draw(
+            matrices, handler.player.getInventory().getDisplayName(), 8.0F, backgroundHeight - 96 + 2, 0x40_40_40
+        );
     }
 
     @Override

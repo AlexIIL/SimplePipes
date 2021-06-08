@@ -30,4 +30,14 @@ public class SingleBlockView implements BlockView {
     public FluidState getFluidState(BlockPos pos) {
         return POS.equals(pos) ? state.getFluidState() : Blocks.AIR.getDefaultState().getFluidState();
     }
+
+    @Override
+    public int getHeight() {
+        return 16;
+    }
+
+    @Override
+    public int getBottomY() {
+        return 0;
+    }
 }

@@ -4,10 +4,11 @@ import javax.annotation.Nullable;
 
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -15,27 +16,30 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 
+import alexiil.mc.mod.pipes.client.model.part.TankPartModelKey;
+import alexiil.mc.mod.pipes.container.SimplePipeContainers;
+import alexiil.mc.mod.pipes.items.SimplePipeItems;
+import alexiil.mc.mod.pipes.util.FluidSmoother;
+import alexiil.mc.mod.pipes.util.FluidSmoother.FluidStackInterp;
+
+import alexiil.mc.lib.net.IMsgReadCtx;
+import alexiil.mc.lib.net.IMsgWriteCtx;
+import alexiil.mc.lib.net.NetByteBuf;
+import alexiil.mc.lib.net.NetIdDataK;
+import alexiil.mc.lib.net.ParentNetIdSingle;
+
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil;
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+
 import alexiil.mc.lib.multipart.api.AbstractPart;
 import alexiil.mc.lib.multipart.api.MultipartEventBus;
 import alexiil.mc.lib.multipart.api.MultipartHolder;
 import alexiil.mc.lib.multipart.api.PartDefinition;
 import alexiil.mc.lib.multipart.api.event.PartTickEvent;
 import alexiil.mc.lib.multipart.api.render.PartModelKey;
-import alexiil.mc.lib.net.IMsgReadCtx;
-import alexiil.mc.lib.net.IMsgWriteCtx;
-import alexiil.mc.lib.net.NetByteBuf;
-import alexiil.mc.lib.net.NetIdDataK;
-import alexiil.mc.lib.net.ParentNetIdSingle;
-import alexiil.mc.mod.pipes.client.model.part.TankPartModelKey;
-import alexiil.mc.mod.pipes.container.SimplePipeContainers;
-import alexiil.mc.mod.pipes.items.SimplePipeItems;
-import alexiil.mc.mod.pipes.util.FluidSmoother;
-import alexiil.mc.mod.pipes.util.FluidSmoother.FluidStackInterp;
 
 public class PartTank extends AbstractPart {
 
@@ -43,14 +47,14 @@ public class PartTank extends AbstractPart {
     public static final NetIdDataK<PartTank> SMOOTHED_TANK_DATA;
 
     public static final VoxelShape SHAPE;
-    private static final int SINGLE_TANK_CAPACITY;
+    private static final FluidAmount SINGLE_TANK_CAPACITY;
 
     static {
         NET_TANK = NET_ID.subType(PartTank.class, "simple_pipes:tank");
         SMOOTHED_TANK_DATA = NET_TANK.idData("smoothed_tank_data").setReceiver(PartTank::receiveSmoothedTankData);
 
         SHAPE = VoxelShapes.cuboid(2 / 16.0, 0, 2 / 16.0, 14 / 16.0, 12 / 16.0, 14 / 16.0);
-        SINGLE_TANK_CAPACITY = 16 * FluidVolume.BUCKET;
+        SINGLE_TANK_CAPACITY = FluidAmount.BUCKET.mul(16);
     }
 
     private boolean isPlayerInteracting = false;
@@ -70,7 +74,7 @@ public class PartTank extends AbstractPart {
         );
     }
 
-    public PartTank(PartDefinition definition, MultipartHolder holder, CompoundTag tag) {
+    public PartTank(PartDefinition definition, MultipartHolder holder, NbtCompound tag) {
         this(definition, holder);
         if (tag.contains("fluidInv")) {
             fluidInv.fromTag(tag.getCompound("fluidInv"));
@@ -78,8 +82,8 @@ public class PartTank extends AbstractPart {
     }
 
     @Override
-    public CompoundTag toTag() {
-        CompoundTag tag = super.toTag();
+    public NbtCompound toTag() {
+        NbtCompound tag = super.toTag();
         tag.put("fluidInv", fluidInv.toTag());
         return tag;
     }
@@ -137,8 +141,8 @@ public class PartTank extends AbstractPart {
     }
 
     @Override
-    public float calculateBreakingDelta(PlayerEntity player) {
-        return calculateBreakingDelta(player, Blocks.GLASS);
+    protected BlockState getClosestBlockState() {
+        return Blocks.GLASS.getDefaultState();
     }
 
     protected void onTick() {

@@ -9,13 +9,14 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 
-import alexiil.mc.lib.multipart.impl.client.model.SinglePartBakedModel;
 import alexiil.mc.mod.pipes.client.model.DelayedBakedModel.ModelBakeCtx;
 import alexiil.mc.mod.pipes.client.model.part.FacadePartKey;
 import alexiil.mc.mod.pipes.items.ItemFacade;
 import alexiil.mc.mod.pipes.part.FacadeBlockStateInfo;
 import alexiil.mc.mod.pipes.part.FacadeShape;
 import alexiil.mc.mod.pipes.part.FullFacade;
+
+import alexiil.mc.lib.multipart.impl.client.model.SinglePartBakedModel;
 
 public final class ModelFacadeItem extends SimpleBakedModel {
     private final FacadeOverride override = new FacadeOverride();
@@ -35,7 +36,9 @@ public final class ModelFacadeItem extends SimpleBakedModel {
         }
 
         @Override
-        public BakedModel apply(BakedModel originalModel, ItemStack stack, ClientWorld world, LivingEntity entity) {
+        public BakedModel apply(
+            BakedModel originalModel, ItemStack stack, ClientWorld world, LivingEntity entity, int seed
+        ) {
             FullFacade inst = ItemFacade.getStates(stack);
             FacadeBlockStateInfo state = inst.state;
             FacadeShape shape = inst.shape;

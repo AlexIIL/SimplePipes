@@ -3,8 +3,9 @@ package alexiil.mc.mod.pipes.blocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 import alexiil.mc.lib.attributes.item.GroupedItemInvView;
@@ -18,22 +19,22 @@ public class TileTriggerInvSpace extends TileTrigger {
 
     public final SimpleInventory filterInv = new SimpleInventory(1);
 
-    public TileTriggerInvSpace() {
-        super(SimplePipeBlocks.TRIGGER_ITEM_INV_SPACE_TILE);
+    public TileTriggerInvSpace(BlockPos pos, BlockState state) {
+        super(SimplePipeBlocks.TRIGGER_ITEM_INV_SPACE_TILE, pos, state);
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
-        filterInv.setStack(0, ItemStack.fromTag(tag.getCompound("filterStack")));
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
+        filterInv.setStack(0, ItemStack.fromNbt(tag.getCompound("filterStack")));
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        tag = super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        tag = super.writeNbt(tag);
         ItemStack stack = filterInv.getStack(0);
         if (!stack.isEmpty()) {
-            tag.put("filterStack", stack.toTag(new CompoundTag()));
+            tag.put("filterStack", stack.writeNbt(new NbtCompound()));
         }
         return tag;
     }
@@ -59,7 +60,8 @@ public class TileTriggerInvSpace extends TileTrigger {
             filter = new ExactItemStackFilter(stack);
         }
         ItemInvStatistic stats = invStats.getStatistics(filter);
-        assert stats.spaceTotal >= 0 : "ItemInvStatistic should have checked this for ExactItemStackFilter and ConstantItemFilter!";
+        assert stats.spaceTotal
+            >= 0 : "ItemInvStatistic should have checked this for ExactItemStackFilter and ConstantItemFilter!";
         return EnumTriggerState.of(stats.spaceAddable + stats.spaceTotal > 0);
     }
 }

@@ -15,18 +15,26 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 
-import alexiil.mc.lib.attributes.item.ItemStackCollections;
-import alexiil.mc.lib.multipart.api.PartDefinition;
-import alexiil.mc.lib.multipart.api.PartDefinition.IPartNbtReader;
-import alexiil.mc.lib.multipart.api.PartDefinition.IPartNetLoader;
 import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.items.ItemFacade;
 import alexiil.mc.mod.pipes.items.SimplePipeItems;
 import alexiil.mc.mod.pipes.mixin.api.FindMatchingRecipesEvent;
 import alexiil.mc.mod.pipes.mixin.api.RecipeMatchFinder;
+import alexiil.mc.mod.pipes.pipe.PartSpPipe;
+import alexiil.mc.mod.pipes.pipe.PipeSpBehaviour;
+import alexiil.mc.mod.pipes.pipe.PipeSpBehaviourWood;
+import alexiil.mc.mod.pipes.pipe.PipeSpDef;
+import alexiil.mc.mod.pipes.pipe.PipeSpDef.PipeDefFluid;
+import alexiil.mc.mod.pipes.pipe.PipeSpDef.PipeDefItem;
 import alexiil.mc.mod.pipes.util.EnumCuboidCorner;
 import alexiil.mc.mod.pipes.util.EnumCuboidEdge;
 import alexiil.mc.mod.pipes.util.IngredientHelper;
+
+import alexiil.mc.lib.attributes.item.ItemStackCollections;
+
+import alexiil.mc.lib.multipart.api.PartDefinition;
+import alexiil.mc.lib.multipart.api.PartDefinition.IPartNbtReader;
+import alexiil.mc.lib.multipart.api.PartDefinition.IPartNetLoader;
 
 public final class SimplePipeParts {
     private SimplePipeParts() {}
@@ -34,18 +42,72 @@ public final class SimplePipeParts {
     public static final PartDefinition FACADE;
     public static final PartDefinition TANK;
 
+    public static final PipeSpDef.PipeDefItem WOODEN_PIPE_ITEMS;
+    public static final PipeSpDef.PipeDefItem STONE_PIPE_ITEMS;
+    public static final PipeSpDef.PipeDefItem CLAY_PIPE_ITEMS;
+    public static final PipeSpDef.PipeDefItem IRON_PIPE_ITEMS;
+    public static final PipeSpDef.PipeDefItem GOLD_PIPE_ITEMS;
+    public static final PipeSpDef.PipeDefItem DIAMOND_PIPE_ITEMS;
+
+    public static final PipeSpDef.PipeDefFluid WOODEN_PIPE_FLUIDS;
+    public static final PipeSpDef.PipeDefFluid STONE_PIPE_FLUIDS;
+    public static final PipeSpDef.PipeDefFluid CLAY_PIPE_FLUIDS;
+    public static final PipeSpDef.PipeDefFluid IRON_PIPE_FLUIDS;
+    public static final PipeSpDef.PipeDefFluid SPONGE_PIPE_FLUIDS;
+
     static {
         FACADE = def("facade", FacadePart::new, FacadePart::new);
         TANK = def("tank", PartTank::new, PartTank::new);
+
+        WOODEN_PIPE_ITEMS = new PipeDefItem(id("wooden_pipe_items"), true, false, 2) {
+            @Override
+            public PipeSpBehaviour createBehaviour(PartSpPipe pipe) {
+                return new PipeSpBehaviourWood(pipe);
+            }
+        };
+        STONE_PIPE_ITEMS = new PipeDefItem(id("stone_pipe_items"), false, false, 1);
+        CLAY_PIPE_ITEMS = new PipeDefItem(id("clay_pipe_items"), false, false, 1);
+        IRON_PIPE_ITEMS = new PipeDefItem(id("iron_pipe_items"), false, false, 1);
+        GOLD_PIPE_ITEMS = new PipeDefItem(id("gold_pipe_items"), false, false, 6);
+        DIAMOND_PIPE_ITEMS = new PipeDefItem(id("diamond_pipe_items"), false, false, 1);
+
+        WOODEN_PIPE_FLUIDS = new PipeDefFluid(id("wooden_pipe_fluids"), true) {
+            @Override
+            public PipeSpBehaviour createBehaviour(PartSpPipe pipe) {
+                return new PipeSpBehaviourWood(pipe);
+            }
+        };
+        STONE_PIPE_FLUIDS = new PipeDefFluid(id("stone_pipe_fluids"), false);
+        CLAY_PIPE_FLUIDS = new PipeDefFluid(id("clay_pipe_fluids"), false);
+        IRON_PIPE_FLUIDS = new PipeDefFluid(id("iron_pipe_fluids"), false);
+        SPONGE_PIPE_FLUIDS = new PipeDefFluid(id("sponge_pipe_fluids"), false);
     }
 
-    private static PartDefinition def(String post, IPartNbtReader reader, IPartNetLoader loader) {
-        return new PartDefinition(new Identifier(SimplePipes.MODID, post), reader, loader);
+    private static Identifier id(String path) {
+        return SimplePipes.id(path);
+    }
+
+    private static PartDefinition def(String path, IPartNbtReader reader, IPartNetLoader loader) {
+        return new PartDefinition(id(path), reader, loader);
     }
 
     public static void load() {
-        PartDefinition.PARTS.put(FACADE.identifier, FACADE);
-        PartDefinition.PARTS.put(TANK.identifier, TANK);
+        FACADE.register();
+        TANK.register();
+
+        WOODEN_PIPE_ITEMS.register();
+        STONE_PIPE_ITEMS.register();
+        CLAY_PIPE_ITEMS.register();
+        IRON_PIPE_ITEMS.register();
+        GOLD_PIPE_ITEMS.register();
+        DIAMOND_PIPE_ITEMS.register();
+
+        WOODEN_PIPE_FLUIDS.register();
+        STONE_PIPE_FLUIDS.register();
+        CLAY_PIPE_FLUIDS.register();
+        IRON_PIPE_FLUIDS.register();
+        SPONGE_PIPE_FLUIDS.register();
+
         FindMatchingRecipesEvent.EVENT.register(SimplePipeParts::addFacadeRecipes);
         Registry.register(Registry.RECIPE_SERIALIZER, FacadeCraftingRecipe.ID, FacadeCraftingRecipe.INSTANCE);
     }
@@ -159,7 +221,7 @@ public final class SimplePipeParts {
 
     private static boolean canCut(RecipeMatchFinder context, BlockState state) {
         // Stone pickaxe (not iron) so that there's actually a reason to upgrade to the laser cutter
-        return !state.isToolRequired() || new ItemStack(Items.STONE_PICKAXE).isEffectiveOn(state);
+        return !state.isToolRequired() || new ItemStack(Items.STONE_PICKAXE).isSuitableFor(state);
     }
 
     private static Ingredient createIngredient(ItemStack stack) {

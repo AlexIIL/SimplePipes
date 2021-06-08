@@ -2,8 +2,7 @@ package alexiil.mc.mod.pipes.part;
 
 import java.util.Arrays;
 import java.util.Locale;
-
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -70,9 +69,9 @@ public abstract class FacadeShape {
         return Arrays.copyOf(ITEM_SHAPES, ITEM_SHAPES.length);
     }
 
-    public abstract CompoundTag toTag();
+    public abstract NbtCompound toTag();
 
-    public static FacadeShape fromTag(CompoundTag tag) {
+    public static FacadeShape fromTag(NbtCompound tag) {
         String type = tag.getString("type").toLowerCase(Locale.ROOT);
         FacadeSize size = TagUtil.readEnum(tag.get("size"), FacadeSize.class, FacadeSize.SLAB);
         // We're fairly forgiving about what we can load from
@@ -209,8 +208,8 @@ public abstract class FacadeShape {
         }
 
         @Override
-        public CompoundTag toTag() {
-            CompoundTag tag = new CompoundTag();
+        public NbtCompound toTag() {
+            NbtCompound tag = new NbtCompound();
             tag.putString("type", NBT_TYPE_SIDED);
             tag.put(NBT_KEY_SIDE, TagUtil.writeEnum(side));
             tag.put("size", TagUtil.writeEnum(size));
@@ -315,8 +314,8 @@ public abstract class FacadeShape {
         }
 
         @Override
-        public CompoundTag toTag() {
-            CompoundTag tag = new CompoundTag();
+        public NbtCompound toTag() {
+            NbtCompound tag = new NbtCompound();
             tag.putString("type", NBT_TYPE_STRIP);
             tag.put(NBT_KEY_EDGE, TagUtil.writeEnum(edge));
             tag.put("size", TagUtil.writeEnum(size));
@@ -416,8 +415,8 @@ public abstract class FacadeShape {
         }
 
         @Override
-        public CompoundTag toTag() {
-            CompoundTag tag = new CompoundTag();
+        public NbtCompound toTag() {
+            NbtCompound tag = new NbtCompound();
             tag.putString("type", NBT_TYPE_CORNER);
             tag.put(NBT_KEY_CORNER, TagUtil.writeEnum(corner));
             tag.put("size", TagUtil.writeEnum(size));

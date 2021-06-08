@@ -18,18 +18,17 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormatElement;
-import net.minecraft.client.render.VertexFormatElement.Format;
+import net.minecraft.client.render.VertexFormatElement.DataType;
 import net.minecraft.client.render.VertexFormatElement.Type;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.client.util.math.Vector4f;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.math.Vec3i;
-
+import net.minecraft.util.math.Vector4f;
 import alexiil.mc.mod.pipes.mixin.impl.BufferBuilderAccessor;
 import alexiil.mc.mod.pipes.util.SpriteUtil;
 
@@ -190,28 +189,28 @@ public class MutableVertex {
         for (VertexFormatElement elem : format.getElements()) {
             switch (elem.getType()) {
                 case POSITION: {
-                    assert elem.getFormat() == Format.FLOAT;
+                    assert elem.getDataType() == DataType.FLOAT;
                     position_x = Float.intBitsToFloat(data[o++]);
                     position_y = Float.intBitsToFloat(data[o++]);
                     position_z = Float.intBitsToFloat(data[o++]);
                     break;
                 }
                 case COLOR: {
-                    assert elem.getFormat() == Format.UBYTE;
+                    assert elem.getDataType() == DataType.UBYTE;
                     colouri(data[o++]);
                     break;
                 }
                 case NORMAL: {
-                    assert elem.getFormat() == Format.BYTE;
+                    assert elem.getDataType() == DataType.BYTE;
                     normali(data[o++]);
                     break;
                 }
                 case UV: {
-                    if (elem.getIndex() == 0) {
+                    if (elem.getTextureIndex() == 0) {
                         tex_u = Float.intBitsToFloat(data[o++]);
                         tex_v = Float.intBitsToFloat(data[o++]);
                         break;
-                    } else if (elem.getIndex() == 1) {
+                    } else if (elem.getTextureIndex() == 1) {
                         lighti(data[o++]);
                         break;
                     }
@@ -248,8 +247,8 @@ public class MutableVertex {
                         renderColour(bb);
                         break;
                     case UV:
-                        if (vfe.getIndex() == 0) renderTex(bb);
-                        else if (vfe.getIndex() == 1) renderLightMap(bb);
+                        if (vfe.getTextureIndex() == 0) renderTex(bb);
+                        else if (vfe.getTextureIndex() == 1) renderLightMap(bb);
                         break;
                     default:
                         break;
@@ -297,7 +296,7 @@ public class MutableVertex {
 
     // Mutating
 
-    public MutableVertex positionv(Vector3f vec) {
+    public MutableVertex positionv(Vec3f vec) {
         return positionf(vec.getX(), vec.getY(), vec.getZ());
     }
 
@@ -316,8 +315,8 @@ public class MutableVertex {
         return this;
     }
 
-    public Vector3f positionvf() {
-        return new Vector3f(position_x, position_y, position_z);
+    public Vec3f positionvf() {
+        return new Vec3f(position_x, position_y, position_z);
     }
 
     public Vec3d positionvd() {
@@ -328,7 +327,7 @@ public class MutableVertex {
      * Note: This calls {@link #normalf(float, float, float)} internally, so refer to that for more warnings.
      * 
      * @see #normalf(float, float, float) */
-    public MutableVertex normalv(Vector3f vec) {
+    public MutableVertex normalv(Vec3f vec) {
         return normalf(vec.getX(), vec.getY(), vec.getZ());
     }
 
@@ -352,8 +351,8 @@ public class MutableVertex {
     }
 
     /** @return The current normal vector of this vertex. This might be normalised. */
-    public Vector3f normal() {
-        return new Vector3f(normal_x, normal_y, normal_z);
+    public Vec3f normal() {
+        return new Vec3f(normal_x, normal_y, normal_z);
     }
 
     public int normalToPackedInt() {

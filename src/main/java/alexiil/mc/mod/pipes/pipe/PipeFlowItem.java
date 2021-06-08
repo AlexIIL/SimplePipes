@@ -1,4 +1,4 @@
-package alexiil.mc.mod.pipes.blocks;
+package alexiil.mc.mod.pipes.pipe;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,14 +12,18 @@ import com.google.common.collect.ImmutableList;
 
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.loot.context.LootContext;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import alexiil.mc.mod.pipes.blocks.TilePipeItemClay;
+import alexiil.mc.mod.pipes.pipe.PipeSpDef.PipeDefItem;
 import alexiil.mc.mod.pipes.util.DelayedList;
 import alexiil.mc.mod.pipes.util.TagUtil;
 
@@ -30,13 +34,15 @@ import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable;
 import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable;
 
-public class PipeFlowItem extends PipeFlow {
+import alexiil.mc.lib.multipart.api.AbstractPart.ItemDropTarget;
+
+public class PipeFlowItem extends PipeSpFlow {
 
     final ItemInsertable[] insertables;
 
     private final DelayedList<TravellingItem> items = new DelayedList<>();
 
-    public PipeFlowItem(TilePipe pipe) {
+    public PipeFlowItem(ISimplePipe pipe) {
         super(pipe);
 
         this.insertables = new ItemInsertable[6];
@@ -59,8 +65,8 @@ public class PipeFlowItem extends PipeFlow {
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        ListTag list = tag.getList("items", new CompoundTag().getType());
+    public void fromTag(NbtCompound tag) {
+        NbtList list = tag.getList("items", new NbtCompound().getType());
         for (int i = 0; i < list.size(); i++) {
             TravellingItem item = new TravellingItem(list.getCompound(i), 0);
             if (!item.stack.isEmpty()) {
@@ -70,10 +76,10 @@ public class PipeFlowItem extends PipeFlow {
     }
 
     @Override
-    public CompoundTag toTag() {
-        CompoundTag nbt = new CompoundTag();
+    public NbtCompound toTag() {
+        NbtCompound nbt = new NbtCompound();
         Iterable<? extends Iterable<TravellingItem>> allItems = items.getAllElements();
-        ListTag list = new ListTag();
+        NbtList list = new NbtList();
 
         long tickNow = pipe.getWorldTime();
         for (Iterable<TravellingItem> l : allItems) {
@@ -88,7 +94,7 @@ public class PipeFlowItem extends PipeFlow {
     }
 
     @Override
-    protected void fromClientTag(CompoundTag tag) {
+    public void fromClientTag(NbtCompound tag) {
 
         // tag.put("item", item.stack.toTag(new CompoundTag()));
         // tag.putBoolean("to_center", item.toCenter);
@@ -96,7 +102,7 @@ public class PipeFlowItem extends PipeFlow {
         // tag.put("colour", TagUtil.writeEnum(item.colour));
         // tag.putShort("time", item.timeToDest > Short.MAX_VALUE ? Short.MAX_VALUE :(short) item.timeToDest);
 
-        TravellingItem item = new TravellingItem(ItemStack.fromTag(tag.getCompound("item")));
+        TravellingItem item = new TravellingItem(ItemStack.fromNbt(tag.getCompound("item")));
         item.toCenter = tag.getBoolean("to_center");
         item.side = TagUtil.readEnum(tag.get("side"), Direction.class);
         item.colour = TagUtil.readEnum(tag.get("colour"), DyeColor.class);
@@ -108,22 +114,22 @@ public class PipeFlowItem extends PipeFlow {
     }
 
     @Override
-    protected Object getInsertable(Direction searchDirection) {
+    public Object getInsertable(Direction searchDirection) {
         return insertables[searchDirection.getId()];
     }
 
     @Override
-    protected boolean hasInsertable(Direction dir) {
+    public boolean hasInsertable(Direction dir) {
         return pipe.getItemInsertable(dir) != RejectingItemInsertable.NULL;
     }
 
     @Override
-    protected boolean hasExtractable(Direction dir) {
+    public boolean hasExtractable(Direction dir) {
         return pipe.getItemExtractable(dir) != EmptyItemExtractable.NULL;
     }
 
     @Override
-    protected void tick() {
+    public void tick() {
         World w = pipe.getWorld();
         if (w == null) {
             return;
@@ -158,6 +164,22 @@ public class PipeFlowItem extends PipeFlow {
     }
 
     @Override
+    public void addDrops(ItemDropTarget target, LootContext context) {
+        BlockPos pos = pipe.getPos();
+        long tick = pipe.getWorldTime();
+        for (Iterable<TravellingItem> list : this.items.getAllElements()) {
+            if (list == null) {
+                continue;
+            }
+            for (TravellingItem travel : list) {
+                if (!travel.isPhantom) {
+                    target.drop(travel.stack, travel.getRenderPosition(pos, tick, 1, pipe), Vec3d.ZERO);
+                }
+            }
+        }
+    }
+
+    @Override
     public void removeItemsForDrop(DefaultedList<ItemStack> all) {
         for (Iterable<TravellingItem> list : this.items.getAllElements()) {
             if (list == null) {
@@ -169,15 +191,15 @@ public class PipeFlowItem extends PipeFlow {
                 }
             }
         }
-        this.items.clear();
+        items.clear();
     }
 
     void sendItemDataToClient(TravellingItem item) {
         // TODO :p
         // System.out.println(getPos() + " - " + item.stack + " - " + item.side);
-        CompoundTag tag = new CompoundTag();
+        NbtCompound tag = new NbtCompound();
 
-        tag.put("item", item.stack.toTag(new CompoundTag()));
+        tag.put("item", item.stack.writeNbt(new NbtCompound()));
         tag.putBoolean("to_center", item.toCenter);
         tag.put("side", TagUtil.writeEnum(item.side));
         tag.put("colour", TagUtil.writeEnum(item.colour));
@@ -210,11 +232,11 @@ public class PipeFlowItem extends PipeFlow {
     }
 
     protected boolean canBounce() {
-        return pipe instanceof TilePipeItemIron;
+        return ((PipeDefItem) pipe.getDefinition()).canBounce;
     }
 
     protected double getSpeedModifier() {
-        return pipe instanceof TilePipeItemGold ? 6 : 1;
+        return ((PipeDefItem) pipe.getDefinition()).speedModifier;
     }
 
     private void onItemReachCenter(TravellingItem item) {
@@ -295,10 +317,11 @@ public class PipeFlowItem extends PipeFlow {
         ItemStack excess = item.stack;
         if (ins != null) {
             Direction oppositeSide = item.side.getOpposite();
-            TilePipe oPipe = pipe.getNeighbourPipe(item.side);
+            ISimplePipe oPipe = pipe.getNeighbourPipe(item.side);
 
-            if (oPipe != null && oPipe.flow instanceof PipeFlowItem) {
-                excess = ((PipeFlowItem) oPipe.flow).injectItem(excess, true, oppositeSide, item.colour, item.speed);
+            if (oPipe != null && oPipe.getFlow() instanceof PipeFlowItem) {
+                excess
+                    = ((PipeFlowItem) oPipe.getFlow()).injectItem(excess, true, oppositeSide, item.colour, item.speed);
             } else {
                 excess = ins.attemptInsertion(excess, Simulation.ACTION);
             }

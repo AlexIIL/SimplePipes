@@ -13,10 +13,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.Direction;
 
-import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace;
-import alexiil.mc.lib.multipart.api.render.PartRenderer;
 import alexiil.mc.mod.pipes.part.PartTank;
 import alexiil.mc.mod.pipes.util.FluidSmoother.FluidStackInterp;
+
+import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace;
+
+import alexiil.mc.lib.multipart.api.render.PartRenderer;
 
 public class TankPartRenderer implements PartRenderer<PartTank> {
 
@@ -37,14 +39,15 @@ public class TankPartRenderer implements PartRenderer<PartTank> {
         double y0 = 0.001;
         double z0 = 0.126;
         double x1 = 0.874;
-        double y1 = 0.001 + (12 / 16.0 - 0.002) * forRender.amount / part.fluidInv.tankCapacity;
+        double y1 = 0.001 + (12 / 16.0 - 0.002) * forRender.amount / part.fluidInv.tankCapacity_F.asInexactDouble();
         double z1 = 0.874;
 
         if (false) {
             matrices.push();
             matrices.translate(0.5, 0.25, 0.5);
             MinecraftClient.getInstance().getItemRenderer().renderItem(
-                new ItemStack(Items.YELLOW_DYE), ModelTransformation.Mode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers
+                new ItemStack(Items.YELLOW_DYE), ModelTransformation.Mode.GROUND, light, OverlayTexture.DEFAULT_UV,
+                matrices, vertexConsumers, 42
             );
             matrices.pop();
         }

@@ -9,9 +9,11 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderPhase;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
@@ -20,6 +22,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.hit.HitResult.Type;
@@ -34,41 +37,62 @@ public final class ItemPlacemenentGhostRenderer {
 
     public static final RenderLayer GHOST;
 
+    private static final RenderPhase TEXTURE;
     private static final Object2ObjectLinkedOpenHashMap<RenderLayer, BufferBuilder> LAYERS;
     private static final VertexConsumerProvider.Immediate VCPS;
     private static GhostPlacement currentPlacementGhost;
 
     static {
-        RenderPhase texture = new RenderPhase.Texture(SpriteAtlasTexture.BLOCK_ATLAS_TEX, false, true);
+        class RenderPhaseAccess extends RenderPhase {
+            public RenderPhaseAccess() {
+                super(null, null, null);
+            }
+
+            public RenderPhase.Texture texture(Identifier id, boolean blur, boolean mipmap) {
+                return new RenderPhase.Texture(id, blur, mipmap);
+            }
+
+            public RenderPhase.Texture blockAtlasMipmap() {
+                return MIPMAP_BLOCK_ATLAS_TEXTURE;
+            }
+        }
+
+        TEXTURE = new RenderPhaseAccess().blockAtlasMipmap();
 
         GHOST = new RenderLayer(
-            "PLACEMENT_GHOST", VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL, GL11.GL_QUADS, 1 << 12, false, true,
-            () -> {
-                // Start action
-                texture.startDrawing();
-                RenderSystem.enableBlend();
-                RenderSystem.enableAlphaTest();
-                RenderSystem.defaultAlphaFunc();
-                RenderSystem
-                    .blendFuncSeparate(SrcFactor.SRC_ALPHA, DstFactor.CONSTANT_ALPHA, SrcFactor.ONE, DstFactor.ZERO);
-                RenderSystem.blendColor(1, 1, 1, 0.9f);
-                GL11.glDepthRange(0, 0);
-                RenderSystem.enableCull();
-                RenderSystem.enableDepthTest();
-            }, () -> {
-                // End action
-                GL11.glDepthRange(0, 1);
-                RenderSystem.blendColor(0, 0, 0, 0);
-                RenderSystem.disableBlend();
-                RenderSystem.defaultBlendFunc();
-                RenderSystem.disableCull();
-                texture.endDrawing();
-            }
+            "PLACEMENT_GHOST", VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL, VertexFormat.DrawMode.QUADS, 1 << 12,
+            false, true, ItemPlacemenentGhostRenderer::prePlacementGhost,
+            ItemPlacemenentGhostRenderer::postPlacementGhost
         ) {};
 
         LAYERS = new Object2ObjectLinkedOpenHashMap<>();
         addRenderLayer(GHOST);
         VCPS = VertexConsumerProvider.immediate(LAYERS, buffer());
+    }
+
+    private static void prePlacementGhost() {
+        // Start action
+        TEXTURE.startDrawing();
+        RenderSystem.enableBlend();
+        // TODO: Create a custom shader for this!
+        RenderSystem.setShader(GameRenderer::getBlockShader);
+        // RenderSystem.enableAlphaTest();
+        // RenderSystem.defaultAlphaFunc();
+        RenderSystem.blendFuncSeparate(SrcFactor.SRC_ALPHA, DstFactor.CONSTANT_ALPHA, SrcFactor.ONE, DstFactor.ZERO);
+        // RenderSystem.blendColor(1, 1, 1, 0.9f);
+        GL11.glDepthRange(0, 0);
+        RenderSystem.enableCull();
+        RenderSystem.enableDepthTest();
+    }
+
+    private static void postPlacementGhost() {
+        // End action
+        GL11.glDepthRange(0, 1);
+        // RenderSystem.blendColor(0, 0, 0, 0);
+        RenderSystem.disableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.disableCull();
+        TEXTURE.endDrawing();
     }
 
     public static void addRenderLayer(RenderLayer layer) {

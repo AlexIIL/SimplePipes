@@ -15,28 +15,36 @@ import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+
+import alexiil.mc.mod.pipes.pipe.ISimplePipe;
+import alexiil.mc.mod.pipes.pipe.PipeSpDef;
+import alexiil.mc.mod.pipes.pipe.PipeSpFlow;
 
 public abstract class TilePipeSided extends TilePipe {
 
     private Direction currentDirection = null;
 
-    public TilePipeSided(BlockEntityType<?> type, BlockPipe pipeBlock, Function<TilePipe, PipeFlow> flowConstructor) {
-        super(type, pipeBlock, flowConstructor);
+    public TilePipeSided(
+        BlockEntityType<?> type, BlockPos pos, BlockState state, BlockPipe pipeBlock,
+        Function<TilePipe, PipeSpFlow> flowConstructor
+    ) {
+        super(type, pos, state, pipeBlock, flowConstructor);
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        tag = super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        tag = super.writeNbt(tag);
         tag.putByte("dir", (byte) (currentDirection == null ? 0xFF : currentDirection.getId()));
         return tag;
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
-        byte b = tag.getByte("dir");
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        byte b = nbt.getByte("dir");
         if (b >= 0 && b < 6) {
             currentDirection = Direction.byId(b);
         } else {
@@ -45,14 +53,14 @@ public abstract class TilePipeSided extends TilePipe {
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
+    public NbtCompound toClientTag(NbtCompound tag) {
         tag = super.toClientTag(tag);
         tag.putByte("dir", (byte) (currentDirection == null ? 0xFF : currentDirection.getId()));
         return tag;
     }
 
     @Override
-    public void fromClientTag(CompoundTag tag) {
+    public void fromClientTag(NbtCompound tag) {
         super.fromClientTag(tag);
         if (!tag.getBoolean("f")) {
             byte b = tag.getByte("dir");
@@ -66,8 +74,8 @@ public abstract class TilePipeSided extends TilePipe {
     }
 
     @Override
-    public CompoundTag toInitialChunkDataTag() {
-        CompoundTag tag = super.toInitialChunkDataTag();
+    public NbtCompound toInitialChunkDataNbt() {
+        NbtCompound tag = super.toInitialChunkDataNbt();
         tag.putByte("dir", (byte) (currentDirection == null ? 0xFF : currentDirection.getId()));
         return tag;
     }
@@ -114,7 +122,7 @@ public abstract class TilePipeSided extends TilePipe {
                 connectedToAny = true;
             } else if (isConnected(dir)) {
                 BlockEntity oTile = world.getBlockEntity(getPos().offset(dir));
-                if (!(oTile instanceof TilePipe) && !canConnect(dir)) {
+                if (!(oTile instanceof ISimplePipe) && !canConnect(dir)) {
                     disconnect(dir);
                 }
             }
@@ -134,15 +142,15 @@ public abstract class TilePipeSided extends TilePipe {
 
     @Override
     protected PipeBlockModelStateSided createModelState() {
-        return new PipeBlockModelStateSided(pipeBlock, encodeConnectedSides(), currentDirection);
+        return new PipeBlockModelStateSided(pipeBlock.pipeDef, encodeConnectedSides(), currentDirection);
     }
 
     public static class PipeBlockModelStateSided extends PipeBlockModelState {
         @Nullable
         public final Direction mainSide;
 
-        public PipeBlockModelStateSided(BlockPipe block, byte isConnected, Direction mainSide) {
-            super(block, isConnected);
+        public PipeBlockModelStateSided(PipeSpDef pipeDef, byte isConnected, Direction mainSide) {
+            super(pipeDef, isConnected);
             this.mainSide = mainSide;
         }
 

@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableSet;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -38,7 +39,7 @@ import net.minecraft.block.SlabBlock;
 import net.minecraft.block.StainedGlassBlock;
 import net.minecraft.block.enums.Instrument;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
@@ -289,7 +290,7 @@ public final class FacadeStateManager {
                 }
 
                 // Test to make sure that we can read + write it
-                CompoundTag nbt = info.toTag();
+                NbtCompound nbt = info.toTag();
                 FacadeBlockStateInfo read = FacadeBlockStateInfo.fromTag(nbt, validFacadeStates);
                 if (read != info) {
                     throw new IllegalStateException(
@@ -357,8 +358,8 @@ public final class FacadeStateManager {
      *         </ul>
      */
     private static TypedActionResult<String> isValidFacadeState(BlockState state) {
-        if (state.getBlock().hasBlockEntity()) {
-            return new TypedActionResult<>(ActionResult.FAIL, "it has a tile entity");
+        if (state.getBlock() instanceof BlockEntityProvider) {
+            return new TypedActionResult<>(ActionResult.FAIL, "it has a block entity");
         }
         if (state.getRenderType() != BlockRenderType.MODEL) {
             return new TypedActionResult<>(ActionResult.FAIL, "it doesn't have a normal model");

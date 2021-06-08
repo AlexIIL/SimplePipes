@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableSet;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.registry.Registry;
@@ -40,11 +40,11 @@ public class FacadeBlockStateInfo {
             + state.toString() + "]";
     }
 
-    public static FacadeBlockStateInfo fromTag(CompoundTag nbt) {
+    public static FacadeBlockStateInfo fromTag(NbtCompound nbt) {
         return fromTag(nbt, FacadeStateManager.getValidFacadeStates());
     }
 
-    static FacadeBlockStateInfo fromTag(CompoundTag nbt, SortedMap<BlockState, FacadeBlockStateInfo> validStates) {
+    static FacadeBlockStateInfo fromTag(NbtCompound nbt, SortedMap<BlockState, FacadeBlockStateInfo> validStates) {
         try {
             FacadeBlockStateInfo stateInfo = FacadeStateManager.getDefaultState();
             BlockState blockState = NbtHelper.toBlockState(nbt);
@@ -58,7 +58,7 @@ public class FacadeBlockStateInfo {
         }
     }
 
-    public CompoundTag toTag() {
+    public NbtCompound toTag() {
         try {
             return NbtHelper.fromBlockState(state);
         } catch (Throwable t) {

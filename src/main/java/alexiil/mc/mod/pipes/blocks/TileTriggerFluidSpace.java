@@ -1,7 +1,8 @@
 package alexiil.mc.mod.pipes.blocks;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 import alexiil.mc.lib.attributes.fluid.GroupedFluidInvView;
@@ -17,19 +18,19 @@ public class TileTriggerFluidSpace extends TileTrigger {
 
     public FluidKey filter = FluidKeys.EMPTY;
 
-    public TileTriggerFluidSpace() {
-        super(SimplePipeBlocks.TRIGGER_FLUID_INV_SPACE_TILE);
+    public TileTriggerFluidSpace(BlockPos pos, BlockState state) {
+        super(SimplePipeBlocks.TRIGGER_FLUID_INV_SPACE_TILE, pos, state);
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         filter = FluidKey.fromTag(tag.getCompound("filter"));
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        tag = super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound tag) {
+        tag = super.writeNbt(tag);
         if (!filter.isEmpty()) {
             tag.put("filter", filter.toTag());
         }
@@ -50,7 +51,8 @@ public class TileTriggerFluidSpace extends TileTrigger {
         }
 
         FluidInvStatistic stats = invStats.getStatistics(fluidFilter);
-        assert stats.spaceTotal >= 0 : "ItemInvStatistic should have checked this for ExactItemStackFilter and ConstantItemFilter!";
-        return EnumTriggerState.of(stats.spaceAddable + stats.spaceTotal > 0);
+        assert !stats.spaceTotal_F
+            .isNegative() : "ItemInvStatistic should have checked this for ExactItemStackFilter and ConstantItemFilter!";
+        return EnumTriggerState.of(stats.spaceAddable_F.isPositive() | stats.spaceTotal_F.isPositive());
     }
 }

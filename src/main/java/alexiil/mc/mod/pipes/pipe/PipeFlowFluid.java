@@ -1,4 +1,4 @@
-package alexiil.mc.mod.pipes.blocks;
+package alexiil.mc.mod.pipes.pipe;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,34 +11,39 @@ import javax.annotation.Nullable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Direction;
+
+import alexiil.mc.mod.pipes.blocks.TilePipeFluidIron;
+import alexiil.mc.mod.pipes.blocks.TilePipeFluidWood;
+import alexiil.mc.mod.pipes.blocks.TilePipeSided;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.ExactFluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
 import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 
-public class PipeFlowFluid extends PipeFlow {
+public class PipeFlowFluid extends PipeSpFlow {
 
     // Think about fluid packets? (Maybe not for this or even soon but for bc at some point?)
-    public static final int SECTION_CAPACITY = FluidVolume.BUCKET / 2;
+    public static final FluidAmount SECTION_CAPACITY = FluidAmount.BUCKET.div(2);
+    private static final FluidAmount AMOUNT_OVERFLOW = FluidAmount.of(1, 1000);
 
     private final Map<Direction, SideSection> sideSections = new EnumMap<>(Direction.class);
-    final CenterSection centerSection = new CenterSection();
+    public final CenterSection centerSection = new CenterSection();
 
     final FluidInsertable[] insertables;
     long lastTickTime;
 
-    public PipeFlowFluid(TilePipe pipe) {
+    public PipeFlowFluid(ISimplePipe pipe) {
         super(pipe);
 
         for (Direction dir : Direction.values()) {
@@ -56,7 +61,10 @@ public class PipeFlowFluid extends PipeFlow {
                     }
                     SideSection sideSection = sideSections.get(dir);
                     if (!sideSection.fluid.isEmpty()) {
-                        if (sideSection.fluid.getAmount() >= SECTION_CAPACITY || !sideSection.fluid.canMerge(fluid)) {
+                        if (
+                            sideSection.fluid.amount().isGreaterThanOrEqual(SECTION_CAPACITY)
+                                || !sideSection.fluid.canMerge(fluid)
+                        ) {
                             return fluid;
                         }
                     }
@@ -67,8 +75,8 @@ public class PipeFlowFluid extends PipeFlow {
                         return fluid;
                     }
                     FluidVolume excess = FluidVolumeUtil.EMPTY;
-                    if (merged.getAmount() > SECTION_CAPACITY) {
-                        excess = merged.split(merged.getAmount() - SECTION_CAPACITY);
+                    if (merged.amount().isGreaterThan(SECTION_CAPACITY)) {
+                        excess = merged.split(merged.amount().sub(SECTION_CAPACITY));
                     }
                     if (simulation == Simulation.ACTION) {
                         sideSection.fluid = merged;
@@ -85,8 +93,8 @@ public class PipeFlowFluid extends PipeFlow {
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        CompoundTag inner = tag.getCompound("sides");
+    public void fromTag(NbtCompound tag) {
+        NbtCompound inner = tag.getCompound("sides");
         centerSection.fluid = FluidVolume.fromTag(inner.getCompound("c"));
         for (Direction dir : Direction.values()) {
             sideSections.get(dir).fluid = FluidVolume.fromTag(inner.getCompound(dir.getName()));
@@ -94,14 +102,14 @@ public class PipeFlowFluid extends PipeFlow {
     }
 
     @Override
-    public CompoundTag toTag() {
-        CompoundTag tag = new CompoundTag();
+    public NbtCompound toTag() {
+        NbtCompound tag = new NbtCompound();
         toTag0(tag);
         return tag;
     }
 
-    private void toTag0(CompoundTag tag) {
-        CompoundTag inner = new CompoundTag();
+    private void toTag0(NbtCompound tag) {
+        NbtCompound inner = new NbtCompound();
         tag.put("sides", inner);
         inner.put("c", centerSection.fluid.toTag());
         for (Direction dir : Direction.values()) {
@@ -110,32 +118,36 @@ public class PipeFlowFluid extends PipeFlow {
     }
 
     @Override
-    protected void fromInitialClientTag(CompoundTag tag) {
+    public void fromInitialClientTag(NbtCompound tag) {
         fromTag(tag);
     }
 
     @Override
-    public void toInitialClientTag(CompoundTag tag) {
+    public void toInitialClientTag(NbtCompound tag) {
         toTag0(tag);
     }
 
     @Override
-    protected void fromClientTag(CompoundTag tag) {
+    public void fromClientTag(NbtCompound tag) {
         fromInitialClientTag(tag);
     }
 
     @Override
-    protected boolean hasInsertable(Direction dir) {
+    public boolean hasInsertable(Direction dir) {
         return pipe.getFluidInsertable(dir) != RejectingFluidInsertable.NULL;
     }
 
     @Override
-    protected boolean hasExtractable(Direction dir) {
+    public boolean hasExtractable(Direction dir) {
         return pipe.getFluidExtractable(dir) != EmptyFluidExtractable.NULL;
     }
 
+    public SideSection getSideSection(Direction dir) {
+        return sideSections.get(dir);
+    }
+
     @Override
-    protected void tick() {
+    public void tick() {
         if (world().isClient) {
             return;
         }
@@ -159,15 +171,15 @@ public class PipeFlowFluid extends PipeFlow {
     public void tryExtract(Direction dir) {
         FluidExtractable from = pipe.getFluidExtractable(dir);
         SideSection section = sideSections.get(dir);
-        int max = SECTION_CAPACITY - section.fluid.getAmount();
-        if (max <= 0) {
+        FluidAmount max = SECTION_CAPACITY.sub(section.fluid.amount());
+        if (!max.isPositive()) {
             return;
         }
         FluidFilter filter = section.fluid.isEmpty() ? ConstantFluidFilter.ANYTHING
             : new ExactFluidFilter(section.fluid.getFluidKey());
         FluidVolume extracted = from.attemptExtraction(filter, max, Simulation.SIMULATE);
-        int extractedAmount = extracted.getAmount();
-        if (extractedAmount < 0) {
+        FluidAmount extractedAmount = extracted.amount();
+        if (extractedAmount.isNegative()) {
             throw new IllegalStateException("Extracted a negative amount of fluid!");
         }
         if (extracted.isEmpty()) {
@@ -183,7 +195,7 @@ public class PipeFlowFluid extends PipeFlow {
             filter = new ExactFluidFilter(extracted.getFluidKey());
         }
         FluidVolume reallyExtracted = from.attemptExtraction(filter, extractedAmount, Simulation.ACTION);
-        if (reallyExtracted.isEmpty() || reallyExtracted.getAmount() != extractedAmount) {
+        if (reallyExtracted.isEmpty() || !reallyExtracted.amount().equals(extractedAmount)) {
             throw new IllegalStateException(
                 "The second call to attemptExtraction on " + from.getClass()
                     + " returned a different fluid than was expected!\n  first = " + extracted + ",\n  second = "
@@ -205,7 +217,7 @@ public class PipeFlowFluid extends PipeFlow {
     }
 
     @Override
-    protected Object getInsertable(Direction searchDirection) {
+    public Object getInsertable(Direction searchDirection) {
         return insertables[searchDirection.ordinal()];
     }
 
@@ -255,11 +267,21 @@ public class PipeFlowFluid extends PipeFlow {
     }
 
     abstract class Section {
-        FluidVolume fluid = FluidKeys.EMPTY.withAmount(0);
-        int lastTickAmount = 0;
+        FluidVolume fluid = FluidVolumeUtil.EMPTY;
+        FluidAmount lastTickAmount = FluidAmount.ZERO;
 
         public void updateAmount() {
-            lastTickAmount = fluid.getAmount();
+            lastTickAmount = fluid.amount();
+        }
+
+        FluidAmount getMoveable(Section other, FluidAmount max) {
+            FluidAmount inOther = other.lastTickAmount/*.sub(AMOUNT_OVERFLOW)*/.max(FluidAmount.ZERO);
+            FluidAmount space = lastTickAmount.sub(inOther).min(SECTION_CAPACITY);
+            if (max != null) {
+                return space.min(max);
+            } else {
+                return space;
+            }
         }
 
         abstract void tick();
@@ -280,41 +302,52 @@ public class PipeFlowFluid extends PipeFlow {
             List<Direction> sides = new ArrayList<>(2);
             if (canGoInDirection(side, null)) {
                 CenterSection other = centerSection;
-                int movable = (lastTickAmount - other.lastTickAmount);
-                if (movable > 0) {
+                FluidAmount movable = getMoveable(other, null);
+                if (movable.isPositive()) {
                     sides.add(null);
-                } else if (!canGoInDirection(null, side) && other.fluid.getAmount() < SECTION_CAPACITY) {
+                } else if (!canGoInDirection(null, side) && other.fluid.amount().isLessThan(SECTION_CAPACITY)) {
                     sides.add(null);
                 }
             }
             if (canGoInDirection(side, side)) {
-                TilePipe oPipe = pipe.getNeighbourPipe(side);
-                if (oPipe != null && oPipe.flow instanceof PipeFlowFluid) {
-                    PipeFlowFluid oFlow = (PipeFlowFluid) oPipe.flow;
+                ISimplePipe oPipe = pipe.getNeighbourPipe(side);
+                if (oPipe != null && oPipe.getFlow() instanceof PipeFlowFluid) {
+                    PipeFlowFluid oFlow = (PipeFlowFluid) oPipe.getFlow();
                     SideSection other = oFlow.sideSections.get(side.getOpposite());
-                    int movable = (lastTickAmount - other.lastTickAmount);
-                    if (movable > 0) {
+                    FluidAmount movable
+                        = lastTickAmount.sub(other.lastTickAmount.sub(AMOUNT_OVERFLOW).max(FluidAmount.ZERO));
+                    if (movable.isPositive()) {
                         sides.add(side);
                     }
                 } else {
                     FluidInsertable insertable = pipe.getNeighbourAttribute(FluidAttributes.INSERTABLE, side);
                     FluidVolume leftover = insertable.attemptInsertion(fluid, Simulation.SIMULATE);
-                    if (leftover.getAmount() < fluid.getAmount()) {
+                    if (leftover.amount().isLessThan(fluid.amount())) {
                         sides.add(side);
                     }
                 }
             }
 
+            if (sides.isEmpty()) {
+                return;
+            }
+
             Collections.shuffle(sides);
 
-            for (Direction to : sides) {
+            FluidAmount amt = lastTickAmount.min(fluid.amount());
+            FluidAmount[] amounts = amt.splitBalanced(sides.size());
+
+            for (int i = 0; i < sides.size(); i++) {
+                Direction to = sides.get(i);
+                FluidAmount max = amounts[i];
+
                 if (to == null) {
                     CenterSection other = centerSection;
-                    int movable = (lastTickAmount - other.lastTickAmount + sides.size() - 1) / sides.size();
+                    FluidAmount movable = getMoveable(other, max);
                     if (!canGoInDirection(null, side)) {
-                        movable = Math.min(fluid.getAmount(), SECTION_CAPACITY - other.fluid.getAmount());
+                        movable = fluid.amount().min(SECTION_CAPACITY.sub(other.fluid.amount()));
                     }
-                    if (movable < 1) {
+                    if (!movable.isPositive()) {
                         continue;
                     }
                     FluidVolume fluidCopy = fluid.copy();
@@ -328,12 +361,12 @@ public class PipeFlowFluid extends PipeFlow {
                         }
                     }
                 } else {
-                    TilePipe oPipe = pipe.getNeighbourPipe(side);
-                    if (oPipe != null && oPipe.flow instanceof PipeFlowFluid) {
-                        PipeFlowFluid oFlow = (PipeFlowFluid) oPipe.flow;
+                    ISimplePipe oPipe = pipe.getNeighbourPipe(side);
+                    if (oPipe != null && oPipe.getFlow() instanceof PipeFlowFluid) {
+                        PipeFlowFluid oFlow = (PipeFlowFluid) oPipe.getFlow();
                         SideSection other = oFlow.sideSections.get(side.getOpposite());
-                        int movable = (lastTickAmount - other.lastTickAmount + sides.size() - 1) / sides.size();
-                        if (movable < 1) {
+                        FluidAmount movable = getMoveable(other, max);
+                        if (!movable.isPositive()) {
                             continue;
                         }
                         FluidVolume fluidCopy = fluid.copy();
@@ -348,15 +381,15 @@ public class PipeFlowFluid extends PipeFlow {
                         }
                     } else {
                         FluidInsertable insertable = pipe.getNeighbourAttribute(FluidAttributes.INSERTABLE, side);
-                        int movable = (fluid.getAmount() + 1) / 2;
-                        if (movable < 0) {
+                        FluidAmount movable = fluid.amount();
+                        if (!movable.isPositive()) {
                             continue;
                         }
                         FluidVolume fluidCopy = fluid.copy();
                         FluidVolume split = fluidCopy.split(movable);
                         FluidVolume leftover = insertable.attemptInsertion(split, Simulation.ACTION);
-                        int inserted = split.getAmount() - leftover.getAmount();
-                        if (inserted > 0) {
+                        FluidAmount inserted = split.amount().sub(leftover.amount());
+                        if (inserted.isPositive()) {
                             FluidVolume merged = FluidVolume.merge(fluidCopy, leftover);
                             if (merged == null) {
                                 throw new IllegalStateException(
@@ -378,7 +411,11 @@ public class PipeFlowFluid extends PipeFlow {
         }
     }
 
-    class CenterSection extends Section {
+    public class CenterSection extends Section {
+
+        public FluidVolume getFluid() {
+            return fluid;
+        }
 
         @Override
         void tick() {
@@ -390,24 +427,33 @@ public class PipeFlowFluid extends PipeFlow {
             for (Direction to : Direction.values()) {
                 if (canGoInDirection(null, to)) {
                     SideSection other = sideSections.get(to);
-                    int movable = (lastTickAmount - other.lastTickAmount);
-                    if (movable > 0) {
+                    FluidAmount movable = getMoveable(other, null);
+                    if (movable.isPositive()) {
                         sides.add(to);
-                    } else if (!canGoInDirection(to, null) && other.fluid.getAmount() < SECTION_CAPACITY) {
+                    } else if (!canGoInDirection(to, null) && other.fluid.amount().isLessThan(SECTION_CAPACITY)) {
                         sides.add(to);
                     }
                 }
             }
 
+            if (sides.isEmpty()) {
+                return;
+            }
+
             Collections.shuffle(sides);
 
-            for (Direction to : sides) {
+            FluidAmount amt = lastTickAmount.min(fluid.amount());
+            FluidAmount[] amounts = amt.splitBalanced(sides.size());
+
+            for (int i = 0; i < sides.size(); i++) {
+                Direction to = sides.get(i);
+                FluidAmount max = amounts[i];
                 SideSection other = sideSections.get(to);
-                int movable = (lastTickAmount - other.lastTickAmount + sides.size() - 1) / sides.size();
+                FluidAmount movable = getMoveable(other, max);
                 if (!canGoInDirection(to, null)) {
-                    movable = Math.min(fluid.getAmount(), SECTION_CAPACITY - other.fluid.getAmount());
+                    movable = fluid.amount().min(SECTION_CAPACITY.sub(other.fluid.amount()));
                 }
-                if (movable < 1) {
+                if (!movable.isPositive()) {
                     continue;
                 }
                 FluidVolume fluidCopy = fluid.copy();

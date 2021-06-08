@@ -5,30 +5,32 @@ import java.util.EnumSet;
 import java.util.List;
 
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3d;
 
-import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alexiil.mc.mod.pipes.blocks.PipeFlowFluid;
 import alexiil.mc.mod.pipes.blocks.TilePipe;
+import alexiil.mc.mod.pipes.pipe.PipeFlowFluid;
 import alexiil.mc.mod.pipes.util.VecUtil;
 
-public class PipeFluidTileRenderer<T extends TilePipe> extends BlockEntityRenderer<T> {
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 
-    public PipeFluidTileRenderer(BlockEntityRenderDispatcher dispatcher) {
-        super(dispatcher);
+public class PipeFluidTileRenderer<T extends TilePipe> implements BlockEntityRenderer<T> {
+
+    public PipeFluidTileRenderer(BlockEntityRendererFactory.Context ctx) {
+
     }
 
     @Override
     public void render(
         T pipe, float tickDelta, MatrixStack matrices, VertexConsumerProvider vcp, int light, int overlay
     ) {
-        PipeFlowFluid fluidFlow = (PipeFlowFluid) pipe.flow;
+        PipeFlowFluid fluidFlow = (PipeFlowFluid) pipe.getFlow();
 
         boolean gas = false;// TODO!
         boolean horizontal = false;
@@ -36,8 +38,8 @@ public class PipeFluidTileRenderer<T extends TilePipe> extends BlockEntityRender
 
         for (Direction side : Direction.values()) {
             FluidVolume fluid = fluidFlow.getClientSideFluid(side);
-            int amount = fluid.getAmount();
-            if (amount <= 0) {
+            FluidAmount amount = fluid.amount();
+            if (!amount.isPositive()) {
                 continue;
             }
 
@@ -51,7 +53,7 @@ public class PipeFluidTileRenderer<T extends TilePipe> extends BlockEntityRender
             Vec3d radius = new Vec3d(0.1874, 0.1874, 0.1874);
             radius = VecUtil.replaceValue(radius, side.getAxis(), 0.15625);
 
-            double perc = amount / (double) PipeFlowFluid.SECTION_CAPACITY;
+            double perc = amount.asInexactDouble() / PipeFlowFluid.SECTION_CAPACITY.asInexactDouble();
             if (side.getAxis() == Axis.Y) {
                 perc = Math.sqrt(perc);
                 radius = new Vec3d(perc * 0.1874, radius.y, perc * 0.1874);
@@ -77,7 +79,7 @@ public class PipeFluidTileRenderer<T extends TilePipe> extends BlockEntityRender
         if (!center.isEmpty()) {
 
             double horizPos = 0.26;
-            double perc = center.getAmount() / (double) PipeFlowFluid.SECTION_CAPACITY;
+            double perc = center.amount().asInexactDouble() / PipeFlowFluid.SECTION_CAPACITY.asInexactDouble();
             List<FluidRenderFace> faces = new ArrayList<>();
 
             if (horizontal | !vertical) {
@@ -88,7 +90,7 @@ public class PipeFluidTileRenderer<T extends TilePipe> extends BlockEntityRender
                 double max_y = (max.y - min.y) * perc + min.y;
                 FluidRenderFace.appendCuboid(min.x, min.y, min.z, max.x, max_y, max.z, 1, sides, faces);
 
-                horizPos += (max.y - min.y) * center.getAmount() / PipeFlowFluid.SECTION_CAPACITY;
+                horizPos += (max.y - min.y) * perc;
             }
 
             if (vertical && horizPos < 0.6874) {

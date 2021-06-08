@@ -20,11 +20,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3d;
 
-import alexiil.mc.mod.pipes.blocks.BlockPipe;
 import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
 import alexiil.mc.mod.pipes.blocks.TilePipe.PipeBlockModelState;
 import alexiil.mc.mod.pipes.blocks.TilePipeSided.PipeBlockModelStateSided;
 import alexiil.mc.mod.pipes.client.model.ModelUtil.UvFaceData;
+import alexiil.mc.mod.pipes.pipe.PipeSpDef;
 
 public class PipeBaseModelGenStandard {
 
@@ -148,7 +148,7 @@ public class PipeBaseModelGenStandard {
 
         for (Direction face : Direction.values()) {
             boolean connected = key.isConnected(face);
-            Sprite sprite = connected ? getSprite(sprites, key, face) : getCenterSprite(sprites, key.block);
+            Sprite sprite = connected ? getSprite(sprites, key, face) : getCenterSprite(sprites, key.def);
             int quadsIndex = connected ? 1 : 0;
             MutableQuad[] quadArray = QUADS[quadsIndex][face.ordinal()];
             addQuads(quadArray, quads, sprite);
@@ -164,28 +164,28 @@ public class PipeBaseModelGenStandard {
         return sprites.getBlockSprite("simple_pipes:pipe_" + id);
     }
 
-    public static Sprite getCenterSprite(SpriteSupplier sprites, BlockPipe block) {
-        if (block == SimplePipeBlocks.WOODEN_PIPE_ITEMS) {
+    public static Sprite getCenterSprite(SpriteSupplier sprites, PipeSpDef def) {
+        if (def == SimplePipeBlocks.WOODEN_PIPE_ITEMS.pipeDef) {
             return getPipeSprite(sprites, "wooden_item_clear");
-        } else if (block == SimplePipeBlocks.STONE_PIPE_ITEMS) {
+        } else if (def == SimplePipeBlocks.STONE_PIPE_ITEMS.pipeDef) {
             return getPipeSprite(sprites, "stone_item");
-        } else if (block == SimplePipeBlocks.GOLD_PIPE_ITEMS) {
+        } else if (def == SimplePipeBlocks.GOLD_PIPE_ITEMS.pipeDef) {
             return getPipeSprite(sprites, "gold_item");
-        } else if (block == SimplePipeBlocks.DIAMOND_PIPE_ITEMS) {
+        } else if (def == SimplePipeBlocks.DIAMOND_PIPE_ITEMS.pipeDef) {
             return getPipeSprite(sprites, "diamond_item");
-        } else if (block == SimplePipeBlocks.IRON_PIPE_ITEMS) {
+        } else if (def == SimplePipeBlocks.IRON_PIPE_ITEMS.pipeDef) {
             return getPipeSprite(sprites, "iron_item_filled");
-        } else if (block == SimplePipeBlocks.CLAY_PIPE_ITEMS) {
+        } else if (def == SimplePipeBlocks.CLAY_PIPE_ITEMS.pipeDef) {
             return getPipeSprite(sprites, "clay_item");
-        } else if (block == SimplePipeBlocks.WOODEN_PIPE_FLUIDS) {
+        } else if (def == SimplePipeBlocks.WOODEN_PIPE_FLUIDS.pipeDef) {
             return getPipeSprite(sprites, "wooden_fluid_clear");
-        } else if (block == SimplePipeBlocks.STONE_PIPE_FLUIDS) {
+        } else if (def == SimplePipeBlocks.STONE_PIPE_FLUIDS.pipeDef) {
             return getPipeSprite(sprites, "stone_fluid");
-        } else if (block == SimplePipeBlocks.IRON_PIPE_FLUIDS) {
+        } else if (def == SimplePipeBlocks.IRON_PIPE_FLUIDS.pipeDef) {
             return getPipeSprite(sprites, "iron_fluid_filled");
-        } else if (block == SimplePipeBlocks.CLAY_PIPE_FLUIDS) {
+        } else if (def == SimplePipeBlocks.CLAY_PIPE_FLUIDS.pipeDef) {
             return getPipeSprite(sprites, "clay_fluid");
-        } else if (block == SimplePipeBlocks.SPONGE_PIPE_FLUIDS) {
+        } else if (def == SimplePipeBlocks.SPONGE_PIPE_FLUIDS.pipeDef) {
             return getPipeSprite(sprites, "sponge_fluid");
         } else {
             return sprites.getMissingBlockSprite();
@@ -193,22 +193,22 @@ public class PipeBaseModelGenStandard {
     }
 
     private static Sprite getSprite(SpriteSupplier sprites, PipeBlockModelState key, Direction face) {
-        BlockPipe block = key.block;
+        PipeSpDef pipeDef = key.def;
 
         if (key instanceof PipeBlockModelStateSided) {
             Direction mainDir = ((PipeBlockModelStateSided) key).mainSide;
             if (mainDir == face) {
-                if (block == SimplePipeBlocks.WOODEN_PIPE_ITEMS) {
+                if (pipeDef == SimplePipeBlocks.WOODEN_PIPE_ITEMS.pipeDef) {
                     return getPipeSprite(sprites, "wooden_item_filled");
-                } else if (block == SimplePipeBlocks.IRON_PIPE_ITEMS) {
+                } else if (pipeDef == SimplePipeBlocks.IRON_PIPE_ITEMS.pipeDef) {
                     return getPipeSprite(sprites, "iron_item_clear");
-                } else if (block == SimplePipeBlocks.WOODEN_PIPE_FLUIDS) {
+                } else if (pipeDef == SimplePipeBlocks.WOODEN_PIPE_FLUIDS.pipeDef) {
                     return getPipeSprite(sprites, "wooden_fluid_filled");
-                } else if (block == SimplePipeBlocks.IRON_PIPE_FLUIDS) {
+                } else if (pipeDef == SimplePipeBlocks.IRON_PIPE_FLUIDS.pipeDef) {
                     return getPipeSprite(sprites, "iron_fluid_clear");
                 }
             }
-        } else if (block == SimplePipeBlocks.DIAMOND_PIPE_ITEMS) {
+        } else if (pipeDef == SimplePipeBlocks.DIAMOND_PIPE_ITEMS.pipeDef) {
             if (face == Direction.DOWN) {
                 return getPipeSprite(sprites, "diamond_item_down");
             } else if (face == Direction.UP) {
@@ -224,7 +224,7 @@ public class PipeBaseModelGenStandard {
             }
         }
 
-        return getCenterSprite(sprites, block);
+        return getCenterSprite(sprites, pipeDef);
     }
 
     private static void addQuads(MutableQuad[] from, List<MutableQuad> to, Sprite sprite) {

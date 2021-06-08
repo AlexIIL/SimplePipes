@@ -5,16 +5,19 @@
  */
 package alexiil.mc.mod.pipes.blocks;
 
-import net.minecraft.world.BlockView;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
+
+import alexiil.mc.mod.pipes.part.SimplePipeParts;
 
 public class BlockPipeItemGold extends BlockPipe implements BlockPipeItem {
 
     public BlockPipeItemGold(Settings settings) {
-        super(settings);
+        super(settings, SimplePipeParts.GOLD_PIPE_ITEMS);
     }
 
     @Override
-    public TilePipe createBlockEntity(BlockView view) {
-        return new TilePipeItemGold();
+    public TilePipe createBlockEntity(BlockPos pos, BlockState state) {
+        return new TilePipeItemGold(pos, state);
     }
 }

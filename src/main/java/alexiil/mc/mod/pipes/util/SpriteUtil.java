@@ -30,6 +30,6 @@ public final class SpriteUtil {
 
     @Deprecated
     public static Sprite getSprite(Identifier id) {
-        return MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEX).apply(id);
+        return MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).apply(id);
     }
 }

@@ -4,14 +4,15 @@ import javax.annotation.Nullable;
 
 import net.minecraft.world.World;
 
-import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.lib.net.IMsgReadCtx;
 import alexiil.mc.lib.net.IMsgWriteCtx;
 import alexiil.mc.lib.net.NetByteBuf;
 import alexiil.mc.mod.pipes.util.FluidSmoother._Client;
 import alexiil.mc.mod.pipes.util.FluidSmoother._Server;
 import alexiil.mc.mod.pipes.util.FluidSmoother._Side;
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 
 public class FluidSmoother {
     final IFluidDataSender sender;
@@ -92,8 +93,8 @@ public class FluidSmoother {
         return null;
     }
 
-    public int getCapacity() {
-        return tank.getMaxAmount(0);
+    public FluidAmount getCapacity() {
+        return tank.getMaxAmount_F(0);
     }
 
     @FunctionalInterface
@@ -121,14 +122,14 @@ public class FluidSmoother {
     }
 
     final class _Server extends _Side {
-        private int sentAmount = -1;
+        private float sentAmount = -1;
         private boolean sentHasFluid = false;
 
         @Override
         void tick(World world) {
             FluidVolume fluid = tank.getInvFluid(0);
             boolean hasFluid = !fluid.isEmpty();
-            if ((fluid.getAmount() != sentAmount || hasFluid != sentHasFluid)) {
+            if (((float) fluid.amount().asInexactDouble()) != sentAmount || hasFluid != sentHasFluid) {
                 sender.writePacket(this::writeMessage);
             }
         }
@@ -137,18 +138,18 @@ public class FluidSmoother {
             FluidVolume fluid = tank.getInvFluid(0);
             boolean hasFluid = !fluid.isEmpty();
 
-            sentAmount = fluid.getAmount();
+            sentAmount = (float) fluid.amount().asInexactDouble();
             sentHasFluid = hasFluid;
 
-            buffer.writeInt(sentAmount);
+            buffer.writeFloat(sentAmount);
             // TODO: Replace this with buffer writing in LBA!
-            buffer.writeCompoundTag(fluid.toTag());
+            buffer.writeNbt(fluid.toTag());
         }
     }
 
     final class _Client extends _Side {
-        private int target;
-        int amount, amountLast;
+        private float target;
+        float amount, amountLast;
         long lastMessage, lastMessageMinus1;
         FluidVolume fluid;
 
@@ -156,7 +157,7 @@ public class FluidSmoother {
         void tick(World world) {
             amountLast = amount;
             if (amount != target) {
-                int delta = target - amount;
+                float delta = target - amount;
                 long msgDelta = lastMessage - lastMessageMinus1;
                 msgDelta = Math.min(Math.max((int) msgDelta, 1), 10);
                 if (Math.abs(delta) < msgDelta) {
@@ -168,8 +169,8 @@ public class FluidSmoother {
         }
 
         void handleMessage(World world, NetByteBuf buffer, IMsgReadCtx ctx) {
-            target = buffer.readInt();
-            fluid = FluidVolume.fromTag(buffer.readCompoundTag());
+            target = buffer.readFloat();
+            fluid = FluidVolume.fromTag(buffer.readNbt());
             lastMessageMinus1 = lastMessage;
             lastMessage = world.getTime();
         }

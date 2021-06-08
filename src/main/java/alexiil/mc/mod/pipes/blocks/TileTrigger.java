@@ -3,7 +3,6 @@ package alexiil.mc.mod.pipes.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
@@ -12,17 +11,13 @@ import alexiil.mc.lib.attributes.fluid.GroupedFluidInvView;
 import alexiil.mc.lib.attributes.item.GroupedItemInvView;
 import alexiil.mc.lib.attributes.item.ItemAttributes;
 
-public abstract class TileTrigger extends TileBase implements Tickable {
+public abstract class TileTrigger extends TileBase {
 
-    public TileTrigger(BlockEntityType<?> type) {
-        super(type);
+    public TileTrigger(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
-    @Override
-    public void tick() {
-        if (world.isClient) {
-            return;
-        }
+    public void serverTick() {
         BlockState state = world.getBlockState(getPos());
         Block block = state.getBlock();
         if (block instanceof BlockTrigger) {

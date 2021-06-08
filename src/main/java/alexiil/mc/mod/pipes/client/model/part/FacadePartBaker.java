@@ -27,7 +27,7 @@ public enum FacadePartBaker implements PartModelBaker<FacadePartKey> {
         BakedModel model = ModelUtil.getBlockModel(key.state);
         Sprite sprite = model.getSprite();
         if (sprite == null) {
-            sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEX)
+            sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE)
                 .apply(MissingSprite.getMissingSpriteId());
         }
 

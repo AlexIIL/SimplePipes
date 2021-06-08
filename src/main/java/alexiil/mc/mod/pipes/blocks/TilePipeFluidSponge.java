@@ -1,7 +1,13 @@
 package alexiil.mc.mod.pipes.blocks;
 
-import alexiil.mc.lib.attributes.fluid.volume.BiomeSourcedFluidVolume;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
+
+import alexiil.mc.mod.pipes.pipe.PipeFlowFluid;
+
+import alexiil.mc.lib.attributes.fluid.volume.ColouredFluidVolume;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 
 public class TilePipeFluidSponge extends TilePipe {
 
@@ -15,21 +21,24 @@ public class TilePipeFluidSponge extends TilePipe {
     private static final float BLUE_SQ = BLUE * BLUE;
     private static final float ALPHA_SQ = ALPHA * ALPHA;
 
-    public TilePipeFluidSponge() {
-        super(SimplePipeBlocks.SPONGE_PIPE_FLUID_TILE, SimplePipeBlocks.SPONGE_PIPE_FLUIDS, PipeFlowFluid::new);
+    public TilePipeFluidSponge(BlockPos pos, BlockState state) {
+        super(
+            SimplePipeBlocks.SPONGE_PIPE_FLUID_TILE, pos, state, SimplePipeBlocks.SPONGE_PIPE_FLUIDS, PipeFlowFluid::new
+        );
     }
 
     @Override
     public void tick() {
         super.tick();
-        PipeFlowFluid f = (PipeFlowFluid) flow;
+        PipeFlowFluid f = (PipeFlowFluid) getFlow();
 
-        if (f.centerSection.fluid.isEmpty()) {
+        FluidVolume fluid = f.centerSection.getFluid();
+        if (fluid.isEmpty()) {
             return;
         }
 
-        if (FluidKeys.WATER.equals(f.centerSection.fluid.getFluidKey())) {
-            BiomeSourcedFluidVolume vol = (BiomeSourcedFluidVolume) f.centerSection.fluid;
+        if (FluidKeys.WATER.equals(fluid.getFluidKey())) {
+            ColouredFluidVolume vol = (ColouredFluidVolume) fluid;
 
             double r = vol.getRed();
             double g = vol.getGreen();

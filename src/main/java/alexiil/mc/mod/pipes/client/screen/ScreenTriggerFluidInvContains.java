@@ -1,6 +1,6 @@
 package alexiil.mc.mod.pipes.client.screen;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.fabricmc.fabric.api.client.screen.ContainerScreenFactory;
 
@@ -22,7 +22,7 @@ public class ScreenTriggerFluidInvContains extends HandledScreen<ContainerTrigge
         = new Identifier(SimplePipes.MODID, "textures/gui/trigger_fluid_inv.png");
 
     public ScreenTriggerFluidInvContains(ContainerTriggerFluidContains container) {
-        super(container, container.player.inventory, SimplePipeBlocks.TRIGGER_FLUID_INV_CONTAINS.getName());
+        super(container, container.player.getInventory(), SimplePipeBlocks.TRIGGER_FLUID_INV_CONTAINS.getName());
         backgroundHeight = 153;
     }
 
@@ -35,7 +35,7 @@ public class ScreenTriggerFluidInvContains extends HandledScreen<ContainerTrigge
 
     @Override
     protected void drawBackground(MatrixStack matrices, float partialTicks, int mouseX, int mouseY) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         MinecraftClient.getInstance().getTextureManager().bindTexture(TRIGGER_GUI);
         int x = (this.width - this.backgroundWidth) / 2;
         int y = (this.height - this.backgroundHeight) / 2;
@@ -45,6 +45,8 @@ public class ScreenTriggerFluidInvContains extends HandledScreen<ContainerTrigge
     @Override
     protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
         textRenderer.draw(matrices, title, 8.0F, 6.0F, 0x40_40_40);
-        textRenderer.draw(matrices, playerInventory.getDisplayName(), 8.0F, backgroundHeight - 96 + 2, 0x40_40_40);
+        textRenderer.draw(
+            matrices, handler.player.getInventory().getDisplayName(), 8.0F, backgroundHeight - 96 + 2, 0x40_40_40
+        );
     }
 }

@@ -10,13 +10,14 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
@@ -25,8 +26,8 @@ import alexiil.mc.lib.attributes.SearchOptions;
 
 public abstract class TileBase extends BlockEntity implements BlockEntityClientSerializable {
 
-    public TileBase(BlockEntityType<?> blockEntityType_1) {
-        super(blockEntityType_1);
+    public TileBase(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     @Nonnull
@@ -38,7 +39,7 @@ public abstract class TileBase extends BlockEntity implements BlockEntityClientS
         return DefaultedList.of();
     }
 
-    protected void sendPacket(ServerWorld w, CompoundTag tag) {
+    protected void sendPacket(ServerWorld w, NbtCompound tag) {
         tag.putString("id", BlockEntityType.getId(getType()).toString());
         sendPacket(w, new BlockEntityUpdateS2CPacket(getPos(), 127, tag));
     }
@@ -49,12 +50,12 @@ public abstract class TileBase extends BlockEntity implements BlockEntityClientS
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
+    public NbtCompound toClientTag(NbtCompound tag) {
         return tag;
     }
 
     @Override
-    public void fromClientTag(CompoundTag tag) {}
+    public void fromClientTag(NbtCompound tag) {}
 
     public void onPlacedBy(LivingEntity placer, ItemStack stack) {}
 

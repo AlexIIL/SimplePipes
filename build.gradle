@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.4-SNAPSHOT'
+    id 'fabric-loom' version '0.8-SNAPSHOT'
 }
 
 apply plugin: 'maven-publish' // for uploading to a maven repo
@@ -13,18 +13,22 @@ repositories {
 }
 
 archivesBaseName = "SimplePipes"
-version = "0.4.3"
+version = "0.5.0-pre.1"
 
 minecraft {
 }
 
+configurations {
+    compile {}
+}
+
 dependencies {
-    minecraft "com.mojang:minecraft:1.16.2"
-    mappings "net.fabricmc:yarn:1.16.2+build.19:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.9.1+build.205"
+    minecraft "com.mojang:minecraft:1.17-rc1"
+    mappings "net.fabricmc:yarn:1.17-rc1+build.1:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.11.3"
 
     //Fabric api
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.18.0+build.397-1.16"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.34.8+1.17"
 
     // Silk API
     // modCompile "io.github.prospector.silk:SilkAPI:1.2.3-38"
@@ -38,8 +42,8 @@ dependencies {
     include "alexiil.mc.lib:libmultipart-base:$libmultipart_version"
 
     // Misc
-    compile "com.google.code.findbugs:jsr305:3.0.1"
-    testCompile "junit:junit:4.12"
+    implementation "com.google.code.findbugs:jsr305:3.0.1"
+    testImplementation "junit:junit:4.12"
 }
 
 // ensure that the encoding is set to UTF-8, no matter what the system default is
@@ -47,6 +51,7 @@ dependencies {
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
+    it.options.release = 16
 }
 
 // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task

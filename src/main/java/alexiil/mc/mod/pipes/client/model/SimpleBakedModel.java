@@ -12,9 +12,8 @@ import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.render.model.json.Transformation;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.math.Direction;
-
+import net.minecraft.util.math.Vec3f;
 import alexiil.mc.mod.pipes.mixin.impl.BakedQuadAccessor;
 import alexiil.mc.mod.pipes.util.SpriteUtil;
 
@@ -97,14 +96,14 @@ public class SimpleBakedModel implements BakedModel {
     private static Transformation scale(Transformation from, double by) {
 
         float scale = (float) by;
-        Vector3f nScale = from.scale.copy();
+        Vec3f nScale = from.scale.copy();
         nScale.scale(scale);
 
         return new Transformation(from.rotation, from.translation, nScale);
     }
 
     private static Transformation translate(Transformation from, double dx, double dy, double dz) {
-        Vector3f nTranslation = from.translation.copy();
+        Vec3f nTranslation = from.translation.copy();
         nTranslation.add((float) dx, (float) dy, (float) dz);
         return new Transformation(from.rotation, nTranslation, from.scale);
     }
@@ -114,9 +113,9 @@ public class SimpleBakedModel implements BakedModel {
     }
 
     private static Transformation def(float rx, float ry, float rz, float tx, float ty, float tz, float scale) {
-        Vector3f rot = new Vector3f(rx, ry, rz);
-        Vector3f translate = new Vector3f(tx / 16f, ty / 16f, tz / 16f);
-        return new Transformation(rot, translate, new Vector3f(scale, scale, scale));
+        Vec3f rot = new Vec3f(rx, ry, rz);
+        Vec3f translate = new Vec3f(tx / 16f, ty / 16f, tz / 16f);
+        return new Transformation(rot, translate, new Vec3f(scale, scale, scale));
     }
 
     private final boolean hasDepthInGui;

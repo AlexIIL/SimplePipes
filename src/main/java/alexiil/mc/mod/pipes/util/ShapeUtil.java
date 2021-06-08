@@ -20,7 +20,10 @@ public final class ShapeUtil {
     }
 
     public static VoxelShape cuboid(Vec3d a, Vec3d b) {
-        return VoxelShapes.cuboid(a.x, a.y, a.z, b.x, b.y, b.z);
+        return VoxelShapes.cuboid(
+            Math.min(a.x, b.x), Math.min(a.y, b.y), Math.min(a.z, b.z),
+            Math.max(a.x, b.x), Math.max(a.y, b.y), Math.max(a.z, b.z)
+        );
     }
 
     public static VoxelShape rotate90(VoxelShape shape, Direction from, Direction to) {

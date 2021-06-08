@@ -9,31 +9,31 @@ import java.util.BitSet;
 import java.util.EnumSet;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.ByteArrayTag;
-import net.minecraft.nbt.ByteTag;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtByte;
+import net.minecraft.nbt.NbtByteArray;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtString;
 
 public final class TagUtil {
     private TagUtil() {}
 
     private static final String NULL_ENUM_STRING = "_NULL";
 
-    public static <E extends Enum<E>> Tag writeEnum(E value) {
+    public static <E extends Enum<E>> NbtElement writeEnum(E value) {
         if (value == null) {
-            return StringTag.of(NULL_ENUM_STRING);
+            return NbtString.of(NULL_ENUM_STRING);
         }
-        return StringTag.of(value.name());
+        return NbtString.of(value.name());
     }
 
-    public static <E extends Enum<E>> E readEnum(Tag tag, Class<E> clazz) {
+    public static <E extends Enum<E>> E readEnum(NbtElement tag, Class<E> clazz) {
         return readEnum(tag, clazz, null);
     }
 
-    public static <E extends Enum<E>> E readEnum(Tag tag, Class<E> clazz, E defaultValue) {
-        if (tag instanceof StringTag) {
-            String value = ((StringTag) tag).asString();
+    public static <E extends Enum<E>> E readEnum(NbtElement tag, Class<E> clazz, E defaultValue) {
+        if (tag instanceof NbtString) {
+            String value = ((NbtString) tag).asString();
             if (NULL_ENUM_STRING.equals(value)) {
                 return defaultValue;
             }
@@ -60,7 +60,7 @@ public final class TagUtil {
      * 
      * @param clazz The class that the {@link EnumSet} is of. This is required as we have no way of getting the class
      *            from the set. */
-    public static <E extends Enum<E>> Tag writeEnumSet(EnumSet<E> set, Class<E> clazz) {
+    public static <E extends Enum<E>> NbtElement writeEnumSet(EnumSet<E> set, Class<E> clazz) {
         E[] constants = clazz.getEnumConstants();
         if (constants == null) throw new IllegalArgumentException("Not an enum type " + clazz);
         BitSet bitset = new BitSet();
@@ -71,20 +71,20 @@ public final class TagUtil {
         }
         byte[] bytes = bitset.toByteArray();
         if (bytes.length == 1) {
-            return ByteTag.of(bytes[0]);
+            return NbtByte.of(bytes[0]);
         } else {
-            return new ByteArrayTag(bytes);
+            return new NbtByteArray(bytes);
         }
     }
 
-    public static <E extends Enum<E>> EnumSet<E> readEnumSet(Tag tag, Class<E> clazz) {
+    public static <E extends Enum<E>> EnumSet<E> readEnumSet(NbtElement tag, Class<E> clazz) {
         E[] constants = clazz.getEnumConstants();
         if (constants == null) throw new IllegalArgumentException("Not an enum type " + clazz);
         byte[] bytes;
-        if (tag instanceof ByteTag) {
-            bytes = new byte[] { ((ByteTag) tag).getByte() };
-        } else if (tag instanceof ByteArrayTag) {
-            bytes = ((ByteArrayTag) tag).getByteArray();
+        if (tag instanceof NbtByte) {
+            bytes = new byte[] { ((NbtByte) tag).byteValue() };
+        } else if (tag instanceof NbtByteArray) {
+            bytes = ((NbtByteArray) tag).getByteArray();
         } else {
             bytes = new byte[] {};
             System.out.println("[lib.nbt] Tried to read an enum set from " + tag);
@@ -99,13 +99,13 @@ public final class TagUtil {
         return set;
     }
 
-    public static CompoundTag getItemData(ItemStack stack) {
+    public static NbtCompound getItemData(ItemStack stack) {
         if (stack.isEmpty()) {
-            return new CompoundTag();
+            return new NbtCompound();
         }
-        CompoundTag nbt = stack.getTag();
+        NbtCompound nbt = stack.getTag();
         if (nbt == null) {
-            nbt = new CompoundTag();
+            nbt = new NbtCompound();
             stack.setTag(nbt);
         }
         return nbt;

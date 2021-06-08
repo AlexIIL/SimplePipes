@@ -35,7 +35,7 @@ public class PipeBlockModel extends PerspAwareModelBase implements FabricBakedMo
     private final SpriteSupplier sprites;
 
     public PipeBlockModel(ModelBakeCtx ctx, BlockPipe pipeBlock) {
-        super(ImmutableList.of(), PipeBaseModelGenStandard.getCenterSprite(ctx, pipeBlock));
+        super(ImmutableList.of(), PipeBaseModelGenStandard.getCenterSprite(ctx, pipeBlock.pipeDef));
         this.sprites = ctx.modelCtx;
     }
 
@@ -53,7 +53,7 @@ public class PipeBlockModel extends PerspAwareModelBase implements FabricBakedMo
 
         BlockEntity tile = blockView.getBlockEntity(pos);
         if (tile instanceof TilePipe) {
-            model = bakeModel(((TilePipe) tile).blockModelState);
+            model = bakeModel(((TilePipe) tile).getBlockModelState());
         } else {
             model = bakeModel(null);
         }

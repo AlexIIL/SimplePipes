@@ -4,13 +4,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import alexiil.mc.lib.attributes.AttributeList;
@@ -31,8 +32,15 @@ public class BlockPump extends BlockBase implements BlockEntityProvider, Attribu
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView var1) {
-        return new TilePump();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new TilePump(pos, state);
+    }
+
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
+        World world, BlockState state, BlockEntityType<T> type
+    ) {
+        return world.isClient ? null : (w, p, s, be) -> ((TilePump) be).serverTick();
     }
 
     @Override

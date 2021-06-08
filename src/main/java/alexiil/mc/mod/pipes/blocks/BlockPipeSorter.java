@@ -17,11 +17,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import alexiil.mc.mod.pipes.container.SimplePipeContainers;
+import alexiil.mc.mod.pipes.pipe.PipeSpDef;
 
 public abstract class BlockPipeSorter extends BlockPipe {
 
-    public BlockPipeSorter(Settings settings) {
-        super(settings);
+    public BlockPipeSorter(Settings settings, PipeSpDef pipeDef) {
+        super(settings, pipeDef);
     }
 
     @Override

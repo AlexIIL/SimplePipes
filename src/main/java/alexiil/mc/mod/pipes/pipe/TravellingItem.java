@@ -9,20 +9,21 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not
  * distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/
  */
-package alexiil.mc.mod.pipes.blocks;
+package alexiil.mc.mod.pipes.pipe;
 
 import java.util.EnumSet;
 
 import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
 import alexiil.mc.lib.attributes.item.ItemStackUtil;
+
 import alexiil.mc.mod.pipes.util.TagUtil;
 
 public class TravellingItem {
@@ -78,8 +79,8 @@ public class TravellingItem {
 //        this.stack = clientStack;
 //    }
 
-    public TravellingItem(CompoundTag nbt, long tickNow) {
-        stack = ItemStack.fromTag(nbt.getCompound("stack"));
+    public TravellingItem(NbtCompound nbt, long tickNow) {
+        stack = ItemStack.fromNbt(nbt.getCompound("stack"));
         int c = nbt.getByte("colour");
         this.colour = c == 0 ? null : DyeColor.byId(c - 1);
         this.toCenter = nbt.getBoolean("toCenter");
@@ -101,9 +102,9 @@ public class TravellingItem {
         isPhantom = nbt.getBoolean("isPhantom");
     }
 
-    public CompoundTag writeToNbt(long tickNow) {
-        CompoundTag nbt = new CompoundTag();
-        nbt.put("stack", stack.toTag(new CompoundTag()));
+    public NbtCompound writeToNbt(long tickNow) {
+        NbtCompound nbt = new NbtCompound();
+        nbt.put("stack", stack.writeNbt(new NbtCompound()));
         nbt.putByte("colour", (byte) (colour == null ? 0 : colour.getId() + 1));
         nbt.putBoolean("toCenter", toCenter);
         nbt.putDouble("speed", speed);
@@ -178,7 +179,7 @@ public class TravellingItem {
         return new Vec3d(x, y, z);
     }
 
-    public Vec3d getRenderPosition(BlockPos pos, long tick, float partialTicks, TilePipe pipe) {
+    public Vec3d getRenderPosition(BlockPos pos, long tick, float partialTicks, ISimplePipe pipe) {
         long diff = tickFinished - tickStarted;
         long afterTick = tick - tickStarted;
 

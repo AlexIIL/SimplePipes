@@ -5,16 +5,19 @@
  */
 package alexiil.mc.mod.pipes.blocks;
 
-import net.minecraft.world.BlockView;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
+
+import alexiil.mc.mod.pipes.part.SimplePipeParts;
 
 public class BlockPipeItemWooden extends BlockPipeSided implements BlockPipeItem {
 
     public BlockPipeItemWooden(Settings settings) {
-        super(settings);
+        super(settings, SimplePipeParts.WOODEN_PIPE_ITEMS);
     }
 
     @Override
-    public TilePipeSided createBlockEntity(BlockView var1) {
-        return new TilePipeItemWood();
+    public TilePipeSided createBlockEntity(BlockPos pos, BlockState state) {
+        return new TilePipeItemWood(pos, state);
     }
 }

@@ -19,9 +19,11 @@ import net.minecraft.client.texture.SpriteAtlasTexture;
 
 import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
 import alexiil.mc.mod.pipes.blocks.TilePipe;
+import alexiil.mc.mod.pipes.blocks.TilePipe.PipeBlockModelState;
 import alexiil.mc.mod.pipes.client.model.SimplePipeModels;
 import alexiil.mc.mod.pipes.client.model.part.FacadePartBaker;
 import alexiil.mc.mod.pipes.client.model.part.FacadePartKey;
+import alexiil.mc.mod.pipes.client.model.part.PipeSpPartBaker;
 import alexiil.mc.mod.pipes.client.model.part.TankPartBaker;
 import alexiil.mc.mod.pipes.client.model.part.TankPartModelKey;
 import alexiil.mc.mod.pipes.client.render.ItemPlacemenentGhostRenderer;
@@ -41,7 +43,7 @@ public class SimplePipesClient implements ClientModInitializer {
         ModelLoadingRegistry.INSTANCE.registerVariantProvider(SimplePipeModels::createVariantProvider);
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(SimplePipeModels::createResourceProvider);
         ModelLoadingRegistry.INSTANCE.registerAppender(SimplePipeModels::appendModels);
-        ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register(this::registerSprites);
+        ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).register(this::registerSprites);
 
         registerItemPipeRender(SimplePipeBlocks.WOODEN_PIPE_ITEM_TILE);
         registerItemPipeRender(SimplePipeBlocks.STONE_PIPE_ITEM_TILE);
@@ -72,6 +74,7 @@ public class SimplePipesClient implements ClientModInitializer {
         PartStaticModelRegisterEvent.EVENT.register(model -> {
             model.register(TankPartModelKey.class, TankPartBaker.INSTANCE);
             model.register(FacadePartKey.class, FacadePartBaker.INSTANCE);
+            model.register(PipeBlockModelState.class, new PipeSpPartBaker(model::getSprite));
         });
         PartDynamicModelRegisterEvent.EVENT.register(renderer -> {
             renderer.register(PartTank.class, new TankPartRenderer());

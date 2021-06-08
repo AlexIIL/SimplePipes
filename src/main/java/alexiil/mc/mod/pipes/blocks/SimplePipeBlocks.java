@@ -7,14 +7,15 @@ package alexiil.mc.mod.pipes.blocks;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.function.Supplier;
 
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
 import alexiil.mc.mod.pipes.SimplePipes;
@@ -74,7 +75,7 @@ public class SimplePipeBlocks {
     public static final BlockEntityType<TilePump> PUMP_TILE;
 
     static {
-        Block.Settings pipeSettings = FabricBlockSettings.of(Material.SUPPORTED)//
+        Block.Settings pipeSettings = FabricBlockSettings.of(Material.DECORATION)//
             .strength(0.5f, 1f)//
             .build();
 
@@ -135,8 +136,17 @@ public class SimplePipeBlocks {
         PUMP_TILE = create(TilePump::new, PUMP);
     }
 
-    private static <T extends BlockEntity> BlockEntityType<T> create(Supplier<T> supplier, Block... blocks) {
-        return new BlockEntityType<>(supplier, new HashSet<>(Arrays.asList(blocks)), null);
+    private static <T extends BlockEntity> BlockEntityType<T> create(IBeCreator<T> supplier, Block... blocks) {
+        return new BlockEntityType<T>(null, new HashSet<>(Arrays.asList(blocks)), null) {
+            @Override
+            public T instantiate(BlockPos pos, BlockState state) {
+                return supplier.create(pos, state);
+            }
+        };
+    }
+
+    public interface IBeCreator<T extends BlockEntity> {
+        T create(BlockPos pos, BlockState state);
     }
 
     public static void load() {

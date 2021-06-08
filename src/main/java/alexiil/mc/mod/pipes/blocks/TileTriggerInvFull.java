@@ -1,5 +1,7 @@
 package alexiil.mc.mod.pipes.blocks;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 import alexiil.mc.lib.attributes.item.GroupedItemInvView;
@@ -9,8 +11,8 @@ import alexiil.mc.lib.attributes.item.impl.EmptyGroupedItemInv;
 import alexiil.mc.lib.attributes.misc.LibBlockAttributes;
 
 public class TileTriggerInvFull extends TileTrigger {
-    public TileTriggerInvFull() {
-        super(SimplePipeBlocks.TRIGGER_ITEM_INV_FULL_TILE);
+    public TileTriggerInvFull(BlockPos pos, BlockState state) {
+        super(SimplePipeBlocks.TRIGGER_ITEM_INV_FULL_TILE, pos, state);
     }
 
     @Override
@@ -22,10 +24,12 @@ public class TileTriggerInvFull extends TileTrigger {
         ItemInvStatistic stats = invStats.getStatistics(ConstantItemFilter.ANYTHING);
         if (stats.spaceTotal == -1) {
             // Not good!
-            LibBlockAttributes.LOGGER.warn("Found an GroupedItemInvView implementation that doesn't correctly "
-                + "calculate the 'ItemInvStatistic.spaceTotal' value from 'ConstantItemFilter.ANYTHING'!\n"
-                + invStats.getClass() + " for block " + world.getBlockState(getPos()) + ", block entity = "
-                + world.getBlockEntity(getPos()));
+            LibBlockAttributes.LOGGER.warn(
+                "Found an GroupedItemInvView implementation that doesn't correctly "
+                    + "calculate the 'ItemInvStatistic.spaceTotal' value from 'ConstantItemFilter.ANYTHING'!\n"
+                    + invStats.getClass() + " for block " + world.getBlockState(getPos()) + ", block entity = "
+                    + world.getBlockEntity(getPos())
+            );
         }
         return EnumTriggerState.of(stats.spaceAddable + stats.spaceTotal == 0);
     }

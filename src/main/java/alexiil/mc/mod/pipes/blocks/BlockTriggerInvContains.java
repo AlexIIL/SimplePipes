@@ -10,7 +10,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import alexiil.mc.mod.pipes.container.SimplePipeContainers;
@@ -22,8 +21,8 @@ public class BlockTriggerInvContains extends BlockTriggerItemInv {
     }
 
     @Override
-    public TileTrigger createBlockEntity(BlockView view) {
-        return new TileTriggerInvContains();
+    public TileTrigger createBlockEntity(BlockPos pos, BlockState state) {
+        return new TileTriggerInvContains(pos, state);
     }
 
     @Override
