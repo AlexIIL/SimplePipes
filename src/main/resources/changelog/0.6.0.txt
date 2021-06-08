@@ -1,0 +1,4 @@
+Changes:
+
+* Ported to minecraft 1.17
+* Made pipes multi-part compatible with LMP: now they can be placed in the same block as facades!
