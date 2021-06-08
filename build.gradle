@@ -4,8 +4,8 @@ plugins {
 
 apply plugin: 'maven-publish' // for uploading to a maven repo
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 repositories {
     mavenLocal()
