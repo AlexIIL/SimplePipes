@@ -1,11 +1,9 @@
 package alexiil.mc.mod.pipes.part;
 
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
+import alexiil.mc.mod.pipes.blocks.TilePipe;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -84,21 +82,26 @@ public final class SimplePipeParts {
                 return new PipeSpFlowItem(pipe) {
                     @Override
                     protected List<EnumSet<Direction>> getOrderForItem(
-                        TravellingItem item, EnumSet<Direction> validDirections
+                            TravellingItem item, EnumSet<Direction> validDirections
                     ) {
                         List<EnumSet<Direction>> order = super.getOrderForItem(item, validDirections);
-                        Direction currentDirection = ((TilePipeSided) pipe).currentDirection();
-                        Iterator<EnumSet<Direction>> iterator = order.iterator();
-                        while (iterator.hasNext()) {
-                            EnumSet<Direction> set = iterator.next();
-                            if (set.contains(currentDirection)) {
-                                set.clear();
-                                set.add(currentDirection);
-                            } else {
-                                iterator.remove();
+                        try {
+                            Direction currentDirection = ((TilePipeSided) pipe).currentDirection();
+                            Iterator<EnumSet<Direction>> iterator = order.iterator();
+                            while (iterator.hasNext()) {
+                                EnumSet<Direction> set = iterator.next();
+                                if (set.contains(currentDirection)) {
+                                    set.clear();
+                                    set.add(currentDirection);
+                                } else {
+                                    iterator.remove();
+                                }
                             }
+                            return order;
+                        } catch(ClassCastException classCastException) {
+                            classCastException.printStackTrace();
+                            return Collections.emptyList();
                         }
-                        return order;
                     }
                 };
             }
@@ -112,7 +115,7 @@ public final class SimplePipeParts {
 
                     @Override
                     protected List<EnumSet<Direction>> getOrderForItem(
-                        TravellingItem item, EnumSet<Direction> validDirections
+                            TravellingItem item, EnumSet<Direction> validDirections
                     ) {
                         return ((PipeSpBehaviourDiamond) part.behaviour).getOrderForItem(item, validDirections);
                     }
@@ -212,7 +215,7 @@ public final class SimplePipeParts {
     }
 
     private static void generateBlockToFacadeCuttingRecipes(
-        Consumer<Recipe<?>> recipeAdder, FacadeStateManager facades, ItemStack stack, FacadeBlockStateInfo state
+            Consumer<Recipe<?>> recipeAdder, FacadeStateManager facades, ItemStack stack, FacadeBlockStateInfo state
     ) {
         Identifier id = new Identifier("buildcraftsilicon:facade_generated");
         Ingredient ingredient = createIngredient(stack);

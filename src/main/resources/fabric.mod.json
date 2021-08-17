@@ -7,7 +7,8 @@
   "environment": "*",
   "entrypoints": {
     "main": ["alexiil.mc.mod.pipes.SimplePipes"],
-    "client": ["alexiil.mc.mod.pipes.SimplePipesClient"]
+    "client": ["alexiil.mc.mod.pipes.SimplePipesClient"],
+    "rei_plugins": ["alexiil.mc.mod.pipes.compat.rei.REIPlugin"]
   },
   "depends": {
     "fabric": "*",
@@ -35,7 +36,7 @@
     "all": {
       "+id": "simple_pipes_dep_container",
       "+name": "SimplePipeTest (Dependency Container)",
-      "+custom": { 
+      "+custom": {
         "modmenu:api": true,
         "modmenu:parent": "simple_pipes"
       },
