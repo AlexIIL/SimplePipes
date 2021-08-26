@@ -25,9 +25,8 @@ public class FacadeDisplayGenerator implements DynamicDisplayGenerator<DefaultSt
     private static final Identifier RECIPE_ID = new Identifier("buildcraftsilicon:facade_generated");
 
     @Override
-    public Optional<List<DefaultStoneCuttingDisplay>> getRecipeFor(EntryStack entry) {
-        if (entry.cast().getValue() instanceof ItemStack) {
-            ItemStack itemStack = (ItemStack) entry.cast().getValue();
+    public Optional<List<DefaultStoneCuttingDisplay>> getRecipeFor(EntryStack<?> entry) {
+        if (entry.getValue() instanceof ItemStack itemStack) {
             if (!(itemStack.getItem() instanceof ItemFacade)) {
                 return Optional.empty();
             }
@@ -79,9 +78,8 @@ public class FacadeDisplayGenerator implements DynamicDisplayGenerator<DefaultSt
     }
 
     @Override
-    public Optional<List<DefaultStoneCuttingDisplay>> getUsageFor(EntryStack entry) {
-        if (entry.cast().getValue() instanceof ItemStack) {
-            ItemStack itemStack = (ItemStack) entry.cast().getValue();
+    public Optional<List<DefaultStoneCuttingDisplay>> getUsageFor(EntryStack<?> entry) {
+        if (entry.getValue() instanceof ItemStack itemStack) {
             if (!(itemStack.getItem() instanceof ItemFacade)) {
                 return Optional.empty();
             }
