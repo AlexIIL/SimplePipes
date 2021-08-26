@@ -18,13 +18,13 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 
 import alexiil.mc.mod.pipes.SimplePipes;
-import alexiil.mc.mod.pipes.blocks.TilePipeSided;
 import alexiil.mc.mod.pipes.items.ItemFacade;
 import alexiil.mc.mod.pipes.items.SimplePipeItems;
 import alexiil.mc.mod.pipes.mixin.api.FindMatchingRecipesEvent;
 import alexiil.mc.mod.pipes.mixin.api.RecipeMatchFinder;
 import alexiil.mc.mod.pipes.pipe.PartSpPipe;
 import alexiil.mc.mod.pipes.pipe.PipeSpBehaviour;
+import alexiil.mc.mod.pipes.pipe.PipeSpBehaviourSided;
 import alexiil.mc.mod.pipes.pipe.PipeSpBehaviourSponge;
 import alexiil.mc.mod.pipes.pipe.PipeSpBehaviourWood;
 import alexiil.mc.mod.pipes.pipe.PipeSpDef;
@@ -80,14 +80,15 @@ public final class SimplePipeParts {
             }
 
             @Override
-            public PipeSpFlowItem createFlow(PartSpPipe pipe) {
-                return new PipeSpFlowItem(pipe) {
+            public PipeSpFlowItem createFlow(PartSpPipe part) {
+                return new PipeSpFlowItem(part) {
                     @Override
                     protected List<EnumSet<Direction>> getOrderForItem(
                         TravellingItem item, EnumSet<Direction> validDirections
                     ) {
                         List<EnumSet<Direction>> order = super.getOrderForItem(item, validDirections);
-                        Direction currentDirection = ((TilePipeSided) pipe).currentDirection();
+                        Direction currentDirection;
+                        currentDirection = ((PipeSpBehaviourSided) part.behaviour).currentDirection();
                         Iterator<EnumSet<Direction>> iterator = order.iterator();
                         while (iterator.hasNext()) {
                             EnumSet<Direction> set = iterator.next();
