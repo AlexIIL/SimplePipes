@@ -1,0 +1,3 @@
+Changes:
+
+* Ported REI facade hiding functionality and facade recipe viewing. (0x007CF / ctrl_x)
