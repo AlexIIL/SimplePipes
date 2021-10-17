@@ -1,0 +1,43 @@
+{
+    "block.simple_pipes.pipe_wooden_item": "木の輸送パイプ(Simple)",
+    "block.simple_pipes.pipe_iron_item": "鉄の輸送パイプ(Simple)",
+    "block.simple_pipes.pipe_clay_item": "粘土の輸送パイプ(Simple)",
+    "block.simple_pipes.pipe_stone_item": "石の輸送パイプ(Simple)",
+    "block.simple_pipes.pipe_gold_item": "金の輸送パイプ(Simple)",
+    "block.simple_pipes.pipe_diamond_item": "ダイヤの輸送パイプ(Simple)",
+
+    "block.simple_pipes.pipe_wooden_fluid": "木の液体パイプ(Simple)",
+    "block.simple_pipes.pipe_iron_fluid": "鉄の液体パイプ(Simple)",
+    "block.simple_pipes.pipe_clay_fluid": "粘土の液体パイプ(Simple)",
+    "block.simple_pipes.pipe_stone_fluid": "石の液体パイプ(Simple)",
+    "block.simple_pipes.pipe_sponge_fluid": "スポンジの液体パイプ(Simple)",
+
+    "block.simple_pipes.trigger_item_inv_empty": "アイテムインベントリトリガー(空のとき)",
+    "block.simple_pipes.trigger_item_inv_full": "アイテムインベントリトリガー(満杯のとき)",
+    "block.simple_pipes.trigger_item_inv_space": "アイテムインベントリトリガー(空きがあるとき)",
+    "block.simple_pipes.trigger_item_inv_contains": "アイテムインベントリトリガー(指定のアイテムがあるとき)",
+
+    "block.simple_pipes.trigger_fluid_inv_empty": "液体インベントリトリガー(空のとき)",
+    "block.simple_pipes.trigger_fluid_inv_full": "液体インベントリトリガー(満杯のとき)",
+    "block.simple_pipes.trigger_fluid_inv_space": "液体インベントリトリガー(空きがあるとき)",
+    "block.simple_pipes.trigger_fluid_inv_contains": "液体インベントリトリガー(指定の液体があるとき)",
+
+    "item.simple_pipes.tank": "液体タンク(Simple)",
+    "block.simple_pipes.pump": "液体ポンプ(Simple)",
+
+    "itemGroup.simple_pipes.main": "Simple Pipes: メイン",
+    "itemGroup.simple_pipes.facades": "Simple Pipes: 化粧板",
+
+    "item.simple_pipes.plug_facade.slab": "ハーフ化粧板: %s",
+    "item.simple_pipes.plug_facade.hollow.slab": "空洞のハーフ化粧板: %s",
+    "item.simple_pipes.plug_facade.thick": "厚い化粧板: %s",
+    "item.simple_pipes.plug_facade.hollow.thick": "空洞の厚い化粧板: %s",
+    "item.simple_pipes.plug_facade.thin": "薄い化粧板: %s",
+    "item.simple_pipes.plug_facade.hollow.thin": "空洞の薄い化粧板: %s",
+    "item.simple_pipes.plug_facade.strip.slab": "切れたハーフ化粧板: %s",
+    "item.simple_pipes.plug_facade.strip.thick": "切れた厚い化粧板: %s",
+    "item.simple_pipes.plug_facade.strip.thin": "切れた薄い化粧板: %s",
+    "item.simple_pipes.plug_facade.corner.slab": "角のハーフ化粧板: %s",
+    "item.simple_pipes.plug_facade.corner.thick": "角の厚い化粧板: %s",
+    "item.simple_pipes.plug_facade.corner.thin": "角の薄い化粧板: %s"
+}
