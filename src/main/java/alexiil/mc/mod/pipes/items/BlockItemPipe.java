@@ -16,6 +16,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.world.World;
 
 import alexiil.mc.mod.pipes.blocks.BlockPipe;
+import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
 import alexiil.mc.mod.pipes.pipe.PartSpPipe;
 import alexiil.mc.mod.pipes.util.SoundUtil;
 
@@ -57,9 +58,11 @@ public class BlockItemPipe extends BlockItem {
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        if (FabricLoader.getInstance().isModLoaded("pipe_vacuum_pump")) {
-            tooltip.add(new TranslatableText("block.simple_pipes.pipe_wooden_item.disabled_redstone.1"));
-            tooltip.add(new TranslatableText("block.simple_pipes.pipe_wooden_item.disabled_redstone.2"));
+        if (getBlock() == SimplePipeBlocks.WOODEN_PIPE_ITEMS || getBlock() == SimplePipeBlocks.WOODEN_PIPE_FLUIDS) {
+            if (FabricLoader.getInstance().isModLoaded("pipe_vacuum_pump")) {
+                tooltip.add(new TranslatableText("block.simple_pipes.pipe_wooden_item.disabled_redstone.1"));
+                tooltip.add(new TranslatableText("block.simple_pipes.pipe_wooden_item.disabled_redstone.2"));
+            }
         }
     }
 }

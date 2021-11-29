@@ -1,6 +1,8 @@
 Changes:
 
 * Ported REI facade hiding functionality and facade recipe viewing. (0x007CF / ctrl_x)
+* Added Japanese translation (noriokun4649)
+* Added an item tooltip to wooden item pipes for when the Pipe Pump mod is installed and prevents the normal redstone-powered extraction from working.
 
 Bug Fixes:
 
