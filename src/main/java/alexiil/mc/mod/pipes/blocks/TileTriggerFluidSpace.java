@@ -29,12 +29,11 @@ public class TileTriggerFluidSpace extends TileTrigger {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        tag = super.writeNbt(tag);
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         if (!filter.isEmpty()) {
             tag.put("filter", filter.toTag());
         }
-        return tag;
     }
 
     @Override

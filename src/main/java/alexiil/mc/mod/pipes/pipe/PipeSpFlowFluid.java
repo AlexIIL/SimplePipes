@@ -19,7 +19,7 @@ import alexiil.mc.mod.pipes.blocks.TilePipeFluidWood;
 import alexiil.mc.mod.pipes.blocks.TilePipeSided;
 import alexiil.mc.mod.pipes.part.PipeSpBehaviourIron;
 import alexiil.mc.mod.pipes.part.SimplePipeParts;
-
+import alexiil.mc.mod.pipes.pipe.PipeSpFlowFluid.SideSection;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.FluidExtractable;

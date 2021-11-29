@@ -79,15 +79,14 @@ public class TilePipeItemDiamond extends TilePipe {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        tag = super.writeNbt(tag);
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         for (int i = 0; i < INV_SIZE; i++) {
             ItemStack stack = filterInv.getStack(i);
             if (!stack.isEmpty()) {
                 tag.put("filterStack_" + i, stack.writeNbt(new NbtCompound()));
             }
         }
-        return tag;
     }
 
     @Override

@@ -21,13 +21,12 @@ public class TileTank extends TileBase {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        tag = super.writeNbt(tag);
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         FluidVolume invFluid = fluidInv.getInvFluid(0);
         if (!invFluid.isEmpty()) {
             tag.put("fluid", invFluid.toTag());
         }
-        return tag;
     }
 
     @Override

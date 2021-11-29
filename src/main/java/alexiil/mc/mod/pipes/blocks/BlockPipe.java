@@ -88,16 +88,14 @@ public abstract class BlockPipe extends BlockBase
 
     @Override
     public BlockState getStateForNeighborUpdate(
-        BlockState blockState_1, Direction direction_1, BlockState blockState_2, WorldAccess iWorld_1,
-        BlockPos blockPos_1, BlockPos blockPos_2
+        BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos,
+        BlockPos neighborPos
     ) {
-        if (blockState_1.get(Properties.WATERLOGGED)) {
-            iWorld_1.getFluidTickScheduler().schedule(blockPos_1, Fluids.WATER, Fluids.WATER.getTickRate(iWorld_1));
+        if (state.get(Properties.WATERLOGGED)) {
+            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
 
-        return super.getStateForNeighborUpdate(
-            blockState_1, direction_1, blockState_2, iWorld_1, blockPos_1, blockPos_2
-        );
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
     @Override

@@ -61,7 +61,7 @@ public class PerspAwareModelBase implements BakedModel {
     }
 
     @Override
-    public Sprite getSprite() {
+    public Sprite getParticleSprite() {
         return particle;
     }
 

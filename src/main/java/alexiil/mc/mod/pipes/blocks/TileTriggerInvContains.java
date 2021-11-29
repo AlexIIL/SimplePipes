@@ -29,13 +29,12 @@ public class TileTriggerInvContains extends TileTrigger {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        tag = super.writeNbt(tag);
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         ItemStack stack = filterInv.getStack(0);
         if (!stack.isEmpty()) {
             tag.put("filterStack", stack.writeNbt(new NbtCompound()));
         }
-        return tag;
     }
 
     @Override

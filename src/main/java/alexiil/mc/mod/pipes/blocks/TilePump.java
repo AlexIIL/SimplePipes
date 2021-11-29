@@ -29,10 +29,9 @@ public class TilePump extends TileBase {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        tag = super.writeNbt(tag);
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         tag.put("fluid", stored.toTag());
-        return tag;
     }
 
     public void serverTick() {

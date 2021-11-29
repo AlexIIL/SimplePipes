@@ -175,7 +175,7 @@ public class SimpleBakedModel implements BakedModel {
     }
 
     @Override
-    public Sprite getSprite() {
+    public Sprite getParticleSprite() {
         return sprite;
     }
 

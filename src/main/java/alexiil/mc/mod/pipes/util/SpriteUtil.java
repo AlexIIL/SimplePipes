@@ -12,7 +12,7 @@ public final class SpriteUtil {
     private SpriteUtil() {}
 
     public static Sprite getMissingSprite() {
-        return ModelUtil.getMissingModel().getSprite();
+        return ModelUtil.getMissingModel().getParticleSprite();
     }
 
     public static float getU(Sprite sprite, float u) {

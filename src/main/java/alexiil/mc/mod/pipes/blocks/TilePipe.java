@@ -69,18 +69,20 @@ public abstract class TilePipe extends TileBase implements ISimplePipe {
         super.readNbt(nbt);
         connections = nbt.getByte("c");
         getFlow().fromTag(nbt.getCompound("flow"));
+        if (hasWorld() && world.isClient) {
+            refreshModel();
+        }
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        tag = super.writeNbt(tag);
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         tag.putByte("c", connections);
         tag.put("flow", getFlow().toTag());
-        return tag;
     }
 
     @Override
-    public void fromClientTag(NbtCompound tag) {
+    public void readPacket(NbtCompound tag) {
         if (tag.getBoolean("f")) {
             getFlow().fromClientTag(tag);
         } else {
@@ -199,8 +201,8 @@ public abstract class TilePipe extends TileBase implements ISimplePipe {
         }
         blockModelState = newState;
         World w = getPipeWorld();
-        if (w instanceof ServerWorld) {
-            sendPacket((ServerWorld) w, this.toUpdatePacket());
+        if (w instanceof ServerWorld sw) {
+            sendPacket((ServerWorld) w, toClientTag(new NbtCompound()));
         } else if (w != null) {
             // air -> pipe
             // (This just forces the world to re-render us)

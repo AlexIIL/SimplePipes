@@ -25,7 +25,7 @@ public enum FacadePartBaker implements PartModelBaker<FacadePartKey> {
     public void emitQuads(FacadePartKey key, PartRenderContext ctx) {
         // TODO: Replace this with a more useful shape-based texture applicator!
         BakedModel model = ModelUtil.getBlockModel(key.state);
-        Sprite sprite = model.getSprite();
+        Sprite sprite = model.getParticleSprite();
         if (sprite == null) {
             sprite = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE)
                 .apply(MissingSprite.getMissingSpriteId());

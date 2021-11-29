@@ -35,10 +35,9 @@ public abstract class TilePipeSided extends TilePipe {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        tag = super.writeNbt(tag);
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
         tag.putByte("dir", (byte) (currentDirection == null ? 0xFF : currentDirection.getId()));
-        return tag;
     }
 
     @Override
@@ -60,8 +59,8 @@ public abstract class TilePipeSided extends TilePipe {
     }
 
     @Override
-    public void fromClientTag(NbtCompound tag) {
-        super.fromClientTag(tag);
+    public void readPacket(NbtCompound tag) {
+        super.readPacket(tag);
         if (!tag.getBoolean("f")) {
             byte b = tag.getByte("dir");
             if (b >= 0 && b < 6) {

@@ -66,7 +66,7 @@ public class PipeBlockModel extends PerspAwareModelBase implements FabricBakedMo
         }
         List<BakedQuad> quads = PipeBaseModelGenStandard.generateCutout(sprites, state);
         return new PerspAwareModelBase(
-            quads, quads.isEmpty() ? getSprite() : ((BakedQuadAccessor) quads.get(0)).simplepipes_getSprite()
+            quads, quads.isEmpty() ? getParticleSprite() : ((BakedQuadAccessor) quads.get(0)).simplepipes_getSprite()
         );
     }
 

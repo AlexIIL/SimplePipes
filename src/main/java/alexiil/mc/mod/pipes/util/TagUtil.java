@@ -103,10 +103,10 @@ public final class TagUtil {
         if (stack.isEmpty()) {
             return new NbtCompound();
         }
-        NbtCompound nbt = stack.getTag();
+        NbtCompound nbt = stack.getNbt();
         if (nbt == null) {
             nbt = new NbtCompound();
-            stack.setTag(nbt);
+            stack.setNbt(nbt);
         }
         return nbt;
     }

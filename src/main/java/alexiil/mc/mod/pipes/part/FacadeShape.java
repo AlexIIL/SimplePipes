@@ -37,7 +37,7 @@ public abstract class FacadeShape {
 
     static {
         ALL_SHAPES = new FacadeShape[SHAPE_COUNT];
-        VALUES_BIT_COUNT = MathHelper.log2DeBruijn(SHAPE_COUNT);
+        VALUES_BIT_COUNT = MathHelper.ceilLog2(SHAPE_COUNT);
 
         ITEM_SHAPES = new FacadeShape[3 * (1 + 1 + 2)];
     }
