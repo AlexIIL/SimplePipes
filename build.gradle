@@ -14,7 +14,7 @@ repositories {
 }
 
 archivesBaseName = "SimplePipes"
-version = "0.7.2-pre.1"
+version = "0.7.2-pre.2"
 
 minecraft {
 }
