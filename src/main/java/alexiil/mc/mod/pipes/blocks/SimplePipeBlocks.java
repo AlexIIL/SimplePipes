@@ -8,7 +8,7 @@ package alexiil.mc.mod.pipes.blocks;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import net.fabricmc.fabric.api.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -76,8 +76,7 @@ public class SimplePipeBlocks {
 
     static {
         Block.Settings pipeSettings = FabricBlockSettings.of(Material.DECORATION)//
-            .strength(0.5f, 1f)//
-            .build();
+            .strength(0.5f, 1f);
 
         WOODEN_PIPE_ITEMS = new BlockPipeItemWooden(pipeSettings);
         STONE_PIPE_ITEMS = new BlockPipeItemStone(pipeSettings);
@@ -93,8 +92,7 @@ public class SimplePipeBlocks {
         SPONGE_PIPE_FLUIDS = new BlockPipeFluidSponge(pipeSettings);
 
         Block.Settings triggerSettings = FabricBlockSettings.of(Material.STONE)//
-            .strength(1.5F, 6.0F)//
-            .build();
+            .strength(1.5F, 6.0F);
 
         TRIGGER_ITEM_INV_EMPTY = new BlockTriggerInvEmpty(triggerSettings);
         TRIGGER_ITEM_INV_FULL = new BlockTriggerInvFull(triggerSettings);
