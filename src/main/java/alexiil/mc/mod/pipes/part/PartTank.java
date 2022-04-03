@@ -2,6 +2,8 @@ package alexiil.mc.mod.pipes.part;
 
 import javax.annotation.Nullable;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 
 import net.minecraft.block.BlockState;
@@ -16,7 +18,6 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 
-import alexiil.mc.mod.pipes.client.model.part.TankPartModelKey;
 import alexiil.mc.mod.pipes.container.SimplePipeContainers;
 import alexiil.mc.mod.pipes.items.SimplePipeItems;
 import alexiil.mc.mod.pipes.util.FluidSmoother;
@@ -110,8 +111,9 @@ public class PartTank extends AbstractPart {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public PartModelKey getModelKey() {
-        return TankPartModelKey.INSTANCE;
+        return alexiil.mc.mod.pipes.client.model.part.TankPartModelKey.INSTANCE;
     }
 
     private final void receiveSmoothedTankData(NetByteBuf buffer, IMsgReadCtx ctx) {

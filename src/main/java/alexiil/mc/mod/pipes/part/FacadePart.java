@@ -1,12 +1,13 @@
 package alexiil.mc.mod.pipes.part;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
-import alexiil.mc.mod.pipes.client.model.part.FacadePartKey;
 import alexiil.mc.mod.pipes.items.SimplePipeItems;
 
 import alexiil.mc.lib.net.IMsgReadCtx;
@@ -91,7 +92,8 @@ public class FacadePart extends AbstractPart {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public PartModelKey getModelKey() {
-        return new FacadePartKey(shape, state.state);
+        return new alexiil.mc.mod.pipes.client.model.part.FacadePartKey(shape, state.state);
     }
 }

@@ -16,10 +16,11 @@ public class REIPlugin implements REIClientPlugin {
         registry.registerDisplayGenerator(DefaultPlugin.STONE_CUTTING, new FacadeDisplayGenerator());
     }
 
+
     @Override
-    public void postRegister() {
-        EntryRegistry.getInstance().removeEntryIf(
-            stack -> (stack.getValue()instanceof ItemStack s) ? s.getItem() == SimplePipeItems.FACADE : false
+    public void registerEntries(EntryRegistry registry) {
+        registry.removeEntryIf(
+                stack -> (stack.getValue()instanceof ItemStack s) ? s.getItem() == SimplePipeItems.FACADE : false
         );
     }
 }
