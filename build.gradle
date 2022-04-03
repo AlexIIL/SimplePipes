@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.10-SNAPSHOT'
+    id 'fabric-loom' version '0.11-SNAPSHOT'
 }
 
 apply plugin: 'maven-publish' // for uploading to a maven repo
@@ -14,10 +14,7 @@ repositories {
 }
 
 archivesBaseName = "SimplePipes"
-version = "0.7.2"
-
-minecraft {
-}
+version = "0.7.3"
 
 configurations {
     compile {}
@@ -25,11 +22,11 @@ configurations {
 
 dependencies {
     minecraft "com.mojang:minecraft:1.18.2"
-    mappings "net.fabricmc:yarn:1.18.2+build.1:v2"
+    mappings "net.fabricmc:yarn:1.18.2+build.2:v2"
     modImplementation "net.fabricmc:fabric-loader:0.13.3"
 
     //Fabric api
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.47.8+1.18.2"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.48.0+1.18.2"
 
     // Silk API
     // modCompile "io.github.prospector.silk:SilkAPI:1.2.3-38"
@@ -43,9 +40,10 @@ dependencies {
     include "alexiil.mc.lib:libmultipart-base:$libmultipart_version"
 
     // REI
-    modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:$rei_version"
-    modCompileOnly "me.shedaniel:RoughlyEnoughItems-fabric:$rei_version"
-    modRuntime "me.shedaniel:RoughlyEnoughItems-fabric:$rei_version"
+    //modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:$rei_version"
+    //modCompileOnly "me.shedaniel:RoughlyEnoughItems:$rei_version"
+    //modRuntime "me.shedaniel:RoughlyEnoughItems:$rei_version"
+    modImplementation "me.shedaniel:RoughlyEnoughItems-fabric:$rei_version"
 
     // Misc
     implementation "com.google.code.findbugs:jsr305:3.0.1"
