@@ -40,7 +40,6 @@ import alexiil.mc.lib.multipart.api.MultipartEventBus;
 import alexiil.mc.lib.multipart.api.MultipartHolder;
 import alexiil.mc.lib.multipart.api.PartDefinition;
 import alexiil.mc.lib.multipart.api.event.PartTickEvent;
-import alexiil.mc.lib.multipart.api.render.PartModelKey;
 
 public class PartTank extends AbstractPart {
 
@@ -112,7 +111,7 @@ public class PartTank extends AbstractPart {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public PartModelKey getModelKey() {
+    public alexiil.mc.lib.multipart.api.render.PartModelKey getModelKey() {
         return alexiil.mc.mod.pipes.client.model.part.TankPartModelKey.INSTANCE;
     }
 

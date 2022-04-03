@@ -18,7 +18,6 @@ import net.fabricmc.api.Environment;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -44,7 +43,7 @@ import alexiil.mc.lib.multipart.api.MultipartHolder;
 import alexiil.mc.lib.multipart.api.MultipartUtil;
 import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.items.ItemFacade.FacadePlacement;
-import alexiil.mc.mod.pipes.items.ItemFacade.FacadePotentialPlacament;
+import alexiil.mc.mod.pipes.items.ItemFacade.FacadePotentialPlacement;
 import alexiil.mc.mod.pipes.part.FacadeBlockStateInfo;
 import alexiil.mc.mod.pipes.part.FacadePart;
 import alexiil.mc.mod.pipes.part.FacadeShape;
@@ -189,7 +188,7 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext flag) {
+    public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, net.minecraft.client.item.TooltipContext flag) {
         FullFacade states = getStates(stack);
         if (flag.isAdvanced()) {
             Identifier blockId = Registry.BLOCK.getId(states.state.state.getBlock());
@@ -209,17 +208,17 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
         FullFacade fullState = getStates(ctx.getStack());
 
         // Try to add it to the first valid block position, in the 27(!) positions surrounding the hit vec
-        List<FacadePotentialPlacament> variants = new ArrayList<>();
+        List<FacadePotentialPlacement> variants = new ArrayList<>();
         FacadeShape[] shapeVariants = fullState.shape.getPlacementVariants();
         for (BlockPos pos : BlockPos.iterate(ctx.getBlockPos().add(-1, -1, -1), ctx.getBlockPos().add(1, 1, 1))) {
             for (FacadeShape shape : shapeVariants) {
-                variants.add(new FacadePotentialPlacament(shape, pos.toImmutable()));
+                variants.add(new FacadePotentialPlacement(shape, pos.toImmutable()));
             }
         }
         Vec3d hit = ctx.getHitPos();
         variants.sort(Comparator.comparingDouble(potential -> potential.centre.distanceTo(hit)));
 
-        for (FacadePotentialPlacament variant : variants) {
+        for (FacadePotentialPlacement variant : variants) {
             PartOffer offer
                 = MultipartUtil.offerNewPart(w, variant.pos, h -> createFacade(fullState.state, variant.shape, h));
             if (offer != null) {
@@ -256,12 +255,12 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
         return new FacadePlacement();
     }
 
-    static final class FacadePotentialPlacament {
+    static final class FacadePotentialPlacement {
         public final FacadeShape shape;
         public final BlockPos pos;
         public final Vec3d centre;
 
-        FacadePotentialPlacament(FacadeShape shape, BlockPos pos) {
+        FacadePotentialPlacement(FacadeShape shape, BlockPos pos) {
             this.shape = shape;
             this.pos = pos;
             this.centre = Vec3d.of(pos).add(shape.centerOfMass);

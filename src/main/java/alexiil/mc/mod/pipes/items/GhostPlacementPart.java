@@ -9,12 +9,8 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.BlockModelRenderer;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.util.math.MatrixStack;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
@@ -47,20 +43,21 @@ public abstract class GhostPlacementPart extends GhostPlacement {
         return pos != null && modelKey != null;
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
-    public void render(MatrixStack matrices, VertexConsumerProvider vcp, PlayerEntity player, float partialTicks) {
+    public void render(net.minecraft.client.util.math.MatrixStack matrices, net.minecraft.client.render.VertexConsumerProvider vcp, PlayerEntity player, float partialTicks) {
         assert pos != null;
         assert modelKey != null;
 
-        BakedModel model = SinglePartBakedModel.create(modelKey);
+        net.minecraft.client.render.model.BakedModel model = SinglePartBakedModel.create(modelKey);
         if (model == null) {
             return;
         }
 
-        VertexConsumer buffer = vcp.getBuffer(ItemPlacemenentGhostRenderer.GHOST);
+        net.minecraft.client.render.VertexConsumer buffer = vcp.getBuffer(ItemPlacemenentGhostRenderer.GHOST);
 
-        MinecraftClient mc = MinecraftClient.getInstance();
-        BlockModelRenderer blockRenderer = mc.getBlockRenderManager().getModelRenderer();
+        net.minecraft.client.MinecraftClient mc = net.minecraft.client.MinecraftClient.getInstance();
+        net.minecraft.client.render.block.BlockModelRenderer blockRenderer = mc.getBlockRenderManager().getModelRenderer();
 
         matrices.push();
         matrices.translate(pos.getX(), pos.getY(), pos.getZ());

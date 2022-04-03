@@ -18,7 +18,6 @@ import alexiil.mc.lib.net.NetByteBuf;
 import alexiil.mc.lib.multipart.api.AbstractPart;
 import alexiil.mc.lib.multipart.api.MultipartHolder;
 import alexiil.mc.lib.multipart.api.PartDefinition;
-import alexiil.mc.lib.multipart.api.render.PartModelKey;
 
 public class FacadePart extends AbstractPart {
 
@@ -93,7 +92,7 @@ public class FacadePart extends AbstractPart {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public PartModelKey getModelKey() {
+    public alexiil.mc.lib.multipart.api.render.PartModelKey getModelKey() {
         return new alexiil.mc.mod.pipes.client.model.part.FacadePartKey(shape, state.state);
     }
 }
