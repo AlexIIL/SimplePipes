@@ -45,7 +45,7 @@ dependencies {
     // REI
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:$rei_version"
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-fabric:$rei_version"
-    modRuntime "me.shedaniel:RoughlyEnoughItems-fabric:$rei_version"
+    modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:$rei_version"
 
     // Misc
     implementation "com.google.code.findbugs:jsr305:3.0.1"
