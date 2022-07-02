@@ -38,7 +38,7 @@ public class ItemSimplePart extends Item implements IItemPlacmentGhost {
     public ActionResult useOnBlock(ItemUsageContext ctx) {
         World w = ctx.getWorld();
         if (w.isClient) {
-            return ActionResult.PASS;
+            return ActionResult.SUCCESS;
         }
 
         PartOffer offer = getOffer(ctx);
@@ -49,7 +49,7 @@ public class ItemSimplePart extends Item implements IItemPlacmentGhost {
         offer.getHolder().getPart().onPlacedBy(ctx.getPlayer(), ctx.getHand());
         ctx.getStack().increment(-1);
         SoundUtil.playBlockPlace(w, offer.getHolder().getContainer().getMultipartPos());
-        return ActionResult.SUCCESS;
+        return ActionResult.CONSUME;
     }
 
     private PartOffer getOffer(ItemUsageContext ctx) {
