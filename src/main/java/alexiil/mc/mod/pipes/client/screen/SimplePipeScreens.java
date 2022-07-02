@@ -1,10 +1,8 @@
 package alexiil.mc.mod.pipes.client.screen;
 
-import net.fabricmc.fabric.api.client.screen.ContainerScreenFactory;
-import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
-
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.util.Identifier;
+import net.minecraft.screen.ScreenHandlerType;
 
 import alexiil.mc.mod.pipes.container.SimplePipeContainers;
 
@@ -21,7 +19,7 @@ public class SimplePipeScreens {
         register(SimplePipeContainers.TANK, ScreenTank.FACTORY);
     }
 
-    private static void register(Identifier id, ContainerScreenFactory<? extends ScreenHandler> factory) {
-        ScreenProviderRegistry.INSTANCE.registerFactory(id, factory);
+    private static <C extends ScreenHandler> void register(ScreenHandlerType<? extends C> type, HandledScreens.Provider<C, ?> factory) {
+        HandledScreens.register(type, factory);
     }
 }

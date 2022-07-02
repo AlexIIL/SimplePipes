@@ -2,8 +2,7 @@ package alexiil.mc.mod.pipes.part;
 
 import javax.annotation.Nullable;
 
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
-
+import alexiil.mc.mod.pipes.container.SimplePipeContainerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,7 +16,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 
 import alexiil.mc.mod.pipes.client.model.part.TankPartModelKey;
-import alexiil.mc.mod.pipes.container.SimplePipeContainers;
+import alexiil.mc.mod.pipes.container.ContainerTank;
 import alexiil.mc.mod.pipes.items.SimplePipeItems;
 import alexiil.mc.mod.pipes.util.FluidSmoother;
 import alexiil.mc.mod.pipes.util.FluidSmoother.FluidStackInterp;
@@ -162,9 +161,9 @@ public class PartTank extends AbstractPart {
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (player.getStackInHand(hand).isEmpty()) {
             if (!player.world.isClient) {
-                ContainerProviderRegistry.INSTANCE.openContainer(SimplePipeContainers.TANK, player, (buffer) -> {
-                    buffer.writeBlockPos(holder.getContainer().getMultipartPos());
-                });
+                player.openHandledScreen(new SimplePipeContainerFactory(SimplePipeItems.TANK.getName(),
+                        (syncId, inv, player1) -> new ContainerTank(syncId, player1, this),
+                        (player1, buf) -> buf.writeBlockPos(holder.getContainer().getMultipartPos())));
             }
             return ActionResult.SUCCESS;
         }

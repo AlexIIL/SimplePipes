@@ -1,10 +1,8 @@
 package alexiil.mc.mod.pipes.container;
 
-import net.fabricmc.fabric.api.container.ContainerFactory;
-
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.BlockPos;
 
@@ -15,7 +13,8 @@ import alexiil.mc.lib.multipart.api.MultipartContainer;
 
 public class ContainerPipeDiamondItem extends ContainerPart<PartSpPipe> {
 
-    public static final ContainerFactory<ScreenHandler> FACTORY = (syncId, id, player, buffer) -> {
+    public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerPipeDiamondItem> FACTORY = (syncId, inv, buffer) -> {
+        PlayerEntity player = inv.player;
         BlockPos pos = buffer.readBlockPos();
         MultipartContainer container = MultipartContainer.ATTRIBUTE.getFirstOrNull(player.world, pos);
 
@@ -35,7 +34,7 @@ public class ContainerPipeDiamondItem extends ContainerPart<PartSpPipe> {
     public final PipeSpBehaviourDiamond behaviour;
 
     public ContainerPipeDiamondItem(int syncId, PlayerEntity player, PipeSpBehaviourDiamond behaviour) {
-        super(syncId, player, behaviour.pipe);
+        super(SimplePipeContainers.PIPE_PART_DIAMOND_ITEM, syncId, player, behaviour.pipe);
         this.behaviour = behaviour;
 
         for (int y = 0; y < 6; y++) {

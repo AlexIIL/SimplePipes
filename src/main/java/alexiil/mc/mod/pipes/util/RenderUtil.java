@@ -1,11 +1,9 @@
 package alexiil.mc.mod.pipes.util;
 
 import javax.annotation.Nullable;
-import alexiil.mc.mod.pipes.util.RenderUtil.TessellatorQueue;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.fabricmc.fabric.api.client.render.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;

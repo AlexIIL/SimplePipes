@@ -1,10 +1,8 @@
 package alexiil.mc.mod.pipes.container;
 
-import net.fabricmc.fabric.api.container.ContainerFactory;
-
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.BlockPos;
 
@@ -18,7 +16,8 @@ import alexiil.mc.mod.pipes.part.PartTank;
 
 public class ContainerTank extends ContainerPart<PartTank> {
 
-    public static final ContainerFactory<ScreenHandler> FACTORY = (syncId, id, player, buffer) -> {
+    public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerTank> FACTORY = (syncId, inv, buffer) -> {
+        PlayerEntity player = inv.player;
         BlockPos pos = buffer.readBlockPos();
         MultipartContainer c = MultipartUtil.get(player.world, pos);
         if (c == null) {
@@ -32,8 +31,8 @@ public class ContainerTank extends ContainerPart<PartTank> {
 
     private boolean isInCall = false;
 
-    protected ContainerTank(int syncId, PlayerEntity player, PartTank tank) {
-        super(syncId, player, tank);
+    public ContainerTank(int syncId, PlayerEntity player, PartTank tank) {
+        super(SimplePipeContainers.TANK, syncId, player, tank);
         addPlayerInventory(94);
     }
 

@@ -5,7 +5,8 @@
  */
 package alexiil.mc.mod.pipes.blocks;
 
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import alexiil.mc.mod.pipes.container.ContainerPipeSorter;
+import alexiil.mc.mod.pipes.container.SimplePipeContainerFactory;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -16,7 +17,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import alexiil.mc.mod.pipes.container.SimplePipeContainers;
 import alexiil.mc.mod.pipes.pipe.PipeSpDef;
 
 public abstract class BlockPipeSorter extends BlockPipe {
@@ -31,12 +31,11 @@ public abstract class BlockPipeSorter extends BlockPipe {
     ) {
         BlockEntity be = world.getBlockEntity(pos);
 
-        if (be instanceof TilePipeItemDiamond) {
+        if (be instanceof TilePipeItemDiamond tile) {
             if (!world.isClient) {
-                ContainerProviderRegistry.INSTANCE
-                    .openContainer(SimplePipeContainers.PIPE_DIAMOND_ITEM, player, (buffer) -> {
-                        buffer.writeBlockPos(pos);
-                    });
+                player.openHandledScreen(new SimplePipeContainerFactory(getName(),
+                        (syncId, inv, player1) -> new ContainerPipeSorter(syncId, player1, tile),
+                        (player1, buf) -> buf.writeBlockPos(pos)));
             }
             return ActionResult.SUCCESS;
         }

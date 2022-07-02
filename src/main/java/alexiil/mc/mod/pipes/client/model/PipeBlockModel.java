@@ -6,7 +6,6 @@
 package alexiil.mc.mod.pipes.client.model;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
@@ -22,6 +21,7 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 
 import alexiil.mc.mod.pipes.blocks.BlockPipe;
