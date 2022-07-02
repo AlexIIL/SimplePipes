@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.10-SNAPSHOT'
+    id 'fabric-loom' version '0.12-SNAPSHOT'
 }
 
 apply plugin: 'maven-publish' // for uploading to a maven repo
@@ -14,9 +14,9 @@ repositories {
 }
 
 archivesBaseName = "SimplePipes"
-version = "0.7.2"
+version = "0.8.0"
 
-minecraft {
+loom {
 }
 
 configurations {
@@ -24,12 +24,12 @@ configurations {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:1.18.2"
-    mappings "net.fabricmc:yarn:1.18.2+build.1:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.13.3"
+    minecraft "com.mojang:minecraft:1.19"
+    mappings "net.fabricmc:yarn:1.19+build.4:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.14.6"
 
     //Fabric api
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.47.8+1.18.2"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.57.0+1.19"
 
     // Silk API
     // modCompile "io.github.prospector.silk:SilkAPI:1.2.3-38"
