@@ -33,7 +33,7 @@ public class BlockItemPipe extends BlockItem {
 
         World w = context.getWorld();
         if (w.isClient) {
-            return ActionResult.PASS;
+            return ActionResult.SUCCESS;
         }
 
         PartOffer offer = getOffer(context);
@@ -44,7 +44,7 @@ public class BlockItemPipe extends BlockItem {
         offer.getHolder().getPart().onPlacedBy(context.getPlayer(), context.getHand());
         context.getStack().increment(-1);
         SoundUtil.playBlockPlace(w, offer.getHolder().getContainer().getMultipartPos());
-        return ActionResult.SUCCESS;
+        return ActionResult.CONSUME;
     }
 
     private PartOffer getOffer(ItemUsageContext context) {

@@ -232,7 +232,7 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
     public ActionResult useOnBlock(ItemUsageContext ctx) {
         World w = ctx.getWorld();
         if (w.isClient) {
-            return ActionResult.PASS;
+            return ActionResult.SUCCESS;
         }
 
         PartOffer offer = offer(ctx);
@@ -241,7 +241,7 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
             offer.apply();
             ctx.getStack().increment(-1);
             SoundUtil.playBlockPlace(ctx.getWorld(), ctx.getBlockPos(), fullState.state.state);
-            return ActionResult.SUCCESS;
+            return ActionResult.CONSUME;
         }
         return ActionResult.FAIL;
     }
