@@ -19,7 +19,7 @@ public class ContainerPipeDiamondItem extends ContainerPart<PartSpPipe> {
         MultipartContainer container = MultipartContainer.ATTRIBUTE.getFirstOrNull(player.world, pos);
 
         if (container == null) {
-            return null;
+            throw new IllegalStateException("Attempted to open a diamond pipe screen where there is no diamond pipe!");
         }
 
         PartSpPipe pipe = container.getFirstPart(PartSpPipe.class);
@@ -27,7 +27,8 @@ public class ContainerPipeDiamondItem extends ContainerPart<PartSpPipe> {
         if (pipe.behaviour instanceof PipeSpBehaviourDiamond) {
             return new ContainerPipeDiamondItem(syncId, player, (PipeSpBehaviourDiamond) pipe.behaviour);
         }
-        return null;
+
+        throw new IllegalStateException("Attempted to open a diamond pipe screen where there is no diamond pipe!");
     };
 
     public final int startY = 18;

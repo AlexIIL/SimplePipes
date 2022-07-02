@@ -21,12 +21,12 @@ public class ContainerTank extends ContainerPart<PartTank> {
         BlockPos pos = buffer.readBlockPos();
         MultipartContainer c = MultipartUtil.get(player.world, pos);
         if (c == null) {
-            return null;
+            throw new IllegalStateException("Attempted to open a tank screen where there is no tank!");
         }
         for (PartTank tank : c.getParts(PartTank.class)) {
             return new ContainerTank(syncId, player, tank);
         }
-        return null;
+        throw new IllegalStateException("Attempted to open a tank screen where there is no tank!");
     };
 
     private boolean isInCall = false;
