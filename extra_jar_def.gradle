@@ -181,7 +181,7 @@ ext.extra_jar_def__decompress_external_included = false;
 // Internals - don't touch this!
 // ==============================
 
-ext.extra_jar_def__jarFile = zipTree(jar.archivePath)
+ext.extra_jar_def__jarFile = zipTree(remapJar.archivePath)
 ext.extra_jar_def__modulesDir = new File(System.getenv("LIBS_DIR") ?: "$projectDir/build/libs/", version)
 ext.extra_jar_def__taken = new HashSet<>();
 ext.extra_jar_def__includedJarTasks = new HashSet<String>();
@@ -227,7 +227,7 @@ def getExpandedJarContentsFolder(String name) {
 }
 
 ext.extra_jar_def__unzippedSourceJar = new File("$projectDir/build/processing/tasks/unzipped_src_jar/unzip")
-task unzipSourcesJar(type: Copy, dependsOn: sourcesJar) {
+task unzipSourcesJar(type: Copy, dependsOn: remapSourcesJar) {
     from (zipTree(sourcesJar.archivePath)) {
         include "**"
     }
@@ -274,6 +274,9 @@ def writeFabricModJsonFile(String key, List<String> addedJars, boolean fat) {
     }
 
     def diff = source.remove("__buildscript_diff")[key];
+    if (diff == null) {
+        throw new Error("Missing buildscript diff for '" + key + "' in fabric.mod.json!");
+    }
     transformJson(source, diff);
 
     if (!addedJars.isEmpty()) {
@@ -303,6 +306,7 @@ task extractAllNestedJars(type: Copy, dependsOn: tasks["remapJar"]) {
         include "META-INF/jars/*.jar"
     }
     into "$projectDir/build/processing/included_jars/"
+    outputs.upToDateWhen { false }
 }
 
 def readAllBytes(InputStream is) throws IOException {
@@ -459,10 +463,10 @@ def generateJarInternal(
         }
     }
 
-    task("submod_" + key + "Jar", type: Jar, dependsOn: "writeFabricModJson_" + key) {
+    task("submod_" + key + "Jar", type: Jar, dependsOn: ["writeFabricModJson_" + key, "remapJar"]) {
 
-        baseName = "$mainName-$key";
-        destinationDir = extra_jar_def__modulesDir;
+        archiveBaseName = "$mainName-$key";
+        destinationDirectory = extra_jar_def__modulesDir;
 
         from(getFabricModJsonFile(key).parentFile);
         for (nKey in nestedJars) {
@@ -514,8 +518,8 @@ def generateJarInternal(
                 }
             }
         }
-        destinationDir getStrippedJarFile(key).parentFile;
-        archiveName "$mainName-$key-stripped-${project.version}.jar";
+        destinationDirectory = getStrippedJarFile(key).parentFile;
+        archiveFileName = "$mainName-$key-stripped-${project.version}.jar";
     }
 
     task("submod_" + key + "SourcesJar", type: Jar, dependsOn: [unzipSourcesJar, "writeFabricModJson_" + key]) {
