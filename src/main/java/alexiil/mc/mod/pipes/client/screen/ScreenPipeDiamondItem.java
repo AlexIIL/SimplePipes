@@ -34,7 +34,7 @@ public class ScreenPipeDiamondItem extends HandledScreen<ContainerPipeDiamondIte
 
     @Override
     protected void drawBackground(MatrixStack matrices, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, GUI);
         int x = (this.width - this.backgroundWidth) / 2;

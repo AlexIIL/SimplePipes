@@ -43,7 +43,7 @@ public class ScreenTank extends HandledScreen<ContainerTank> {
 
     @Override
     protected void drawBackground(MatrixStack matrices, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TANK_GUI);
         int x = (this.width - this.backgroundWidth) / 2;
@@ -56,7 +56,7 @@ public class ScreenTank extends HandledScreen<ContainerTank> {
             double x1 = x + 80 + 16;
             double y1 = y + 23 + 48;
             fluid.fluid.renderGuiRect(x0, y0, x1, y1);
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShader(GameRenderer::getPositionTexProgram);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.setShaderTexture(0, TANK_GUI);
         }

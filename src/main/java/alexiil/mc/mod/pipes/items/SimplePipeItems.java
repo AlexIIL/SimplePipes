@@ -5,13 +5,12 @@
  */
 package alexiil.mc.mod.pipes.items;
 
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.registry.Registry;
 
 import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
@@ -19,6 +18,11 @@ import alexiil.mc.mod.pipes.part.FacadeStateManager;
 import alexiil.mc.mod.pipes.part.FullFacade;
 import alexiil.mc.mod.pipes.part.PartTank;
 import alexiil.mc.mod.pipes.part.SimplePipeParts;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.util.collection.DefaultedList;
+
+import java.util.ArrayList;
 
 public class SimplePipeItems {
 
@@ -51,13 +55,18 @@ public class SimplePipeItems {
     public static final BlockItem TRIGGER_FLUID_INV_CONTAINS;
 
     static {
-        ItemGroup mainGroup = FabricItemGroupBuilder.build(SimplePipes.id("main"), SimplePipeItems::getMainGroupStack);
+        ItemGroup mainGroup = FabricItemGroup.builder(SimplePipes.id("main")).icon(SimplePipeItems::getMainGroupStack).build();
         ItemGroup facadeGroup
-            = FabricItemGroupBuilder.build(SimplePipes.id("facades"), SimplePipeItems::getFacadeGroupStack);
+            = FabricItemGroup.builder(SimplePipes.id("facades")).icon(SimplePipeItems::getFacadeGroupStack).build();
 
         Item.Settings pipes = new Item.Settings();
-        pipes.group(mainGroup);
-        FACADE = new ItemFacade(new Item.Settings().group(facadeGroup));
+
+        FACADE = new ItemFacade(new Item.Settings());
+
+        DefaultedList<ItemStack> subItems = DefaultedList.of();
+        FACADE.addSubItems(facadeGroup, subItems);
+
+        ItemGroupEvents.modifyEntriesEvent(facadeGroup).register(entries -> entries.addAll(subItems));
 
         WOODEN_PIPE_ITEMS = new BlockItemPipe(SimplePipeBlocks.WOODEN_PIPE_ITEMS, pipes);
         STONE_PIPE_ITEMS = new BlockItemPipe(SimplePipeBlocks.STONE_PIPE_ITEMS, pipes);
@@ -72,8 +81,20 @@ public class SimplePipeItems {
         IRON_PIPE_FLUIDS = new BlockItemPipe(SimplePipeBlocks.IRON_PIPE_FLUIDS, pipes);
         SPONGE_PIPE_FLUIDS = new BlockItemPipe(SimplePipeBlocks.SPONGE_PIPE_FLUIDS, pipes);
 
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(WOODEN_PIPE_ITEMS));
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(STONE_PIPE_ITEMS));
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(CLAY_PIPE_ITEMS));
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(IRON_PIPE_ITEMS));
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(GOLD_PIPE_ITEMS));
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(DIAMOND_PIPE_ITEMS));
+
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(WOODEN_PIPE_FLUIDS));
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(STONE_PIPE_FLUIDS));
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(CLAY_PIPE_FLUIDS));
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(IRON_PIPE_FLUIDS));
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(SPONGE_PIPE_FLUIDS));
+
         Item.Settings triggers = new Item.Settings();
-        triggers.group(mainGroup);
 
         TANK = new ItemSimplePart(triggers, SimplePipeParts.TANK, PartTank::new);
         PUMP = new BlockItem(SimplePipeBlocks.PUMP, triggers);
@@ -87,6 +108,19 @@ public class SimplePipeItems {
         TRIGGER_FLUID_INV_FULL = new BlockItem(SimplePipeBlocks.TRIGGER_FLUID_INV_FULL, triggers);
         TRIGGER_FLUID_INV_SPACE = new BlockItem(SimplePipeBlocks.TRIGGER_FLUID_INV_SPACE, triggers);
         TRIGGER_FLUID_INV_CONTAINS = new BlockItem(SimplePipeBlocks.TRIGGER_FLUID_INV_CONTAINS, triggers);
+
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(TANK));
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(PUMP));
+
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(TRIGGER_ITEM_INV_EMPTY));
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(TRIGGER_ITEM_INV_FULL));
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(TRIGGER_ITEM_INV_SPACE));
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(TRIGGER_ITEM_INV_CONTAINS));
+
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(TRIGGER_FLUID_INV_EMPTY));
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(TRIGGER_FLUID_INV_FULL));
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(TRIGGER_FLUID_INV_SPACE));
+        ItemGroupEvents.modifyEntriesEvent(mainGroup).register(entries -> entries.add(TRIGGER_FLUID_INV_CONTAINS));
     }
 
     private static ItemStack getMainGroupStack() {
@@ -128,6 +162,6 @@ public class SimplePipeItems {
     }
 
     private static void registerItem(Item item, String name) {
-        Registry.register(Registry.ITEM, SimplePipes.MODID + ":" + name, item);
+        Registry.register(Registries.ITEM, SimplePipes.MODID + ":" + name, item);
     }
 }

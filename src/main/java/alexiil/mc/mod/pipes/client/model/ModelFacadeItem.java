@@ -32,7 +32,7 @@ public final class ModelFacadeItem extends SimpleBakedModel {
 
     public class FacadeOverride extends ModelOverrideList {
         private FacadeOverride() {
-            super(null, null, null, ImmutableList.of());
+            super(null, null, ImmutableList.of());
         }
 
         @Override

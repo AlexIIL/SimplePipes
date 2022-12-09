@@ -11,9 +11,9 @@ import com.google.common.collect.Sets;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.registry.Registries;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 public final class BlockUtil {
     private BlockUtil() {}
@@ -29,8 +29,8 @@ public final class BlockUtil {
             Block blockA = blockStateA.getBlock();
             Block blockB = blockStateB.getBlock();
             if (blockA != blockB) {
-                Identifier idA = Registry.BLOCK.getId(blockA);
-                Identifier idB = Registry.BLOCK.getId(blockB);
+                Identifier idA = Registries.BLOCK.getId(blockA);
+                Identifier idB = Registries.BLOCK.getId(blockB);
                 return Objects.toString(idA).compareTo(Objects.toString(idB));
             }
             for (Property<?> property : Sets

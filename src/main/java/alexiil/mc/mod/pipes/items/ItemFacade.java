@@ -5,17 +5,15 @@
  */
 package alexiil.mc.mod.pipes.items;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
+import alexiil.mc.lib.multipart.api.AbstractPart;
+import alexiil.mc.lib.multipart.api.MultipartContainer.PartOffer;
+import alexiil.mc.lib.multipart.api.MultipartHolder;
+import alexiil.mc.lib.multipart.api.MultipartUtil;
+import alexiil.mc.mod.pipes.SimplePipes;
+import alexiil.mc.mod.pipes.part.*;
+import alexiil.mc.mod.pipes.util.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.item.TooltipContext;
@@ -25,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -34,28 +33,14 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
-import alexiil.mc.lib.multipart.api.AbstractPart;
-import alexiil.mc.lib.multipart.api.MultipartContainer.PartOffer;
-import alexiil.mc.lib.multipart.api.MultipartHolder;
-import alexiil.mc.lib.multipart.api.MultipartUtil;
-import alexiil.mc.mod.pipes.SimplePipes;
-import alexiil.mc.mod.pipes.items.ItemFacade.FacadePlacement;
-import alexiil.mc.mod.pipes.items.ItemFacade.FacadePotentialPlacament;
-import alexiil.mc.mod.pipes.part.FacadeBlockStateInfo;
-import alexiil.mc.mod.pipes.part.FacadePart;
-import alexiil.mc.mod.pipes.part.FacadeShape;
-import alexiil.mc.mod.pipes.part.FacadeSize;
-import alexiil.mc.mod.pipes.part.FacadeStateManager;
-import alexiil.mc.mod.pipes.part.FullFacade;
-import alexiil.mc.mod.pipes.part.SimplePipeParts;
-import alexiil.mc.mod.pipes.util.BlockUtil;
-import alexiil.mc.mod.pipes.util.EnumCuboidCorner;
-import alexiil.mc.mod.pipes.util.EnumCuboidEdge;
-import alexiil.mc.mod.pipes.util.SoundUtil;
-import alexiil.mc.mod.pipes.util.TagUtil;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 
 public class ItemFacade extends Item implements IItemPlacmentGhost {
     public static final FacadeShape DEFAULT_SHAPE = FacadeShape.Sided.get(FacadeSize.THIN, Direction.WEST, false);
@@ -127,20 +112,22 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
         }
     }
 
+    /*
     @Override
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> subItems) {
         if (isIn(group)) {
             addSubItems(group, subItems);
         }
     }
+     */
 
-    private void addSubItems(ItemGroup group, DefaultedList<ItemStack> subItems) {
+    public void addSubItems(ItemGroup group, DefaultedList<ItemStack> subItems) {
         // Add a single phased facade as a default
         // check if the data is present as we only process in post-init
         FacadeBlockStateInfo stone = FacadeStateManager.getInfoForBlock(Blocks.STONE);
         if (stone != null) {
             for (FacadeBlockStateInfo info : FacadeStateManager.getValidFacadeStates().values()) {
-                if (Registry.BLOCK.getDefaultId().equals(Registry.BLOCK.getId(info.state.getBlock()))) {
+                if (Registries.BLOCK.getDefaultId().equals(Registries.BLOCK.getId(info.state.getBlock()))) {
                     // Entries are removed from the registry(?) if the client has values that the server doesn't
                     continue;
                 }
@@ -191,7 +178,7 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext flag) {
         FullFacade states = getStates(stack);
         if (flag.isAdvanced()) {
-            Identifier blockId = Registry.BLOCK.getId(states.state.state.getBlock());
+            Identifier blockId = Registries.BLOCK.getId(states.state.state.getBlock());
             tooltip.add(Text.of(blockId.toString()));
         }
         String propertiesStart = Formatting.GRAY + "" + Formatting.ITALIC;

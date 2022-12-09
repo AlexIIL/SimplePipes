@@ -75,7 +75,7 @@ public final class ItemPlacemenentGhostRenderer {
         TEXTURE.startDrawing();
         RenderSystem.enableBlend();
         // TODO: Create a custom shader for this!
-        RenderSystem.setShader(GameRenderer::getBlockShader);
+        RenderSystem.setShader(GameRenderer::getBlockProgram);
         // RenderSystem.enableAlphaTest();
         // RenderSystem.defaultAlphaFunc();
         RenderSystem.blendFuncSeparate(SrcFactor.SRC_ALPHA, DstFactor.CONSTANT_ALPHA, SrcFactor.ONE, DstFactor.ZERO);

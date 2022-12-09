@@ -1,5 +1,9 @@
 package alexiil.mc.mod.pipes.client.render;
 
+import alexiil.mc.mod.pipes.blocks.TilePipe;
+import alexiil.mc.mod.pipes.pipe.ISimplePipe;
+import alexiil.mc.mod.pipes.pipe.PipeSpFlowItem;
+import alexiil.mc.mod.pipes.pipe.TravellingItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -9,27 +13,21 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
-
-import alexiil.mc.mod.pipes.blocks.TilePipe;
-import alexiil.mc.mod.pipes.pipe.ISimplePipe;
-import alexiil.mc.mod.pipes.pipe.PipeSpFlowItem;
-import alexiil.mc.mod.pipes.pipe.TravellingItem;
+import org.joml.Quaternionf;
 
 public class PipeItemTileRenderer<T extends TilePipe> implements BlockEntityRenderer<T> {
 
-    private static final Quaternion[] ROTATIONS = new Quaternion[6];
+    private static final Quaternionf[] ROTATIONS = new Quaternionf[6];
 
     static {
         ROTATIONS[Direction.SOUTH.ordinal()] = null;
-        ROTATIONS[Direction.NORTH.ordinal()] = new Quaternion(new Vec3f(0, 1, 0), 180, true);
-        ROTATIONS[Direction.EAST.ordinal()] = new Quaternion(new Vec3f(0, 1, 0), 90, true);
-        ROTATIONS[Direction.WEST.ordinal()] = new Quaternion(new Vec3f(0, 1, 0), 270, true);
-        ROTATIONS[Direction.UP.ordinal()] = new Quaternion(new Vec3f(1, 0, 0), 270, true);
-        ROTATIONS[Direction.DOWN.ordinal()] = new Quaternion(new Vec3f(1, 0, 0), 90, true);
+        ROTATIONS[Direction.NORTH.ordinal()] = new Quaternionf(0, 1, 0, 180);
+        ROTATIONS[Direction.EAST.ordinal()] = new Quaternionf(0, 1, 0, 90);
+        ROTATIONS[Direction.WEST.ordinal()] = new Quaternionf(0, 1, 0, 270);
+        ROTATIONS[Direction.UP.ordinal()] = new Quaternionf(1, 0, 0, 270);
+        ROTATIONS[Direction.DOWN.ordinal()] = new Quaternionf(1, 0, 0, 90);
     }
 
     public PipeItemTileRenderer(BlockEntityRendererFactory.Context ctx) {
@@ -64,7 +62,7 @@ public class PipeItemTileRenderer<T extends TilePipe> implements BlockEntityRend
                 matrices.scale(0.5f, 0.5f, 0.5f);
 
                 if (renderDirection != null) {
-                    Quaternion quat = ROTATIONS[renderDirection.ordinal()];
+                    Quaternionf quat = ROTATIONS[renderDirection.ordinal()];
                     if (quat != null) {
                         matrices.multiply(quat);
                     }

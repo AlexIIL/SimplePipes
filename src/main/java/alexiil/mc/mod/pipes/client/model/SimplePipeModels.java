@@ -13,9 +13,9 @@ import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ModelIdentifier;
+import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.blocks.BlockPipe;
@@ -26,7 +26,7 @@ public class SimplePipeModels {
     public static final ModelIdentifier TANK_BLOCK_ID;
 
     static {
-        TANK_BLOCK_ID = new ModelIdentifier("simple_pipes:tank");
+        TANK_BLOCK_ID = new ModelIdentifier("simple_pipes", "tank", "");
     }
 
     public static ModelResourceProvider createResourceProvider(ResourceManager manager) {
@@ -66,7 +66,7 @@ public class SimplePipeModels {
                 }
             }
         }
-        Block block = Registry.BLOCK.get(new Identifier(resourceId.getNamespace(), resourceId.getPath()));
+        Block block = Registries.BLOCK.get(new Identifier(resourceId.getNamespace(), resourceId.getPath()));
         if (block instanceof BlockPipe) {
             return ctx -> new PipeBlockModel(ctx, (BlockPipe) block);
         }

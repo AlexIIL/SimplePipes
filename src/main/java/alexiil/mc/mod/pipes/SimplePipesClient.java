@@ -10,7 +10,6 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
@@ -45,7 +44,7 @@ public class SimplePipesClient implements ClientModInitializer {
         ModelLoadingRegistry.INSTANCE.registerVariantProvider(SimplePipeModels::createVariantProvider);
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(SimplePipeModels::createResourceProvider);
         ModelLoadingRegistry.INSTANCE.registerAppender(SimplePipeModels::appendModels);
-        ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).register(this::registerSprites);
+        //ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).register(this::registerSprites);
 
         registerItemPipeRender(SimplePipeBlocks.WOODEN_PIPE_ITEM_TILE);
         registerItemPipeRender(SimplePipeBlocks.STONE_PIPE_ITEM_TILE);
@@ -99,6 +98,7 @@ public class SimplePipesClient implements ClientModInitializer {
         BlockEntityRendererRegistry.register(type, PipeFluidTileRenderer::new);
     }
 
+    /*
     private void registerSprites(SpriteAtlasTexture atlasTexture, ClientSpriteRegistryCallback.Registry registry) {
         registry.register(SimplePipes.id("pipe_wooden_item_clear"));
         registry.register(SimplePipes.id("pipe_wooden_item_filled"));
@@ -120,4 +120,6 @@ public class SimplePipesClient implements ClientModInitializer {
         registry.register(SimplePipes.id("pipe_diamond_item_east"));
         registry.register(SimplePipes.id("pipe_sponge_fluid"));
     }
+
+     */
 }

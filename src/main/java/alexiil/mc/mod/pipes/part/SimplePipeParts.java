@@ -13,9 +13,10 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.StonecuttingRecipe;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 
 import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.items.ItemFacade;
@@ -174,7 +175,7 @@ public final class SimplePipeParts {
         SPONGE_PIPE_FLUIDS.register();
 
         FindMatchingRecipesEvent.EVENT.register(SimplePipeParts::addFacadeRecipes);
-        Registry.register(Registry.RECIPE_SERIALIZER, FacadeCraftingRecipe.ID, FacadeCraftingRecipe.INSTANCE);
+        Registry.register(Registries.RECIPE_SERIALIZER, FacadeCraftingRecipe.ID, FacadeCraftingRecipe.INSTANCE);
     }
 
     private static void addFacadeRecipes(RecipeMatchFinder context) {

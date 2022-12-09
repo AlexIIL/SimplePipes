@@ -47,7 +47,7 @@ public class ContainerPipeDiamondItem extends ContainerPart<PartSpPipe> {
     }
 
     @Override
-    public ItemStack transferSlot(PlayerEntity player, int slotIndex) {
+    public ItemStack quickMove(PlayerEntity player, int slotIndex) {
         ItemStack stack = ItemStack.EMPTY;
         Slot slot = slots.get(slotIndex);
 
