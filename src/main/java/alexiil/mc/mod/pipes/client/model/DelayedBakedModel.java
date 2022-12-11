@@ -51,6 +51,7 @@ public final class DelayedBakedModel implements UnbakedModel {
 
     @Override
     public BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
-        return baker.bake(modelId, rotationContainer);
+        return this.baker.bake(new ModelBakeCtx(textureGetter));
+        // baker.bake(modelId, rotationContainer);
     }
 }

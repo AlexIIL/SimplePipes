@@ -1,12 +1,8 @@
 package alexiil.mc.mod.pipes.part;
 
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.SortedMap;
-
+import alexiil.mc.lib.net.NetByteBuf;
+import alexiil.mc.mod.pipes.util.MessageUtil;
 import com.google.common.collect.ImmutableSet;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -14,14 +10,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.state.State;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Property;
-
-import alexiil.mc.lib.net.NetByteBuf;
-import alexiil.mc.mod.pipes.util.MessageUtil;
 import net.minecraft.util.Identifier;
+
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.SortedMap;
 
 public class FacadeBlockStateInfo {
     public final BlockState state;

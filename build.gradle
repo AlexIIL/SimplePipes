@@ -12,6 +12,7 @@ repositories {
     maven { name="BuildCraft"; url="https://mod-buildcraft.com/maven" }
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://kneelawk.com/maven/" }
+    maven { url "https://maven.pkom.ml/" }
 }
 
 archivesBaseName = "SimplePipes"
