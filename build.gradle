@@ -11,7 +11,6 @@ repositories {
     mavenLocal()
     maven { name="BuildCraft"; url="https://mod-buildcraft.com/maven" }
     maven { url "https://maven.shedaniel.me/" }
-    maven { url "https://kneelawk.com/maven" }
 }
 
 archivesBaseName = "SimplePipes"
