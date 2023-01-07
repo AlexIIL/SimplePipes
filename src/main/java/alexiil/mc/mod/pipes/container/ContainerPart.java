@@ -2,6 +2,7 @@ package alexiil.mc.mod.pipes.container;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -10,13 +11,13 @@ import net.minecraft.world.World;
 import alexiil.mc.lib.multipart.api.AbstractPart;
 import alexiil.mc.lib.multipart.api.MultipartContainer;
 
-public class ContainerPart<P extends AbstractPart> extends ScreenHandler {
+public abstract class ContainerPart<P extends AbstractPart> extends ScreenHandler {
 
     public final PlayerEntity player;
     public final P part;
 
-    protected ContainerPart(int syncId, PlayerEntity player, P part) {
-        super(/* Custom containers don't use the ContainerType system */null, syncId);
+    protected ContainerPart(ScreenHandlerType<?> type, int syncId, PlayerEntity player, P part) {
+        super(type, syncId);
         this.player = player;
         this.part = part;
     }

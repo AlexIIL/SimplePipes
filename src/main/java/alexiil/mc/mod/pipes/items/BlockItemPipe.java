@@ -11,7 +11,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.world.World;
 
@@ -34,7 +33,7 @@ public class BlockItemPipe extends BlockItem {
 
         World w = context.getWorld();
         if (w.isClient) {
-            return ActionResult.PASS;
+            return ActionResult.SUCCESS;
         }
 
         PartOffer offer = getOffer(context);
@@ -45,7 +44,7 @@ public class BlockItemPipe extends BlockItem {
         offer.getHolder().getPart().onPlacedBy(context.getPlayer(), context.getHand());
         context.getStack().increment(-1);
         SoundUtil.playBlockPlace(w, offer.getHolder().getContainer().getMultipartPos());
-        return ActionResult.SUCCESS;
+        return ActionResult.CONSUME;
     }
 
     private PartOffer getOffer(ItemUsageContext context) {
@@ -58,8 +57,8 @@ public class BlockItemPipe extends BlockItem {
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
         if (FabricLoader.getInstance().isModLoaded("pipe_vacuum_pump")) {
-            tooltip.add(new TranslatableText("block.simple_pipes.pipe_wooden_item.disabled_redstone.1"));
-            tooltip.add(new TranslatableText("block.simple_pipes.pipe_wooden_item.disabled_redstone.2"));
+            tooltip.add(Text.translatable("block.simple_pipes.pipe_wooden_item.disabled_redstone.1"));
+            tooltip.add(Text.translatable("block.simple_pipes.pipe_wooden_item.disabled_redstone.2"));
         }
     }
 }

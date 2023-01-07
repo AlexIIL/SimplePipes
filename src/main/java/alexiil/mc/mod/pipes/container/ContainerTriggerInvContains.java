@@ -5,12 +5,10 @@
  */
 package alexiil.mc.mod.pipes.container;
 
-import net.fabricmc.fabric.api.container.ContainerFactory;
-
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.BlockPos;
 
@@ -18,7 +16,8 @@ import alexiil.mc.mod.pipes.blocks.TileTriggerInvContains;
 
 public class ContainerTriggerInvContains extends ContainerTile<TileTriggerInvContains> {
 
-    public static final ContainerFactory<ScreenHandler> FACTORY = (syncId, id, player, buffer) -> {
+    public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerTriggerInvContains> FACTORY = (syncId, inv, buffer) -> {
+        PlayerEntity player = inv.player;
         BlockPos pos = buffer.readBlockPos();
         BlockEntity be = player.world.getBlockEntity(pos);
         if (be instanceof TileTriggerInvContains) {
@@ -28,7 +27,7 @@ public class ContainerTriggerInvContains extends ContainerTile<TileTriggerInvCon
     };
 
     public ContainerTriggerInvContains(int syncId, PlayerEntity player, TileTriggerInvContains tile) {
-        super(syncId, player, tile);
+        super(SimplePipeContainers.TRIGGER_ITEM_INV_CONTAINS, syncId, player, tile);
         addPlayerInventory(71);
         addSlot(new Slot(tile.filterInv, 0, 80, 26));
     }

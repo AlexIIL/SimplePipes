@@ -18,7 +18,7 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormatElement;
-import net.minecraft.client.render.VertexFormatElement.DataType;
+import net.minecraft.client.render.VertexFormatElement.ComponentType;
 import net.minecraft.client.render.VertexFormatElement.Type;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.model.BakedQuad;
@@ -189,28 +189,28 @@ public class MutableVertex {
         for (VertexFormatElement elem : format.getElements()) {
             switch (elem.getType()) {
                 case POSITION: {
-                    assert elem.getDataType() == DataType.FLOAT;
+                    assert elem.getComponentType() == ComponentType.FLOAT;
                     position_x = Float.intBitsToFloat(data[o++]);
                     position_y = Float.intBitsToFloat(data[o++]);
                     position_z = Float.intBitsToFloat(data[o++]);
                     break;
                 }
                 case COLOR: {
-                    assert elem.getDataType() == DataType.UBYTE;
+                    assert elem.getComponentType() == ComponentType.UBYTE;
                     colouri(data[o++]);
                     break;
                 }
                 case NORMAL: {
-                    assert elem.getDataType() == DataType.BYTE;
+                    assert elem.getComponentType() == ComponentType.BYTE;
                     normali(data[o++]);
                     break;
                 }
                 case UV: {
-                    if (elem.getTextureIndex() == 0) {
+                    if (elem.getUvIndex() == 0) {
                         tex_u = Float.intBitsToFloat(data[o++]);
                         tex_v = Float.intBitsToFloat(data[o++]);
                         break;
-                    } else if (elem.getTextureIndex() == 1) {
+                    } else if (elem.getUvIndex() == 1) {
                         lighti(data[o++]);
                         break;
                     }
@@ -247,8 +247,8 @@ public class MutableVertex {
                         renderColour(bb);
                         break;
                     case UV:
-                        if (vfe.getTextureIndex() == 0) renderTex(bb);
-                        else if (vfe.getTextureIndex() == 1) renderLightMap(bb);
+                        if (vfe.getUvIndex() == 0) renderTex(bb);
+                        else if (vfe.getUvIndex() == 1) renderLightMap(bb);
                         break;
                     default:
                         break;

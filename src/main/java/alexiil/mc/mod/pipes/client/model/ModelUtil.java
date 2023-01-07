@@ -8,7 +8,6 @@ package alexiil.mc.mod.pipes.client.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -22,6 +21,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Direction.AxisDirection;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 
 import alexiil.mc.mod.pipes.util.SpriteUtil;
@@ -55,9 +55,9 @@ public class ModelUtil {
             return Collections.emptyList();
         }
         List<BakedQuad> quads = new ArrayList<>();
-        quads.addAll(model.getQuads(state, null, new Random(seed)));
+        quads.addAll(model.getQuads(state, null, Random.create(seed)));
         for (Direction dir : Direction.values()) {
-            quads.addAll(model.getQuads(state, dir, new Random(seed)));
+            quads.addAll(model.getQuads(state, dir, Random.create(seed)));
         }
         return quads;
     }

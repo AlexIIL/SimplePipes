@@ -1,6 +1,7 @@
 package alexiil.mc.mod.pipes.blocks;
 
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import alexiil.mc.mod.pipes.container.ContainerTriggerFluidContains;
+import alexiil.mc.mod.pipes.container.SimplePipeContainerFactory;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -11,8 +12,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import alexiil.mc.mod.pipes.container.SimplePipeContainers;
 
 public class BlockTriggerFluidContains extends BlockTriggerFluidInv {
 
@@ -31,12 +30,11 @@ public class BlockTriggerFluidContains extends BlockTriggerFluidInv {
     ) {
         BlockEntity be = world.getBlockEntity(pos);
 
-        if (be instanceof TileTriggerFluidContains) {
+        if (be instanceof TileTriggerFluidContains tile) {
             if (!world.isClient) {
-                ContainerProviderRegistry.INSTANCE
-                    .openContainer(SimplePipeContainers.TRIGGER_FLUID_INV_CONTAINS, player, (buffer) -> {
-                        buffer.writeBlockPos(pos);
-                    });
+                player.openHandledScreen(new SimplePipeContainerFactory(getName(),
+                        (syncId, inv, player1) -> new ContainerTriggerFluidContains(syncId, player1, tile),
+                        (player1, buf) -> buf.writeBlockPos(pos)));
             }
             return ActionResult.SUCCESS;
         }

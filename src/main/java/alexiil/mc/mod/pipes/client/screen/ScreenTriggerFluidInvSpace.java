@@ -2,26 +2,27 @@ package alexiil.mc.mod.pipes.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.fabricmc.fabric.api.client.screen.ContainerScreenFactory;
-
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import alexiil.mc.mod.pipes.SimplePipes;
-import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
 import alexiil.mc.mod.pipes.container.ContainerTriggerFluidSpace;
 
 public class ScreenTriggerFluidInvSpace extends HandledScreen<ContainerTriggerFluidSpace> {
 
-    public static final ContainerScreenFactory<ContainerTriggerFluidSpace> FACTORY = ScreenTriggerFluidInvSpace::new;
+    public static final HandledScreens.Provider<ContainerTriggerFluidSpace, ScreenTriggerFluidInvSpace> FACTORY
+        = ScreenTriggerFluidInvSpace::new;
 
     private static final Identifier TRIGGER_GUI
         = new Identifier(SimplePipes.MODID, "textures/gui/trigger_fluid_inv.png");
 
-    public ScreenTriggerFluidInvSpace(ContainerTriggerFluidSpace container) {
-        super(container, container.player.getInventory(), SimplePipeBlocks.TRIGGER_FLUID_INV_SPACE.getName());
+    public ScreenTriggerFluidInvSpace(ContainerTriggerFluidSpace container, PlayerInventory inv, Text title) {
+        super(container, inv, title);
         backgroundHeight = 153;
     }
 

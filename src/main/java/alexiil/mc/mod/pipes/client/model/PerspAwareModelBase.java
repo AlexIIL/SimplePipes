@@ -6,7 +6,6 @@
 package alexiil.mc.mod.pipes.client.model;
 
 import java.util.List;
-import java.util.Random;
 
 import com.google.common.collect.ImmutableList;
 
@@ -20,6 +19,7 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.Direction;
 
 import alexiil.mc.mod.pipes.util.SpriteUtil;
+import net.minecraft.util.math.random.Random;
 
 public class PerspAwareModelBase implements BakedModel {
     private final ImmutableList<BakedQuad> quads;
@@ -32,7 +32,7 @@ public class PerspAwareModelBase implements BakedModel {
 
     public static List<BakedQuad> missingModel() {
         BakedModel model = ModelUtil.getMissingModel();
-        return model.getQuads(Blocks.AIR.getDefaultState(), null, new Random());
+        return model.getQuads(Blocks.AIR.getDefaultState(), null, Random.create());
     }
 
     @Override

@@ -5,18 +5,17 @@ import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.fabricmc.fabric.api.client.screen.ContainerScreenFactory;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.container.ContainerTank;
-import alexiil.mc.mod.pipes.items.SimplePipeItems;
 import alexiil.mc.mod.pipes.util.FluidSmoother.FluidStackInterp;
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
@@ -26,12 +25,12 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 
 public class ScreenTank extends HandledScreen<ContainerTank> {
 
-    public static final ContainerScreenFactory<ContainerTank> FACTORY = ScreenTank::new;
+    public static final HandledScreens.Provider<ContainerTank, ScreenTank> FACTORY = ScreenTank::new;
 
     private static final Identifier TANK_GUI = new Identifier(SimplePipes.MODID, "textures/gui/tank.png");
 
-    public ScreenTank(ContainerTank container) {
-        super(container, container.player.getInventory(), SimplePipeItems.TANK.getName());
+    public ScreenTank(ContainerTank container, PlayerInventory inv, Text title) {
+        super(container, inv, title);
         backgroundHeight = 176;
     }
 

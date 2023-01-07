@@ -2,25 +2,26 @@ package alexiil.mc.mod.pipes.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.fabricmc.fabric.api.client.screen.ContainerScreenFactory;
-
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import alexiil.mc.mod.pipes.SimplePipes;
-import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
 import alexiil.mc.mod.pipes.container.ContainerPipeDiamondItem;
 
 public class ScreenPipeDiamondItem extends HandledScreen<ContainerPipeDiamondItem> {
 
-    public static final ContainerScreenFactory<ContainerPipeDiamondItem> FACTORY = ScreenPipeDiamondItem::new;
+    public static final HandledScreens.Provider<ContainerPipeDiamondItem, ScreenPipeDiamondItem> FACTORY
+        = ScreenPipeDiamondItem::new;
 
     private static final Identifier GUI = new Identifier(SimplePipes.MODID, "textures/gui/filter.png");
 
-    public ScreenPipeDiamondItem(ContainerPipeDiamondItem container) {
-        super(container, container.player.getInventory(), SimplePipeBlocks.DIAMOND_PIPE_ITEMS.getName());
+    public ScreenPipeDiamondItem(ContainerPipeDiamondItem container, PlayerInventory inv, Text title) {
+        super(container, inv, title);
         backgroundHeight = 222;
     }
 

@@ -7,10 +7,10 @@ package alexiil.mc.mod.pipes;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
-import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
@@ -84,9 +84,7 @@ public class SimplePipesClient implements ClientModInitializer {
         });
         SimplePipeScreens.load();
         // RenderMatrixType.FROM_WORLD_ORIGIN.addRenderer(ItemPlacemenentGhostRenderer::render);
-        ClientTickCallback.EVENT.register(mc -> {
-            ItemPlacemenentGhostRenderer.clientTick();
-        });
+        ClientTickEvents.END_CLIENT_TICK.register(client -> ItemPlacemenentGhostRenderer.clientTick());
     }
 
     private static void setCutoutLayer(Block block) {
@@ -94,11 +92,11 @@ public class SimplePipesClient implements ClientModInitializer {
     }
 
     private static <T extends TilePipe> void registerItemPipeRender(BlockEntityType<T> type) {
-        BlockEntityRendererRegistry.INSTANCE.register(type, PipeItemTileRenderer::new);
+        BlockEntityRendererRegistry.register(type, PipeItemTileRenderer::new);
     }
 
     private static <T extends TilePipe> void registerFluidPipeRender(BlockEntityType<T> type) {
-        BlockEntityRendererRegistry.INSTANCE.register(type, PipeFluidTileRenderer::new);
+        BlockEntityRendererRegistry.register(type, PipeFluidTileRenderer::new);
     }
 
     private void registerSprites(SpriteAtlasTexture atlasTexture, ClientSpriteRegistryCallback.Registry registry) {

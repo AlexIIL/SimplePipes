@@ -1,11 +1,9 @@
 package alexiil.mc.mod.pipes.container;
 
-import net.fabricmc.fabric.api.container.ContainerFactory;
-
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.BlockPos;
 
@@ -13,7 +11,8 @@ import alexiil.mc.mod.pipes.blocks.TilePipeItemDiamond;
 
 public class ContainerPipeSorter extends ContainerTile<TilePipeItemDiamond> {
 
-    public static final ContainerFactory<ScreenHandler> FACTORY = (syncId, id, player, buffer) -> {
+    public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerPipeSorter> FACTORY = (syncId, inv, buffer) -> {
+        PlayerEntity player = inv.player;
         BlockPos pos = buffer.readBlockPos();
         BlockEntity be = player.world.getBlockEntity(pos);
         if (be instanceof TilePipeItemDiamond) {
@@ -25,7 +24,7 @@ public class ContainerPipeSorter extends ContainerTile<TilePipeItemDiamond> {
     public final int startY = 18;
 
     public ContainerPipeSorter(int syncId, PlayerEntity player, TilePipeItemDiamond tile) {
-        super(syncId, player, tile);
+        super(SimplePipeContainers.PIPE_DIAMOND_ITEM, syncId, player, tile);
         for (int y = 0; y < 6; y++) {
             for (int x = 0; x < 9; x++) {
                 addSlot(new Slot(tile.filterInv, x + y * 9, 8 + x * 18, startY + y * 18));

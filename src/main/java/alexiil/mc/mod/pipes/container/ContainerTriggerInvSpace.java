@@ -5,11 +5,10 @@
  */
 package alexiil.mc.mod.pipes.container;
 
-import net.fabricmc.fabric.api.container.ContainerFactory;
-
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.screen.ScreenHandler;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.BlockPos;
 
@@ -17,7 +16,8 @@ import alexiil.mc.mod.pipes.blocks.TileTriggerInvSpace;
 
 public class ContainerTriggerInvSpace extends ContainerTile<TileTriggerInvSpace> {
 
-    public static final ContainerFactory<ScreenHandler> FACTORY = (syncId, id, player, buffer) -> {
+    public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerTriggerInvSpace> FACTORY = (syncId, inv, buffer) -> {
+        PlayerEntity player = inv.player;
         BlockPos pos = buffer.readBlockPos();
         BlockEntity be = player.world.getBlockEntity(pos);
         if (be instanceof TileTriggerInvSpace) {
@@ -27,8 +27,13 @@ public class ContainerTriggerInvSpace extends ContainerTile<TileTriggerInvSpace>
     };
 
     public ContainerTriggerInvSpace(int syncId, PlayerEntity player, TileTriggerInvSpace tile) {
-        super(syncId, player, tile);
+        super(SimplePipeContainers.TRIGGER_ITEM_INV_SPACE, syncId, player, tile);
         addPlayerInventory(71);
         addSlot(new Slot(tile.filterInv, 0, 80, 26));
+    }
+
+    @Override
+    public ItemStack transferSlot(PlayerEntity player, int index) {
+        return ItemStack.EMPTY;
     }
 }

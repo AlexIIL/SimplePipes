@@ -3,17 +3,18 @@ package alexiil.mc.mod.pipes.container;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class ContainerTile<T extends BlockEntity> extends ScreenHandler {
+public abstract class ContainerTile<T extends BlockEntity> extends ScreenHandler {
 
     public final PlayerEntity player;
     public final T tile;
 
-    protected ContainerTile(int syncId, PlayerEntity player, T tile) {
-        super(/* Custom containers don't use the ContainerType system */null, syncId);
+    protected ContainerTile(ScreenHandlerType<?> type, int syncId, PlayerEntity player, T tile) {
+        super(type, syncId);
         this.player = player;
         this.tile = tile;
     }

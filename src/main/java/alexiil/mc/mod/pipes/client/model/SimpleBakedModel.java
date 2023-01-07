@@ -1,7 +1,6 @@
 package alexiil.mc.mod.pipes.client.model;
 
 import java.util.List;
-import java.util.Random;
 
 import com.google.common.collect.ImmutableList;
 
@@ -16,6 +15,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
 import alexiil.mc.mod.pipes.mixin.impl.BakedQuadAccessor;
 import alexiil.mc.mod.pipes.util.SpriteUtil;
+import net.minecraft.util.math.random.Random;
 
 /** Provides a simple way of creating a {@link BakedModel} with just a list of quads. This provides some transforms to
  * use that make it simple to render item models with various different transforms. */

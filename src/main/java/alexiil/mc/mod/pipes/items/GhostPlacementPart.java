@@ -5,8 +5,6 @@
  */
 package alexiil.mc.mod.pipes.items;
 
-import java.util.Random;
-
 import javax.annotation.Nullable;
 
 import net.minecraft.client.MinecraftClient;
@@ -25,6 +23,7 @@ import alexiil.mc.lib.multipart.api.render.PartModelKey;
 import alexiil.mc.lib.multipart.impl.LibMultiPart;
 import alexiil.mc.lib.multipart.impl.client.model.SinglePartBakedModel;
 import alexiil.mc.mod.pipes.client.render.ItemPlacemenentGhostRenderer;
+import net.minecraft.util.math.random.Random;
 
 public abstract class GhostPlacementPart extends GhostPlacement {
 
@@ -65,7 +64,7 @@ public abstract class GhostPlacementPart extends GhostPlacement {
         matrices.push();
         matrices.translate(pos.getX(), pos.getY(), pos.getZ());
         blockRenderer.render(
-            mc.world, model, LibMultiPart.BLOCK.getDefaultState(), pos, matrices, buffer, true, new Random(), 0, -1
+            mc.world, model, LibMultiPart.BLOCK.getDefaultState(), pos, matrices, buffer, true, Random.create(), 0, -1
         );
         matrices.pop();
     }

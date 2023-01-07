@@ -25,9 +25,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -180,11 +179,11 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
             key += "unknown_shape";
         }
         key += facade.shape.getSize().name().toLowerCase(Locale.ROOT);
-        return new TranslatableText(key, getFacadeStateDisplayName(facade.state.state));
+        return Text.translatable(key, getFacadeStateDisplayName(facade.state.state));
     }
 
-    public static TranslatableText getFacadeStateDisplayName(BlockState state) {
-        return new TranslatableText(state.getBlock().getTranslationKey());
+    public static MutableText getFacadeStateDisplayName(BlockState state) {
+        return Text.translatable(state.getBlock().getTranslationKey());
     }
 
     @Environment(EnvType.CLIENT)
@@ -193,12 +192,12 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
         FullFacade states = getStates(stack);
         if (flag.isAdvanced()) {
             Identifier blockId = Registry.BLOCK.getId(states.state.state.getBlock());
-            tooltip.add(new LiteralText(blockId.toString()));
+            tooltip.add(Text.of(blockId.toString()));
         }
         String propertiesStart = Formatting.GRAY + "" + Formatting.ITALIC;
         FacadeBlockStateInfo info = states.state;
         BlockUtil.getPropertiesStringMap(info.state, info.varyingProperties)
-            .forEach((name, value) -> tooltip.add(new LiteralText(propertiesStart + name + " = " + value)));
+            .forEach((name, value) -> tooltip.add(Text.of(propertiesStart + name + " = " + value)));
     }
 
     // Placement
@@ -233,7 +232,7 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
     public ActionResult useOnBlock(ItemUsageContext ctx) {
         World w = ctx.getWorld();
         if (w.isClient) {
-            return ActionResult.PASS;
+            return ActionResult.SUCCESS;
         }
 
         PartOffer offer = offer(ctx);
@@ -242,7 +241,7 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
             offer.apply();
             ctx.getStack().increment(-1);
             SoundUtil.playBlockPlace(ctx.getWorld(), ctx.getBlockPos(), fullState.state.state);
-            return ActionResult.SUCCESS;
+            return ActionResult.CONSUME;
         }
         return ActionResult.FAIL;
     }
