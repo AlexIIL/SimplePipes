@@ -1,0 +1,5 @@
+Changes:
+
+* Updated to Minecraft 1.19.
+    * This release should work with Minecraft 1.19, 1.19.1, and 1.19.2. This release does *not* work with Minecraft 1.19.3+.
+* Update to use new screen-handler APIs.
