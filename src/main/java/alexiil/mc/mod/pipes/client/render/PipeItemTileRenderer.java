@@ -23,11 +23,11 @@ public class PipeItemTileRenderer<T extends TilePipe> implements BlockEntityRend
 
     static {
         ROTATIONS[Direction.SOUTH.ordinal()] = null;
-        ROTATIONS[Direction.NORTH.ordinal()] = new Quaternionf(0, 1, 0, 180);
-        ROTATIONS[Direction.EAST.ordinal()] = new Quaternionf(0, 1, 0, 90);
-        ROTATIONS[Direction.WEST.ordinal()] = new Quaternionf(0, 1, 0, 270);
-        ROTATIONS[Direction.UP.ordinal()] = new Quaternionf(1, 0, 0, 270);
-        ROTATIONS[Direction.DOWN.ordinal()] = new Quaternionf(1, 0, 0, 90);
+        ROTATIONS[Direction.NORTH.ordinal()] = new Quaternionf().fromAxisAngleDeg(0, 1, 0, 180);
+        ROTATIONS[Direction.EAST.ordinal()] = new Quaternionf().fromAxisAngleDeg(0, 1, 0, 90);
+        ROTATIONS[Direction.WEST.ordinal()] = new Quaternionf().fromAxisAngleDeg(0, 1, 0, 270);
+        ROTATIONS[Direction.UP.ordinal()] = new Quaternionf().fromAxisAngleDeg(1, 0, 0, 270);
+        ROTATIONS[Direction.DOWN.ordinal()] = new Quaternionf().fromAxisAngleDeg(1, 0, 0, 90);
     }
 
     public PipeItemTileRenderer(BlockEntityRendererFactory.Context ctx) {

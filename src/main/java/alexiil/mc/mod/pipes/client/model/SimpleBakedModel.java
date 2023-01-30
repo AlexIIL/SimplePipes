@@ -96,15 +96,13 @@ public class SimpleBakedModel implements BakedModel {
     private static Transformation scale(Transformation from, double by) {
 
         float scale = (float) by;
-        Vector3f nScale = from.scale;
-        nScale.mul(scale);
+        Vector3f nScale = from.scale.mul(scale, new Vector3f());
 
         return new Transformation(from.rotation, from.translation, nScale);
     }
 
     private static Transformation translate(Transformation from, double dx, double dy, double dz) {
-        Vector3f nTranslation = from.translation;
-        nTranslation.add((float) dx, (float) dy, (float) dz);
+        Vector3f nTranslation = from.translation.add((float) dx, (float) dy, (float) dz, new Vector3f());
         return new Transformation(from.rotation, nTranslation, from.scale);
     }
 

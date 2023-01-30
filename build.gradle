@@ -8,11 +8,9 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 
 repositories {
-    //mavenLocal()
+    mavenLocal()
     maven { name="BuildCraft"; url="https://mod-buildcraft.com/maven" }
     maven { url "https://maven.shedaniel.me/" }
-    maven { url "https://kneelawk.com/maven/" }
-    maven { url "https://maven.pkom.ml/" }
 }
 
 archivesBaseName = "SimplePipes"
@@ -60,10 +58,7 @@ dependencies {
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
 
-    def targetVersion = 17
-    if (JavaVersion.current().isJava9Compatible()) {
-        it.options.release = targetVersion
-    }
+    it.options.release = 17
 }
 
 java.withSourcesJar()
