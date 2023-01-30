@@ -33,7 +33,7 @@ public class ContainerTriggerInvContains extends ContainerTile<TileTriggerInvCon
     }
 
     @Override 
-    public ItemStack transferSlot(PlayerEntity player, int slotIndex){
+    public ItemStack quickMove(PlayerEntity player, int slotIndex){
 		return ItemStack.EMPTY;
 	}
 }

@@ -15,9 +15,9 @@
         }
     ],
     "textures": {
-        "particle": "simple_pipes:blocks/tank/side",
-        "up": "simple_pipes:blocks/tank/end",
-        "down": "simple_pipes:blocks/tank/end",
-        "side": "simple_pipes:blocks/tank/side"
+        "particle": "simple_pipes:block/tank/side",
+        "up": "simple_pipes:block/tank/end",
+        "down": "simple_pipes:block/tank/end",
+        "side": "simple_pipes:block/tank/side"
     }
 }

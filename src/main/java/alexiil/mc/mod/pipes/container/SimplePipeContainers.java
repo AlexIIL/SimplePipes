@@ -6,12 +6,13 @@
 package alexiil.mc.mod.pipes.container;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 
 import alexiil.mc.mod.pipes.SimplePipes;
-import net.minecraft.util.registry.Registry;
 
 public class SimplePipeContainers {
     public static final ScreenHandlerType<ContainerTriggerInvSpace> TRIGGER_ITEM_INV_SPACE
@@ -43,6 +44,6 @@ public class SimplePipeContainers {
     }
 
     private static void register(Identifier id, ScreenHandlerType<? extends ScreenHandler> type) {
-        Registry.register(Registry.SCREEN_HANDLER, id, type);
+        Registry.register(Registries.SCREEN_HANDLER, id, type);
     }
 }

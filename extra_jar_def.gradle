@@ -468,8 +468,8 @@ def generateJarInternal(
 
     task("submod_" + key + "Jar", type: Jar, dependsOn: ["writeFabricModJson_" + key, "remapJar"]) {
 
-        baseName = "$mainName-$key";
-        destinationDir = extra_jar_def__modulesDir;
+        archiveBaseName = "$mainName-$key";
+        destinationDirectory = extra_jar_def__modulesDir;
 
         from(getFabricModJsonFile(key).parentFile);
         for (nKey in nestedJars) {
@@ -521,8 +521,8 @@ def generateJarInternal(
                 }
             }
         }
-        destinationDir getStrippedJarFile(key).parentFile;
-        archiveName "$mainName-$key-stripped-${project.version}.jar";
+        destinationDirectory = getStrippedJarFile(key).parentFile;
+        archiveFileName = "$mainName-$key-stripped-${project.version}.jar";
     }
 
     task("submod_" + key + "SourcesJar", type: Jar, dependsOn: [unzipSourcesJar, "writeFabricModJson_" + key]) {

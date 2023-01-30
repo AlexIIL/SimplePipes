@@ -1,6 +1,6 @@
 {
     "parent": "simple_pipes:item/pipe",
     "textures": {
-        "main": "simple_pipes:pipe_stone_item"
+        "main": "simple_pipes:block/pipe_stone_item"
     }
 }

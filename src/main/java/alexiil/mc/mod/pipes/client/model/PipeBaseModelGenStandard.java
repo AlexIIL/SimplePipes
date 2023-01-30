@@ -161,7 +161,7 @@ public class PipeBaseModelGenStandard {
     }
 
     private static Sprite getPipeSprite(SpriteSupplier sprites, String id) {
-        return sprites.getBlockSprite("simple_pipes:pipe_" + id);
+        return sprites.getBlockSprite("simple_pipes:block/pipe_" + id);
     }
 
     public static Sprite getCenterSprite(SpriteSupplier sprites, PipeSpDef def) {

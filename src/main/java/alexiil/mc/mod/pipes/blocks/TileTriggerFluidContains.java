@@ -47,6 +47,6 @@ public class TileTriggerFluidContains extends TileTrigger {
         } else {
             fluidFilter = new ExactFluidFilter(filter);
         }
-        return EnumTriggerState.of(invStats.getStatistics(fluidFilter).amount > 0);
+        return EnumTriggerState.of(invStats.getStatistics(fluidFilter).amount_F.as1620() > 0);
     }
 }

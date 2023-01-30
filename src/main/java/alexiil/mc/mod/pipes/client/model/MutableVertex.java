@@ -11,26 +11,24 @@
  */
 package alexiil.mc.mod.pipes.client.model;
 
+import alexiil.mc.mod.pipes.mixin.impl.BufferBuilderAccessor;
+import alexiil.mc.mod.pipes.util.SpriteUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormatElement;
 import net.minecraft.client.render.VertexFormatElement.ComponentType;
-import net.minecraft.client.render.VertexFormatElement.Type;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.math.Vector4f;
-import alexiil.mc.mod.pipes.mixin.impl.BufferBuilderAccessor;
-import alexiil.mc.mod.pipes.util.SpriteUtil;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 /** Holds all of the information necessary to make one of the verticies in a {@link BakedQuad}. This provides a variety
  * of methods to quickly set or get different elements. This should be used with {@link MutableQuad} to make a face, or
@@ -296,8 +294,8 @@ public class MutableVertex {
 
     // Mutating
 
-    public MutableVertex positionv(Vec3f vec) {
-        return positionf(vec.getX(), vec.getY(), vec.getZ());
+    public MutableVertex positionv(Vector3f vec) {
+        return positionf(vec.x, vec.y, vec.z);
     }
 
     public MutableVertex positionv(Vec3d vec) {
@@ -315,8 +313,8 @@ public class MutableVertex {
         return this;
     }
 
-    public Vec3f positionvf() {
-        return new Vec3f(position_x, position_y, position_z);
+    public Vector3f positionvf() {
+        return new Vector3f(position_x, position_y, position_z);
     }
 
     public Vec3d positionvd() {
@@ -327,8 +325,8 @@ public class MutableVertex {
      * Note: This calls {@link #normalf(float, float, float)} internally, so refer to that for more warnings.
      * 
      * @see #normalf(float, float, float) */
-    public MutableVertex normalv(Vec3f vec) {
-        return normalf(vec.getX(), vec.getY(), vec.getZ());
+    public MutableVertex normalv(Vector3f vec) {
+        return normalf(vec.x, vec.y, vec.z);
     }
 
     /** Sets the current normal given the x, y, and z coordinates. These are NOT normalised or checked. */
@@ -351,8 +349,8 @@ public class MutableVertex {
     }
 
     /** @return The current normal vector of this vertex. This might be normalised. */
-    public Vec3f normal() {
-        return new Vec3f(normal_x, normal_y, normal_z);
+    public Vector3f normal() {
+        return new Vector3f(normal_x, normal_y, normal_z);
     }
 
     public int normalToPackedInt() {
@@ -367,7 +365,7 @@ public class MutableVertex {
     }
 
     public MutableVertex colourv(Vector4f vec) {
-        return colourf(vec.getX(), vec.getY(), vec.getZ(), vec.getW());
+        return colourf(vec.x, vec.y, vec.z, vec.w);
     }
 
     public MutableVertex colourf(float r, float g, float b, float a) {

@@ -40,6 +40,7 @@ import net.minecraft.block.StainedGlassBlock;
 import net.minecraft.block.enums.Instrument;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
@@ -47,7 +48,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.function.BooleanBiFunction;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
@@ -117,8 +117,8 @@ public final class FacadeStateManager {
     }
 
     private FacadeStateManager() {
-        scanBlocks(Registry.BLOCK);
-        RegistryEntryAddedCallback.event(Registry.BLOCK).register((rawId, identifier, object) -> {
+        scanBlocks(Registries.BLOCK);
+        RegistryEntryAddedCallback.event(Registries.BLOCK).register((rawId, identifier, object) -> {
             newBlocks.add(object);
             hasUpdates = true;
         });
@@ -128,7 +128,7 @@ public final class FacadeStateManager {
     private static void scanBlocks(Iterable<Block> blockSet) {
         RuntimeException ex = null;
         for (Block block : blockSet) {
-            Identifier blockId = Registry.BLOCK.getId(block);
+            Identifier blockId = Registries.BLOCK.getId(block);
             try {
                 scanBlock(block, blockId);
             } catch (Throwable t) {

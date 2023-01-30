@@ -19,6 +19,6 @@ public class TileTriggerFluidEmpty extends TileTrigger {
         if (invStats == EmptyGroupedFluidInv.INSTANCE) {
             return EnumTriggerState.NO_TARGET;
         }
-        return EnumTriggerState.of(invStats.getStatistics(ConstantFluidFilter.ANYTHING).amount == 0);
+        return EnumTriggerState.of(invStats.getStatistics(ConstantFluidFilter.ANYTHING).amount_F.as1620() == 0);
     }
 }

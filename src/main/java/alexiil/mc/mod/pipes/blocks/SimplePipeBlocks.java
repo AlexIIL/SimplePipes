@@ -15,8 +15,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 
 import alexiil.mc.mod.pipes.SimplePipes;
 
@@ -202,10 +203,10 @@ public class SimplePipeBlocks {
     }
 
     private static void registerBlock(Block block, String name) {
-        Registry.register(Registry.BLOCK, SimplePipes.MODID + ":" + name, block);
+        Registry.register(Registries.BLOCK, SimplePipes.MODID + ":" + name, block);
     }
 
     private static void registerTile(BlockEntityType<?> type, String name) {
-        Registry.register(Registry.BLOCK_ENTITY_TYPE, SimplePipes.MODID + ":" + name, type);
+        Registry.register(Registries.BLOCK_ENTITY_TYPE, SimplePipes.MODID + ":" + name, type);
     }
 }

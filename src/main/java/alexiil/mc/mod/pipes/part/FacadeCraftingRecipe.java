@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
@@ -112,5 +113,10 @@ public enum FacadeCraftingRecipe implements CraftingRecipe, RecipeSerializer<Fac
     @Override
     public void write(PacketByteBuf buffer, FacadeCraftingRecipe recipe) {
         // NO-OP
+    }
+
+    @Override
+    public CraftingRecipeCategory getCategory() {
+        return CraftingRecipeCategory.BUILDING;
     }
 }
