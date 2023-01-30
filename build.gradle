@@ -16,7 +16,7 @@ repositories {
 }
 
 archivesBaseName = "SimplePipes"
-version = "0.8.0-pre.2"
+version = "0.9.0-pre.1"
 
 loom {
 }
@@ -28,7 +28,7 @@ configurations {
 dependencies {
     minecraft "com.mojang:minecraft:1.19.3"
     mappings "net.fabricmc:yarn:1.19.3+build.2:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.14.11"
+    modImplementation "net.fabricmc:fabric-loader:0.14.12"
 
     //Fabric api
     modImplementation "net.fabricmc.fabric-api:fabric-api:0.68.1+1.19.3"
@@ -66,13 +66,7 @@ tasks.withType(JavaCompile).configureEach {
     }
 }
 
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
+java.withSourcesJar()
 
 publishing {
     repositories {
