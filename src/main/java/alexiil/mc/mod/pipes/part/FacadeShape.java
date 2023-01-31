@@ -8,6 +8,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Direction.AxisDirection;
+import net.minecraft.util.math.DirectionTransformation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
@@ -113,6 +114,8 @@ public abstract class FacadeShape {
     public abstract FacadeShape[] getPlacementVariants();
 
     public abstract FacadeSize getSize();
+
+    public abstract FacadeShape transform(DirectionTransformation transformation);
 
     public VoxelShape getVoxelShape() {
         return shape;
@@ -230,6 +233,11 @@ public abstract class FacadeShape {
             return hollow;
         }
 
+        @Override
+        public FacadeShape transform(DirectionTransformation transformation) {
+            return get(size, transformation.map(side), hollow);
+        }
+
         public Sided withSize(FacadeSize newSize) {
             return get(newSize, side, hollow);
         }
@@ -331,6 +339,11 @@ public abstract class FacadeShape {
             return edge;
         }
 
+        @Override
+        public FacadeShape transform(DirectionTransformation transformation) {
+            return get(size, edge.transform(transformation));
+        }
+
         public Strip withSize(FacadeSize newSize) {
             return get(newSize, edge);
         }
@@ -430,6 +443,11 @@ public abstract class FacadeShape {
 
         public EnumCuboidCorner getCorner() {
             return corner;
+        }
+
+        @Override
+        public FacadeShape transform(DirectionTransformation transformation) {
+            return get(size, corner.transform(transformation));
         }
 
         public Corner withSize(FacadeSize newSize) {
