@@ -3,6 +3,8 @@ package alexiil.mc.mod.pipes.util;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Direction.AxisDirection;
+import net.minecraft.util.math.DirectionTransformation;
+import net.minecraft.util.math.Vec3f;
 
 /** The 8 corners of a cuboid. The field name is in the form "X,Y,Z", for x is positive, y is positive, z is
  * positive. */
@@ -47,5 +49,11 @@ public enum EnumCuboidCorner {
 
     public boolean touchesFace(Direction side) {
         return getDirection(side.getAxis()) == side;
+    }
+
+    public EnumCuboidCorner transform(DirectionTransformation transformation) {
+        Vec3f vec = new Vec3f(x.offset(), y.offset(), z.offset());
+        vec.transform(transformation.getMatrix());
+        return get(vec.getX() > 0, vec.getY() > 0, vec.getZ() > 0);
     }
 }
