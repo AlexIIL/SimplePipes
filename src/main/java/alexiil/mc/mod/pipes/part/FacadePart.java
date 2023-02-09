@@ -13,21 +13,15 @@ import alexiil.mc.lib.net.IMsgReadCtx;
 import alexiil.mc.lib.net.IMsgWriteCtx;
 import alexiil.mc.lib.net.InvalidInputDataException;
 import alexiil.mc.lib.net.NetByteBuf;
-import alexiil.mc.lib.net.NetIdSignalK;
-import alexiil.mc.lib.net.ParentNetIdSingle;
 
 import alexiil.mc.lib.multipart.api.AbstractPart;
 import alexiil.mc.lib.multipart.api.MultipartEventBus;
 import alexiil.mc.lib.multipart.api.MultipartHolder;
 import alexiil.mc.lib.multipart.api.PartDefinition;
-import alexiil.mc.lib.multipart.api.event.PartPostTransformEvent;
 import alexiil.mc.lib.multipart.api.event.PartTransformEvent;
 import alexiil.mc.lib.multipart.api.render.PartModelKey;
 
 public class FacadePart extends AbstractPart {
-
-    private static final ParentNetIdSingle<FacadePart> NET_PARENT = NET_ID.subType(FacadePart.class, "simple_pipes:facade");
-    private static final NetIdSignalK<FacadePart> NET_RECALCULATE_SHAPE = NET_PARENT.idSignal("recalculate_shape").toClientOnly().setReceiver(FacadePart::onRecalculateShape);
 
     public final FacadeBlockStateInfo state;
     private FacadeShape shape;
@@ -84,22 +78,9 @@ public class FacadePart extends AbstractPart {
     public void onAdded(MultipartEventBus bus) {
         super.onAdded(bus);
 
+        // Render data is automatically re-sent and parts are re-rendered and re-shaped after transformations are
+        // complete.
         bus.addListener(this, PartTransformEvent.class, event -> shape = shape.transform(event.transformation));
-        bus.addContextlessListener(this, PartPostTransformEvent.class, this::redraw);
-    }
-
-    private void redraw() {
-        if (!container.isClientWorld()) {
-            sendNetworkUpdate(this, NET_RENDER_DATA);
-            sendNetworkUpdate(this, NET_RECALCULATE_SHAPE);
-        }
-
-        holder.getContainer().recalculateShape();
-        holder.getContainer().redrawIfChanged();
-    }
-
-    private void onRecalculateShape(IMsgReadCtx ctx) {
-        holder.getContainer().recalculateShape();
     }
 
     @Override
