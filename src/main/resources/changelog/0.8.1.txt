@@ -1,0 +1,3 @@
+Changes:
+
+* Adds support for rotating facades by block rotation methods.
