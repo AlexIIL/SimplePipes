@@ -10,6 +10,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.DirectionTransformation;
 
 import alexiil.mc.mod.pipes.blocks.TilePipe;
 import alexiil.mc.mod.pipes.blocks.TilePipeSided;
@@ -117,6 +118,11 @@ public abstract class PipeSpBehaviourSided extends PipeSpBehaviour {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public void transform(DirectionTransformation transform) {
+        currentDirection = transform.map(currentDirection);
     }
 
     @Override

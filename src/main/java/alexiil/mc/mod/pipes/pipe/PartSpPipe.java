@@ -14,6 +14,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
+import net.minecraft.util.math.DirectionTransformation;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
@@ -37,6 +38,7 @@ import alexiil.mc.lib.multipart.api.event.NeighbourUpdateEvent;
 import alexiil.mc.lib.multipart.api.event.PartAddedEvent;
 import alexiil.mc.lib.multipart.api.event.PartRemovedEvent;
 import alexiil.mc.lib.multipart.api.event.PartTickEvent;
+import alexiil.mc.lib.multipart.api.event.PartTransformEvent;
 import alexiil.mc.lib.multipart.api.render.PartModelKey;
 
 public class PartSpPipe extends AbstractPart implements ISimplePipe {
@@ -195,6 +197,7 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
         bus.addListener(this, NeighbourUpdateEvent.class, this::onNeighbourUpdate);
         bus.addListener(this, PartAddedEvent.class, e -> updateConnections());
         bus.addListener(this, PartRemovedEvent.class, e -> updateConnections());
+        bus.addListener(this, PartTransformEvent.class, e -> transform(e.transformation));
     }
 
     public void tick() {
@@ -227,6 +230,11 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
                 disconnect(dir);
             }
         }
+    }
+
+    private void transform(DirectionTransformation transform) {
+        transformConnections(transform);
+        behaviour.transform(transform);
     }
 
     @Override
@@ -315,6 +323,17 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
     public void disconnect(Direction dir) {
         connections &= ~(1 << dir.ordinal());
         refreshModel();
+    }
+
+    private void transformConnections(DirectionTransformation transform) {
+        byte newConnections = 0;
+        for (Direction dir : Direction.values()) {
+            if (isConnected(dir)) {
+                Direction newDir = transform.map(dir);
+                newConnections |= 1 << newDir.ordinal();
+            }
+        }
+        connections = newConnections;
     }
 
     public void refreshModel() {
