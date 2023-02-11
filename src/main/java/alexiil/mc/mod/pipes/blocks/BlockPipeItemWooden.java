@@ -10,6 +10,7 @@ import net.minecraft.util.math.BlockPos;
 
 import alexiil.mc.mod.pipes.part.SimplePipeParts;
 
+@Deprecated
 public class BlockPipeItemWooden extends BlockPipeSided implements BlockPipeItem {
 
     public BlockPipeItemWooden(Settings settings) {

@@ -10,6 +10,7 @@ import net.minecraft.util.math.BlockPos;
 
 import alexiil.mc.mod.pipes.part.SimplePipeParts;
 
+@Deprecated
 public class BlockPipeItemStone extends BlockPipe implements BlockPipeItem {
 
     public BlockPipeItemStone(Settings settings) {

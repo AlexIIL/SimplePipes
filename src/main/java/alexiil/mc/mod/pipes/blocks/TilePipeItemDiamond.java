@@ -17,6 +17,7 @@ import alexiil.mc.mod.pipes.pipe.TravellingItem;
 
 import alexiil.mc.lib.attributes.item.ItemAttributes;
 
+@Deprecated
 public class TilePipeItemDiamond extends TilePipe {
 
     public final int INV_SIZE = 9 * 6;

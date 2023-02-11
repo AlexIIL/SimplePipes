@@ -14,6 +14,7 @@ import net.minecraft.util.math.Direction;
 
 import alexiil.mc.mod.pipes.pipe.PipeSpFlow;
 
+@Deprecated
 public abstract class TilePipeWood extends TilePipeSided {
 
     private boolean lastRecv = true;

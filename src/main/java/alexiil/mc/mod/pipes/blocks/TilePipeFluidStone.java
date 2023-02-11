@@ -5,6 +5,7 @@ import net.minecraft.util.math.BlockPos;
 
 import alexiil.mc.mod.pipes.pipe.PipeSpFlowFluid;
 
+@Deprecated
 public class TilePipeFluidStone extends TilePipe {
     public TilePipeFluidStone(BlockPos pos, BlockState state) {
         super(

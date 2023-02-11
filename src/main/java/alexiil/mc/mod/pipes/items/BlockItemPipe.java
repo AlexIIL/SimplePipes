@@ -22,6 +22,7 @@ import alexiil.mc.lib.multipart.api.MultipartContainer.MultipartCreator;
 import alexiil.mc.lib.multipart.api.MultipartContainer.PartOffer;
 import alexiil.mc.lib.multipart.api.MultipartUtil;
 
+@Deprecated
 public class BlockItemPipe extends BlockItem {
 
     public BlockItemPipe(Block block, Item.Settings settings) {
@@ -38,7 +39,7 @@ public class BlockItemPipe extends BlockItem {
 
         PartOffer offer = getOffer(context);
         if (offer == null) {
-            return super.useOnBlock(context);
+            return ActionResult.FAIL;
         }
         offer.apply();
         offer.getHolder().getPart().onPlacedBy(context.getPlayer(), context.getHand());
@@ -50,7 +51,11 @@ public class BlockItemPipe extends BlockItem {
     private PartOffer getOffer(ItemUsageContext context) {
         MultipartCreator c = h -> new PartSpPipe(((BlockPipe) getBlock()).pipeDef, h);
         World w = context.getWorld();
-        return MultipartUtil.offerNewPart(w, context.getBlockPos(), c);
+        PartOffer offer = MultipartUtil.offerNewPart(w, context.getBlockPos(), c);
+        if (offer == null) {
+            offer = MultipartUtil.offerNewPart(w, context.getBlockPos().offset(context.getSide()), c);
+        }
+        return offer;
     }
 
     @Override

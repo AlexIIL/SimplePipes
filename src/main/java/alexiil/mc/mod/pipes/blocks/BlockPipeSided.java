@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 
 import alexiil.mc.mod.pipes.pipe.PipeSpDef;
 
+@Deprecated
 public abstract class BlockPipeSided extends BlockPipe {
 
     public BlockPipeSided(Settings settings, PipeSpDef pipeDef) {

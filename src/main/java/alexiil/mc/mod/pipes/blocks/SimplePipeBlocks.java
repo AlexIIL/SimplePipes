@@ -33,33 +33,55 @@ public class SimplePipeBlocks {
     public static final BlockTriggerFluidSpace TRIGGER_FLUID_INV_SPACE;
     public static final BlockTriggerFluidContains TRIGGER_FLUID_INV_CONTAINS;
 
+    @Deprecated
     public static final BlockPipeItemWooden WOODEN_PIPE_ITEMS;
+    @Deprecated
     public static final BlockPipeItemStone STONE_PIPE_ITEMS;
+    @Deprecated
     public static final BlockPipeItemClay CLAY_PIPE_ITEMS;
+    @Deprecated
     public static final BlockPipeItemIron IRON_PIPE_ITEMS;
+    @Deprecated
     public static final BlockPipeItemGold GOLD_PIPE_ITEMS;
+    @Deprecated
     public static final BlockPipeItemDiamond DIAMOND_PIPE_ITEMS;
 
+    @Deprecated
     public static final BlockPipeFluidWooden WOODEN_PIPE_FLUIDS;
+    @Deprecated
     public static final BlockPipeFluidStone STONE_PIPE_FLUIDS;
+    @Deprecated
     public static final BlockPipeFluidClay CLAY_PIPE_FLUIDS;
+    @Deprecated
     public static final BlockPipeFluidIron IRON_PIPE_FLUIDS;
+    @Deprecated
     public static final BlockPipeFluidSponge SPONGE_PIPE_FLUIDS;
 
     public static final BlockTank TANK;
     public static final BlockPump PUMP;
 
+    @Deprecated
     public static final BlockEntityType<TilePipeItemWood> WOODEN_PIPE_ITEM_TILE;
+    @Deprecated
     public static final BlockEntityType<TilePipeItemStone> STONE_PIPE_ITEM_TILE;
+    @Deprecated
     public static final BlockEntityType<TilePipeItemClay> CLAY_PIPE_ITEM_TILE;
+    @Deprecated
     public static final BlockEntityType<TilePipeItemIron> IRON_PIPE_ITEM_TILE;
+    @Deprecated
     public static final BlockEntityType<TilePipeItemGold> GOLD_PIPE_ITEM_TILE;
+    @Deprecated
     public static final BlockEntityType<TilePipeItemDiamond> DIAMOND_PIPE_ITEM_TILE;
 
+    @Deprecated
     public static final BlockEntityType<TilePipeFluidWood> WOODEN_PIPE_FLUID_TILE;
+    @Deprecated
     public static final BlockEntityType<TilePipeFluidStone> STONE_PIPE_FLUID_TILE;
+    @Deprecated
     public static final BlockEntityType<TilePipeFluidClay> CLAY_PIPE_FLUID_TILE;
+    @Deprecated
     public static final BlockEntityType<TilePipeFluidIron> IRON_PIPE_FLUID_TILE;
+    @Deprecated
     public static final BlockEntityType<TilePipeFluidSponge> SPONGE_PIPE_FLUID_TILE;
 
     public static final BlockEntityType<TileTriggerInvEmpty> TRIGGER_ITEM_INV_EMPTY_TILE;

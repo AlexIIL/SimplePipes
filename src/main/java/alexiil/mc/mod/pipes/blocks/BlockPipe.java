@@ -42,6 +42,7 @@ import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable;
 import alexiil.mc.lib.multipart.api.MultipartContainer.MultipartCreator;
 import alexiil.mc.lib.multipart.api.NativeMultipart;
 
+@Deprecated
 public abstract class BlockPipe extends BlockBase
     implements BlockEntityProvider, AttributeProvider, Waterloggable, NativeMultipart {
 
