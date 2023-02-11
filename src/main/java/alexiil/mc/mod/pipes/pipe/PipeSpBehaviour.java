@@ -7,6 +7,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.DirectionTransformation;
 
 import alexiil.mc.mod.pipes.blocks.TilePipe;
 import alexiil.mc.mod.pipes.blocks.TilePipe.PipeBlockModelState;
@@ -50,6 +51,10 @@ public class PipeSpBehaviour {
     }
 
     public void addDrops(ItemDropTarget target, LootContext context) {
+
+    }
+
+    public void transform(DirectionTransformation transform) {
 
     }
 }

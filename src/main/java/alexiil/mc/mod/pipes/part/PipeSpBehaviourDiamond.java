@@ -16,6 +16,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.DirectionTransformation;
 
 import alexiil.mc.mod.pipes.blocks.TilePipe;
 import alexiil.mc.mod.pipes.blocks.TilePipeItemDiamond;
@@ -88,6 +89,23 @@ public class PipeSpBehaviourDiamond extends PipeSpBehaviour {
         list.add(matches);
         list.add(empties);
         return list;
+    }
+
+    @Override
+    public void transform(DirectionTransformation transform) {
+        ItemStack[] stacks = new ItemStack[INV_SIZE];
+
+        for (Direction fromDir : Direction.values()) {
+            Direction toDir = transform.map(fromDir);
+            for (int x = 0; x < 9; x++) {
+                ItemStack filter = filterInv.getStack(fromDir.getId() * 9 + x);
+                stacks[toDir.getId() * 9 + x] = filter;
+            }
+        }
+
+        for (int i = 0; i < INV_SIZE; i++) {
+            filterInv.setStack(i, stacks[i]);
+        }
     }
 
     @Override
