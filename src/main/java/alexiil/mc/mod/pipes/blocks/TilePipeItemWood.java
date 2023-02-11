@@ -11,6 +11,7 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.ItemExtractable;
 import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable;
 
+@Deprecated
 public class TilePipeItemWood extends TilePipeWood {
 
     public TilePipeItemWood(BlockPos pos, BlockState state) {

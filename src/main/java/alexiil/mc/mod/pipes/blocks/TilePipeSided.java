@@ -23,6 +23,7 @@ import alexiil.mc.mod.pipes.pipe.ISimplePipe;
 import alexiil.mc.mod.pipes.pipe.PipeSpDef;
 import alexiil.mc.mod.pipes.pipe.PipeSpFlow;
 
+@Deprecated
 public abstract class TilePipeSided extends TilePipe {
 
     private Direction currentDirection = null;

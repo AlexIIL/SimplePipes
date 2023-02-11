@@ -9,6 +9,7 @@ import alexiil.mc.lib.attributes.fluid.volume.ColouredFluidVolume;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 
+@Deprecated
 public class TilePipeFluidSponge extends TilePipe {
 
     public static final float RED = 0.625f;

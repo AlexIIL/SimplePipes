@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 
 import alexiil.mc.mod.pipes.pipe.PipeSpDef;
 
+@Deprecated
 public abstract class BlockPipeSorter extends BlockPipe {
 
     public BlockPipeSorter(Settings settings, PipeSpDef pipeDef) {

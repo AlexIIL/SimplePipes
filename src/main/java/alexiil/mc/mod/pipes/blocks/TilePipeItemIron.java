@@ -11,6 +11,7 @@ import net.minecraft.util.math.Direction;
 import alexiil.mc.mod.pipes.pipe.PipeSpFlowItem;
 import alexiil.mc.mod.pipes.pipe.TravellingItem;
 
+@Deprecated
 public class TilePipeItemIron extends TilePipeIron {
 
     public TilePipeItemIron(BlockPos pos, BlockState state) {

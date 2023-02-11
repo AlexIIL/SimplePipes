@@ -10,6 +10,7 @@ import net.minecraft.util.math.BlockPos;
 
 import alexiil.mc.mod.pipes.pipe.PipeSpFlowItem;
 
+@Deprecated
 public class TilePipeItemClay extends TilePipe {
     public TilePipeItemClay(BlockPos pos, BlockState state) {
         super(SimplePipeBlocks.CLAY_PIPE_ITEM_TILE, pos, state, SimplePipeBlocks.CLAY_PIPE_ITEMS, PipeSpFlowItem::new);

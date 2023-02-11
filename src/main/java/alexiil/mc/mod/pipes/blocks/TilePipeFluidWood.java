@@ -8,6 +8,7 @@ import alexiil.mc.mod.pipes.pipe.PipeSpFlowFluid;
 
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
 
+@Deprecated
 public class TilePipeFluidWood extends TilePipeWood {
     public TilePipeFluidWood(BlockPos pos, BlockState state) {
         super(

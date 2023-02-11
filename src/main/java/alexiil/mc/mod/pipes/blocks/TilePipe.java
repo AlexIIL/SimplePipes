@@ -31,6 +31,7 @@ import alexiil.mc.lib.multipart.api.MultipartHolder;
 import alexiil.mc.lib.multipart.api.MultipartUtil;
 import alexiil.mc.lib.multipart.api.render.PartModelKey;
 
+@Deprecated
 public abstract class TilePipe extends TileBase implements ISimplePipe {
 
     protected static final double EXTRACT_SPEED = 0.08;
@@ -270,9 +271,7 @@ public abstract class TilePipe extends TileBase implements ISimplePipe {
         World w = world;
         if (w != null) {
             w.markDirty(getPipePos());
-        }
 
-        if (false) {
             MultipartUtil.turnIntoMultipart(w, getPipePos());
         }
     }

@@ -17,6 +17,7 @@ import alexiil.mc.mod.pipes.pipe.ISimplePipe;
 import alexiil.mc.mod.pipes.pipe.PipeSpFlowItem;
 import alexiil.mc.mod.pipes.pipe.PipeSpFlow;
 
+@Deprecated
 public abstract class TilePipeIron extends TilePipeSided {
 
     public TilePipeIron(

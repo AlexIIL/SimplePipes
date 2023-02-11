@@ -1,3 +1,4 @@
 Changes:
 
 * Adds support for rotating pipes and facades by block rotation methods.
+* Converts all pipe blocks into multiparts for improved compatibility and maintainability.
