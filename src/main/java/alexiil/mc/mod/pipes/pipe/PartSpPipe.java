@@ -121,6 +121,8 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
     @Override
     public void readRenderData(NetByteBuf buffer, IMsgReadCtx ctx) throws InvalidInputDataException {
         fromNbt(buffer.readNbt());
+
+        refreshModel();
     }
 
     @Override
@@ -339,10 +341,13 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
     }
 
     public void refreshModel() {
-        if (!holder.getContainer().isClientWorld()) {
+        if (holder.getContainer().isClientWorld()) {
+            // This can be called on the server too, but this way everything's done with a single packet
+            redrawIfChanged();
+        } else {
             sendNetworkUpdate(this, NET_RENDER_DATA);
         }
-        holder.getContainer().redrawIfChanged();
+        recalculateShape();
     }
 
     protected boolean canConnect(Direction dir) {
