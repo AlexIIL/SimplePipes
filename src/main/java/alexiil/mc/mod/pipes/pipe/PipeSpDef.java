@@ -1,5 +1,6 @@
 package alexiil.mc.mod.pipes.pipe;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
@@ -20,7 +21,10 @@ public abstract class PipeSpDef extends PartDefinition {
 
     public final boolean isExtraction;
 
+    @Deprecated
     public BlockPipe pipeBlock;
+
+    private ItemStack pickStack = ItemStack.EMPTY;
 
     public PipeSpDef(Identifier identifier, boolean isExtraction) {
         super(identifier);
@@ -49,6 +53,25 @@ public abstract class PipeSpDef extends PartDefinition {
     public abstract PipeSpFlow createFlow(PartSpPipe pipe);
 
     public abstract Object getEmptyExtractable();
+
+    public void setPickStack(ItemStack pickStack) {
+        if (this.pickStack.isEmpty()) {
+            this.pickStack = pickStack;
+        }
+    }
+
+    public ItemStack getPickStack() {
+        if (this.pickStack.isEmpty()) {
+            // Handle addons that don't know about pickStack
+            if (pipeBlock == null) {
+                return ItemStack.EMPTY;
+            } else {
+                return new ItemStack(pipeBlock);
+            }
+        } else {
+            return this.pickStack;
+        }
+    }
 
     public static class PipeDefItem extends PipeSpDef {
 

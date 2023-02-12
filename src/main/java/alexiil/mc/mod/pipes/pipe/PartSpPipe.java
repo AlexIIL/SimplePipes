@@ -1,5 +1,7 @@
 package alexiil.mc.mod.pipes.pipe;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -152,8 +154,8 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
     }
 
     @Override
-    public ItemStack getPickStack() {
-        return new ItemStack(definition.pipeBlock.asItem());
+    public ItemStack getPickStack(@Nullable BlockHitResult hitResult) {
+        return definition.getPickStack();
     }
 
     @Override
