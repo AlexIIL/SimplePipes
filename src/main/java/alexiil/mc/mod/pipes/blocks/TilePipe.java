@@ -271,12 +271,13 @@ public abstract class TilePipe extends TileBase implements ISimplePipe {
         World w = world;
         if (w != null) {
             w.markDirty(getPipePos());
+        }
+    }
 
-            // Some addons still place their pipes as blocks, meaning this will get ticked on the client too which will
-            // break stuff. Best prevent that.
-            if (!w.isClient) {
-                MultipartUtil.turnIntoMultipart(w, getPipePos());
-            }
+    public void convert() {
+        World w = world;
+        if (w != null && !w.isClient) {
+            MultipartUtil.turnIntoMultipart(w, getPipePos());
         }
     }
 

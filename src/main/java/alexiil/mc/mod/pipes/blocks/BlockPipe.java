@@ -113,7 +113,7 @@ public abstract class BlockPipe extends BlockBase
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
         World world, BlockState state, BlockEntityType<T> type
     ) {
-        return (w, p, s, e) -> ((TilePipe) e).tick();
+        return (w, p, s, e) -> ((TilePipe) e).convert();
     }
 
     @Override
