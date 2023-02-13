@@ -20,15 +20,19 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Direction.AxisDirection;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 
 import alexiil.mc.mod.pipes.util.SpriteUtil;
+import alexiil.mc.mod.pipes.util.VecUtil;
 
 /** Provides various utilities for creating {@link MutableQuad} out of various position information, such as a single
  * face of a cuboid. */
 public class ModelUtil {
+
+    private static final double FACE_INSET = 0.001;
 
     public static BakedModel getModel(ModelIdentifier modelLocation) {
         return MinecraftClient.getInstance().getBakedModelManager().getModel(modelLocation);
@@ -175,16 +179,28 @@ public class ModelUtil {
         return new MutableQuad[] { norm, norm.copyAndInvertNormal() };
     }
 
-    public static List<MutableQuad> createModel(VoxelShape shape, Sprite sprite) {
+    public static List<MutableQuad> createModel(VoxelShape shape, Sprite sprite, int insetSides) {
         List<MutableQuad> list = new ArrayList<>();
         UvFaceData uvs = new UvFaceData();
         for (Box box : shape.getBoundingBoxes()) {
             Vec3d center = box.getCenter();
             Vec3d radius = new Vec3d(box.maxX - box.minX, box.maxY - box.minY, box.maxZ - box.minZ).multiply(0.5);
             for (Direction dir : Direction.values()) {
+                double dirRadius = dir.getAxis().choose(radius.x, radius.y, radius.z);
+                double dirCenter = dir.getAxis().choose(center.x, center.y, center.z);
+                double faceOffset = dirCenter + dirRadius * dir.getDirection().offset();
+
+                Vec3d insetRadius;
+                if (((1 << dir.getId()) & insetSides) != 0 &&
+                    (MathHelper.approximatelyEquals(faceOffset, 0) || MathHelper.approximatelyEquals(faceOffset, 1))) {
+                    insetRadius = VecUtil.replaceValue(radius, dir.getAxis(), dirRadius - FACE_INSET);
+                } else {
+                    insetRadius = radius;
+                }
+
                 mapBoxToUvs(box, dir, uvs);
                 uvs.inSprite(sprite);
-                list.add(createFace(dir, center, radius, uvs));
+                list.add(createFace(dir, center, insetRadius, uvs));
             }
         }
         return list;
@@ -193,51 +209,43 @@ public class ModelUtil {
     public static void mapBoxToUvs(Box box, Direction side, UvFaceData uvs) {
         // TODO: Fix these!
         switch (side) {
-            case WEST: /* -X */ {
+            case WEST -> /* -X */ {
                 uvs.minU = (float) box.minZ;
                 uvs.maxU = (float) box.maxZ;
                 uvs.minV = 1 - (float) box.maxY;
                 uvs.maxV = 1 - (float) box.minY;
-                return;
             }
-            case EAST: /* +X */ {
+            case EAST -> /* +X */ {
                 uvs.minU = 1 - (float) box.minZ;
                 uvs.maxU = 1 - (float) box.maxZ;
                 uvs.minV = 1 - (float) box.maxY;
                 uvs.maxV = 1 - (float) box.minY;
-                return;
             }
-            case DOWN: /* -Y */ {
+            case DOWN -> /* -Y */ {
                 uvs.minU = (float) box.minX;
                 uvs.maxU = (float) box.maxX;
                 uvs.minV = 1 - (float) box.maxZ;
                 uvs.maxV = 1 - (float) box.minZ;
-                return;
             }
-            case UP: /* +Y */ {
+            case UP -> /* +Y */ {
                 uvs.minU = (float) box.minX;
                 uvs.maxU = (float) box.maxX;
                 uvs.minV = (float) box.maxZ;
                 uvs.maxV = (float) box.minZ;
-                return;
             }
-            case NORTH: /* -Z */ {
+            case NORTH -> /* -Z */ {
                 uvs.minU = 1 - (float) box.minX;
                 uvs.maxU = 1 - (float) box.maxX;
                 uvs.minV = 1 - (float) box.maxY;
                 uvs.maxV = 1 - (float) box.minY;
-                return;
             }
-            case SOUTH: /* +Z */ {
+            case SOUTH -> /* +Z */ {
                 uvs.minU = (float) box.minX;
                 uvs.maxU = (float) box.maxX;
                 uvs.minV = 1 - (float) box.maxY;
                 uvs.maxV = 1 - (float) box.minY;
-                return;
             }
-            default: {
-                throw new IllegalStateException("Unknown Direction " + side);
-            }
+            default -> throw new IllegalStateException("Unknown Direction " + side);
         }
     }
 

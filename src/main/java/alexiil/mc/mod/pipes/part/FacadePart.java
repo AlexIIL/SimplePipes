@@ -8,6 +8,7 @@ import net.minecraft.util.shape.VoxelShapes;
 
 import alexiil.mc.mod.pipes.client.model.part.FacadePartKey;
 import alexiil.mc.mod.pipes.items.SimplePipeItems;
+import alexiil.mc.mod.pipes.part.FacadeShape.Sided;
 
 import alexiil.mc.lib.net.IMsgReadCtx;
 import alexiil.mc.lib.net.IMsgWriteCtx;
@@ -115,6 +116,16 @@ public class FacadePart extends AbstractPart {
 
     @Override
     public PartModelKey getModelKey() {
-        return new FacadePartKey(shape, state.state);
+        int insetSides;
+        if (shape instanceof Sided sided) {
+            insetSides = container.getParts(FacadePart.class, (part) -> part.shape instanceof Sided).stream()
+                .reduce(0,
+                    (faces, part) -> part.shape instanceof Sided s ? (faces | (1 << s.side.getId())) : faces,
+                    (a, b) -> (a | b)
+                ) & ~(1 << sided.side.getId());
+        } else {
+            insetSides = 0;
+        }
+        return new FacadePartKey(shape, state.state, insetSides);
     }
 }

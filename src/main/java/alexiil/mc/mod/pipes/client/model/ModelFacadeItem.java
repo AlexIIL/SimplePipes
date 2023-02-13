@@ -42,7 +42,7 @@ public final class ModelFacadeItem extends SimpleBakedModel {
             FullFacade inst = ItemFacade.getStates(stack);
             FacadeBlockStateInfo state = inst.state;
             FacadeShape shape = inst.shape;
-            return new SinglePartBakedModel<FacadePartKey>(new FacadePartKey(shape, state.state), FacadePartKey.class) {
+            return new SinglePartBakedModel<FacadePartKey>(new FacadePartKey(shape, state.state, 0), FacadePartKey.class) {
                 @Override
                 public boolean hasDepth() {
                     return true;

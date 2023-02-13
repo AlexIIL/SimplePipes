@@ -10,12 +10,14 @@ import alexiil.mc.mod.pipes.part.FacadeShape;
 public class FacadePartKey extends PartModelKey {
     public final FacadeShape shape;
     public final BlockState state;
+    public final int insetSides;
     private final int hash;
 
-    public FacadePartKey(FacadeShape shape, BlockState state) {
+    public FacadePartKey(FacadeShape shape, BlockState state, int insetSides) {
         this.shape = shape;
         this.state = state;
-        this.hash = Objects.hash(shape, state);
+        this.insetSides = insetSides;
+        this.hash = Objects.hash(shape, state, insetSides);
     }
 
     @Override
@@ -29,6 +31,8 @@ public class FacadePartKey extends PartModelKey {
         if (obj == null) return false;
         if (obj.getClass() != getClass()) return false;
         FacadePartKey other = (FacadePartKey) obj;
-        return Objects.equals(shape, other.shape) && Objects.equals(state, other.state);
+        return Objects.equals(shape, other.shape) //
+            && Objects.equals(state, other.state) //
+            && insetSides == other.insetSides;
     }
 }
