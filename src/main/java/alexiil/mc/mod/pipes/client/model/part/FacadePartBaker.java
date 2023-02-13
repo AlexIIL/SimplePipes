@@ -37,7 +37,7 @@ public enum FacadePartBaker implements PartModelBaker<FacadePartKey> {
         finder = finder.blendMode(0, blockLayer);
         final RenderMaterial mat = finder.find();
 
-        for (MutableQuad quad : ModelUtil.createModel(key.shape.shape, sprite)) {
+        for (MutableQuad quad : ModelUtil.createModel(key.shape.shape, sprite, key.insetSides)) {
             quad.setCalculatedDiffuse();
             emitter.material(mat);
             emitter.nominalFace(quad.getFace());
