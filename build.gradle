@@ -17,6 +17,10 @@ archivesBaseName = "SimplePipes"
 version = "0.8.0"
 
 loom {
+    accessWidenerPath = file("src/main/resources/simple_pipes.accesswidener")
+
+    // Use this to see where we depend on others' access wideners
+//    enableTransitiveAccessWideners = false
 }
 
 configurations {

@@ -21,6 +21,7 @@
     "simple_pipes.client.json",
     "simple_pipes.common.json"
   ],
+  "accessWidener": "simple_pipes.accesswidener",
   "authors": [ "AlexIIL" ],
   "license": "Mozilla Public License Version 2.0",
   "icon": "assets/simple_pipes/icon.png",
@@ -43,6 +44,7 @@
       "+icon": "assets/simple_pipes/icon_container.png",
       "-entrypoints": {},
       "-mixins": {},
+      "-accessWidener": {},
       "~depends": {
         "+simple_pipes": ">=$version"
       }
