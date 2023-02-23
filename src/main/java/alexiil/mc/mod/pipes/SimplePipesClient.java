@@ -10,11 +10,11 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 
 import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
 import alexiil.mc.mod.pipes.blocks.TilePipe;
@@ -25,7 +25,8 @@ import alexiil.mc.mod.pipes.client.model.part.FacadePartKey;
 import alexiil.mc.mod.pipes.client.model.part.PipeSpPartBaker;
 import alexiil.mc.mod.pipes.client.model.part.TankPartBaker;
 import alexiil.mc.mod.pipes.client.model.part.TankPartModelKey;
-import alexiil.mc.mod.pipes.client.render.ItemPlacemenentGhostRenderer;
+import alexiil.mc.mod.pipes.client.render.GhostVertexConsumer;
+import alexiil.mc.mod.pipes.client.render.ItemPlacementGhostRenderer;
 import alexiil.mc.mod.pipes.client.render.PipeFluidTileRenderer;
 import alexiil.mc.mod.pipes.client.render.PipeItemTileRenderer;
 import alexiil.mc.mod.pipes.client.render.PipePartRenderer;
@@ -83,7 +84,10 @@ public class SimplePipesClient implements ClientModInitializer {
         });
         SimplePipeScreens.load();
         // RenderMatrixType.FROM_WORLD_ORIGIN.addRenderer(ItemPlacemenentGhostRenderer::render);
-        ClientTickEvents.END_CLIENT_TICK.register(client -> ItemPlacemenentGhostRenderer.clientTick());
+        ClientTickEvents.END_CLIENT_TICK.register(client -> ItemPlacementGhostRenderer.clientTick());
+
+        WorldRenderEvents.START.register(GhostVertexConsumer::renderStart);
+        WorldRenderEvents.END.register(ItemPlacementGhostRenderer::render);
     }
 
     private static void setCutoutLayer(Block block) {

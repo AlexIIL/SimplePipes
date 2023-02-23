@@ -4,8 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "BakedQuadAccessor",
-    "BufferBuilderAccessor",
-    "WorldRendererMixin"
+    "BufferBuilderAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
