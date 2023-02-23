@@ -15,7 +15,10 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderPhase;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,6 +32,7 @@ import net.minecraft.util.hit.HitResult.Type;
 
 import alexiil.mc.mod.pipes.items.GhostPlacement;
 import alexiil.mc.mod.pipes.items.IItemPlacmentGhost;
+import alexiil.mc.mod.pipes.mixin.impl.RenderLayerAccessor;
 
 public final class ItemPlacementGhostRenderer {
     private ItemPlacementGhostRenderer() {}
@@ -38,9 +42,26 @@ public final class ItemPlacementGhostRenderer {
     private static GhostPlacement currentPlacementGhost;
     private static Framebuffer framebuffer;
 
+    public static class Layers extends RenderPhase {
+        private Layers(String name, Runnable beginAction, Runnable endAction) {
+            super(name, beginAction, endAction);
+        }
+
+        public static final RenderLayer GHOST = RenderLayerAccessor.callOf(
+            "PLACEMENT_GHOST", VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL, VertexFormat.DrawMode.QUADS, 2 << 12,
+            false, true, //
+            RenderLayer.MultiPhaseParameters.builder() //
+                .lightmap(ENABLE_LIGHTMAP) //
+                .program(TRANSLUCENT_PROGRAM) //
+                .texture(MIPMAP_BLOCK_ATLAS_TEXTURE) //
+                .transparency(TRANSLUCENT_TRANSPARENCY) //
+                .build(false) //
+        );
+    }
+
     static {
         LAYERS = new Object2ObjectLinkedOpenHashMap<>();
-        addRenderLayer(RenderLayer.getTranslucent());
+        addRenderLayer(Layers.GHOST);
         VCPS = VertexConsumerProvider.immediate(LAYERS, buffer());
     }
 

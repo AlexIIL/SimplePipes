@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 
 import alexiil.mc.mod.pipes.client.render.GhostVertexConsumer;
+import alexiil.mc.mod.pipes.client.render.ItemPlacementGhostRenderer;
 
 import alexiil.mc.lib.multipart.api.AbstractPart;
 import alexiil.mc.lib.multipart.api.MultipartContainer.PartOffer;
@@ -58,7 +59,7 @@ public abstract class GhostPlacementPart extends GhostPlacement {
             return;
         }
 
-        VertexConsumer buffer = new GhostVertexConsumer(vcp.getBuffer(RenderLayer.getTranslucent()));
+        VertexConsumer buffer = new GhostVertexConsumer(vcp.getBuffer(ItemPlacementGhostRenderer.Layers.GHOST));
 
         MinecraftClient mc = MinecraftClient.getInstance();
         BlockModelRenderer blockRenderer = mc.getBlockRenderManager().getModelRenderer();
