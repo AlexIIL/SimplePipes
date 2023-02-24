@@ -3,3 +3,5 @@ Changes:
 * Added support for rotating pipes and facades by block rotation methods.
 * Enabled code that converts all pipe blocks into multiparts for improved compatibility and maintainability.
 * Fixed issues with multipart pipes not updating their shapes.
+* Fixed some instances of facade z-fighting.
+* Improved part placement ghosts.
