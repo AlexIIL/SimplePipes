@@ -8,7 +8,8 @@
   "entrypoints": {
     "main": ["alexiil.mc.mod.pipes.SimplePipes"],
     "client": ["alexiil.mc.mod.pipes.SimplePipesClient"],
-    "rei_client": ["alexiil.mc.mod.pipes.compat.rei.REIPlugin"]
+    "rei_client": ["alexiil.mc.mod.pipes.compat.rei.REIPlugin"],
+    "emi": ["alexiil.mc.mod.pipes.compat.emi.EMIPlugin"]
   },
   "depends": {
     "fabric": "*",

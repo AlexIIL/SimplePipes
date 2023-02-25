@@ -10,7 +10,8 @@ targetCompatibility = JavaVersion.VERSION_17
 repositories {
     mavenLocal()
     maven { name="BuildCraft"; url="https://mod-buildcraft.com/maven" }
-    maven { url "https://maven.shedaniel.me/" }
+    maven { name="REI"; url="https://maven.shedaniel.me/" }
+    maven { name="EMI"; url="https://maven.terraformersmc.com/" }
 }
 
 archivesBaseName = "SimplePipes"
@@ -49,7 +50,15 @@ dependencies {
     // REI
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:$rei_version"
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-fabric:$rei_version"
-    modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:$rei_version"
+    if (runtime_recipe_viewer == "rei") {
+        modLocalRuntime "me.shedaniel:RoughlyEnoughItems-fabric:$rei_version"
+    }
+
+    // EMI
+    modCompileOnly "dev.emi:emi:$emi_version:api"
+    if (runtime_recipe_viewer == "emi") {
+        modLocalRuntime "dev.emi:emi:$emi_version"
+    }
 
     // Misc
     implementation "com.google.code.findbugs:jsr305:3.0.1"

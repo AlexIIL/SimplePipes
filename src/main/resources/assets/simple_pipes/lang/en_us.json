@@ -41,5 +41,8 @@
     "item.simple_pipes.plug_facade.strip.thin": "Thin Strip Facade: %s",
     "item.simple_pipes.plug_facade.corner.slab": "Slab Corner Facade: %s",
     "item.simple_pipes.plug_facade.corner.thick": "Thick Corner Facade: %s",
-    "item.simple_pipes.plug_facade.corner.thin": "Thin Corner Facade: %s"
+    "item.simple_pipes.plug_facade.corner.thin": "Thin Corner Facade: %s",
+
+    "tag.simple_pipes.triggers_fluid": "Fluid Triggers",
+    "tag.simple_pipes.triggers_item": "Item Triggers"
 }
