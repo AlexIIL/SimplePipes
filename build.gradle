@@ -42,10 +42,12 @@ dependencies {
     modApi "alexiil.mc.lib:libblockattributes-all:$libblockattributes_version"
     modApi "alexiil.mc.lib:libnetworkstack-base:$libnetworkstack_version"
     modApi "alexiil.mc.lib:libmultipart-base:$libmultipart_version"
+    modApi "alexiil.mc.lib:libmultipart-compat:$libmultipart_version"
 
     include "alexiil.mc.lib:libblockattributes-all:$libblockattributes_version"
     include "alexiil.mc.lib:libnetworkstack-base:$libnetworkstack_version"
     include "alexiil.mc.lib:libmultipart-base:$libmultipart_version"
+    include "alexiil.mc.lib:libmultipart-compat:$libmultipart_version"
 
     // REI
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:$rei_version"
