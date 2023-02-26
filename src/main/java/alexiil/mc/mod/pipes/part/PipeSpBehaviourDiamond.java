@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
-import alexiil.mc.mod.pipes.container.ContainerPipeDiamondItem;
-import alexiil.mc.mod.pipes.container.SimplePipeContainerFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
@@ -20,6 +17,9 @@ import net.minecraft.util.math.DirectionTransformation;
 
 import alexiil.mc.mod.pipes.blocks.TilePipe;
 import alexiil.mc.mod.pipes.blocks.TilePipeItemDiamond;
+import alexiil.mc.mod.pipes.container.ContainerPipeDiamondItem;
+import alexiil.mc.mod.pipes.container.SimplePipeContainerFactory;
+import alexiil.mc.mod.pipes.items.SimplePipeItems;
 import alexiil.mc.mod.pipes.pipe.PartSpPipe;
 import alexiil.mc.mod.pipes.pipe.PipeSpBehaviour;
 import alexiil.mc.mod.pipes.pipe.TravellingItem;
@@ -131,9 +131,11 @@ public class PipeSpBehaviourDiamond extends PipeSpBehaviour {
     @Override
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!player.world.isClient) {
-            player.openHandledScreen(new SimplePipeContainerFactory(SimplePipeBlocks.DIAMOND_PIPE_ITEMS.getName(),
-                    (syncId, inv, player1) -> new ContainerPipeDiamondItem(syncId, player1, this),
-                    (player1, buf) -> buf.writeBlockPos(pipe.getPipePos())));
+            player.openHandledScreen(new SimplePipeContainerFactory(
+                SimplePipeItems.DIAMOND_PIPE_ITEMS.getName(),
+                (syncId, inv, player1) -> new ContainerPipeDiamondItem(syncId, player1, this),
+                (player1, buf) -> buf.writeBlockPos(pipe.getPipePos())
+            ));
         }
         return ActionResult.SUCCESS;
     }
