@@ -116,7 +116,8 @@ def allIncludes = [
 def jarDeps = [
         ["alexiil.mc.lib", "libblockattributes-all", "$libblockattributes_version"],
         ["alexiil.mc.lib", "libnetworkstack-base", "$libnetworkstack_version"],
-        ["alexiil.mc.lib", "libmultipart-base", "$libmultipart_version"]
+        ["alexiil.mc.lib", "libmultipart-base", "$libmultipart_version"],
+        ["alexiil.mc.lib", "libmultipart-compat", "$libmultipart_version"]
 ];
 
 generateJar("base", ["**"], [], true);
