@@ -6,3 +6,4 @@ Changes:
 * Fixed some instances of facade z-fighting.
 * Improved part placement ghosts.
 * Added EMI compatibility. (Prevents facades from cluttering up the EMI side panel.)
+* Updated LMP for improved in-world tooltip support.
