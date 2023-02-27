@@ -19,6 +19,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.DirectionTransformation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -190,6 +191,24 @@ public class PipeSpFlowItem extends PipeSpFlow {
             }
         }
         items.clear();
+    }
+
+    @Override
+    public void transform(DirectionTransformation transformation) {
+        for (Iterable<TravellingItem> list : this.items.getAllElements()) {
+            if (list == null) {
+                continue;
+            }
+            for (TravellingItem item : list) {
+                item.side = transformation.map(item.side);
+
+                EnumSet<Direction> oldTried = EnumSet.copyOf(item.tried);
+                item.tried.clear();
+                for (Direction tried : oldTried) {
+                    item.tried.add(transformation.map(tried));
+                }
+            }
+        }
     }
 
     void sendItemDataToClient(TravellingItem item) {
