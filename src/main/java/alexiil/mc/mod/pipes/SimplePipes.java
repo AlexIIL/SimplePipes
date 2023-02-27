@@ -25,11 +25,15 @@ public class SimplePipes implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        LOGGER.info("[SimplePipes] Initializing...");
+
         FacadeStateManager.load();
         SimplePipeParts.load();
         SimplePipeBlocks.load();
         SimplePipeItems.load();
         SimplePipeContainers.load();
+
+        LOGGER.info("[SimplePipes] Mod Initialized.");
     }
 
     public static Identifier id(String path) {
