@@ -239,6 +239,7 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
     private void transform(DirectionTransformation transform) {
         transformConnections(transform);
         behaviour.transform(transform);
+        flow.transform(transform);
     }
 
     @Override

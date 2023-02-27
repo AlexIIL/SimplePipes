@@ -5,6 +5,7 @@ import net.minecraft.loot.context.LootContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.DirectionTransformation;
 import net.minecraft.world.World;
 
 import alexiil.mc.lib.multipart.api.AbstractPart.ItemDropTarget;
@@ -49,4 +50,6 @@ public abstract class PipeSpFlow {
     public void removeItemsForDrop(DefaultedList<ItemStack> all) {}
 
     public abstract Object getInsertable(Direction searchDirection);
+
+    public void transform(DirectionTransformation transformation) {}
 }
