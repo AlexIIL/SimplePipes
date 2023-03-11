@@ -69,7 +69,7 @@ public abstract class PipeSpDef extends PartDefinition {
                 return new ItemStack(pipeBlock);
             }
         } else {
-            return this.pickStack;
+            return this.pickStack.copy();
         }
     }
 
