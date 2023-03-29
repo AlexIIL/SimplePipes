@@ -9,6 +9,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
@@ -27,6 +28,10 @@ public enum FacadeCraftingRecipe implements CraftingRecipe, RecipeSerializer<Fac
     }
 
     @Override
+    public ItemStack craft(CraftingInventory inventory, DynamicRegistryManager registryManager) {
+        return craft(inventory);
+    }
+
     public ItemStack craft(CraftingInventory inv) {
 
         FacadeBlockStateInfo state = null;
@@ -78,7 +83,7 @@ public enum FacadeCraftingRecipe implements CraftingRecipe, RecipeSerializer<Fac
     }
 
     @Override
-    public ItemStack getOutput() {
+    public ItemStack getOutput(DynamicRegistryManager registryManager) {
         return ItemStack.EMPTY;
     }
 

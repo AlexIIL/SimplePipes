@@ -75,10 +75,11 @@ public abstract class BlockPipe extends BlockBase
         builder.add(Properties.WATERLOGGED);
     }
 
-    @Override
-    public boolean isTranslucent(BlockState state, BlockView view, BlockPos pos) {
-        return !(Boolean) state.get(Properties.WATERLOGGED);
-    }
+    // This block's sole purpose is to convert itself into a part. So no need for proper rendering.
+//    @Override
+//    public boolean isTranslucent(BlockState state, BlockView view, BlockPos pos) {
+//        return !(Boolean) state.get(Properties.WATERLOGGED);
+//    }
 
     @Override
     public FluidState getFluidState(BlockState blockState_1) {

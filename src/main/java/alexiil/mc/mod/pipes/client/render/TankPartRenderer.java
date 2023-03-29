@@ -7,7 +7,7 @@ import java.util.List;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -46,8 +46,8 @@ public class TankPartRenderer implements PartRenderer<PartTank> {
             matrices.push();
             matrices.translate(0.5, 0.25, 0.5);
             MinecraftClient.getInstance().getItemRenderer().renderItem(
-                new ItemStack(Items.YELLOW_DYE), ModelTransformation.Mode.GROUND, light, OverlayTexture.DEFAULT_UV,
-                matrices, vertexConsumers, 42
+                new ItemStack(Items.YELLOW_DYE), ModelTransformationMode.GROUND, light, OverlayTexture.DEFAULT_UV,
+                matrices, vertexConsumers, null, 42
             );
             matrices.pop();
         }

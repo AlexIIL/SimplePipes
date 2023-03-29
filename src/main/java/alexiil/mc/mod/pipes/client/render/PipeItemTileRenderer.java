@@ -9,6 +9,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -68,7 +69,7 @@ public class PipeItemTileRenderer<T extends TilePipe> implements BlockEntityRend
                     }
                 }
                 MinecraftClient.getInstance().getItemRenderer()
-                    .renderItem(stack, ModelTransformation.Mode.FIXED, light, overlay, matrices, vertexConsumers, 42);
+                    .renderItem(stack, ModelTransformationMode.FIXED, light, overlay, matrices, vertexConsumers, null, 42);
                 matrices.pop();
             }
         }
