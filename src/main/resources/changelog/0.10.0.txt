@@ -1,0 +1,4 @@
+Changes:
+
+* Updated to Minecraft 1.19.4
+* Fixed block triggers and pumps pointing in the wrong direction when placed vertically.
