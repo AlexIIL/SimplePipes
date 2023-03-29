@@ -2,3 +2,4 @@ Changes:
 
 * Fixed bug where pipe definitions' drop stacks would get corrupted, leading to pipes no longer dropping items in
   survival.
+* Fixed block triggers and pumps pointing in the wrong direction when placed vertically.
