@@ -39,8 +39,10 @@
       "+id": "simple_pipes_dep_container",
       "+name": "SimplePipeTest (Dependency Container)",
       "+custom": {
-        "modmenu:api": true,
-        "modmenu:parent": "simple_pipes"
+        "modmenu": {
+          "badges": ["library"],
+          "parent": "simple_pipes"
+        }
       },
       "+icon": "assets/simple_pipes/icon_container.png",
       "-entrypoints": {},
