@@ -15,7 +15,7 @@ repositories {
 }
 
 archivesBaseName = "SimplePipes"
-version = "0.8.1"
+version = "0.8.2"
 
 loom {
     accessWidenerPath = file("src/main/resources/simple_pipes.accesswidener")
