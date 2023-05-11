@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import net.minecraft.class_8567;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.context.LootContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -50,7 +50,7 @@ public class PipeSpBehaviourDiamond extends PipeSpBehaviour {
     }
 
     @Override
-    public void addDrops(ItemDropTarget target, LootContext context) {
+    public void addDrops(ItemDropTarget target, class_8567 context) {
         for (int i = 0; i < INV_SIZE; i++) {
             ItemStack stack = filterInv.getStack(i);
             if (!stack.isEmpty()) {
@@ -130,7 +130,7 @@ public class PipeSpBehaviourDiamond extends PipeSpBehaviour {
 
     @Override
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!player.world.isClient) {
+        if (!player.getWorld().isClient) {
             player.openHandledScreen(new SimplePipeContainerFactory(
                 SimplePipeItems.DIAMOND_PIPE_ITEMS.getName(),
                 (syncId, inv, player1) -> new ContainerPipeDiamondItem(syncId, player1, this),

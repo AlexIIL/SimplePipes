@@ -18,7 +18,7 @@ public class ContainerTriggerFluidContains extends ContainerTile<TileTriggerFlui
     public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerTriggerFluidContains> FACTORY = (syncId, inv, buffer) -> {
         PlayerEntity player = inv.player;
         BlockPos pos = buffer.readBlockPos();
-        BlockEntity be = player.world.getBlockEntity(pos);
+        BlockEntity be = player.getWorld().getBlockEntity(pos);
         if (be instanceof TileTriggerFluidContains) {
             return new ContainerTriggerFluidContains(syncId, player, (TileTriggerFluidContains) be);
         }

@@ -1,5 +1,6 @@
 package alexiil.mc.mod.pipes.pipe;
 
+import net.minecraft.class_8567;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.nbt.NbtCompound;
@@ -45,7 +46,7 @@ public abstract class PipeSpFlow {
 
     public abstract void tick();
 
-    public void addDrops(ItemDropTarget target, LootContext context) {}
+    public void addDrops(ItemDropTarget target, class_8567 context) {}
 
     public void removeItemsForDrop(DefaultedList<ItemStack> all) {}
 

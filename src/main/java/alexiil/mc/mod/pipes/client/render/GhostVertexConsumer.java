@@ -12,7 +12,7 @@ public class GhostVertexConsumer implements VertexConsumer {
     public static void renderStart(WorldRenderContext context) {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if (player != null) {
-            float placementDelta = (player.world.getTime() % 100) + context.tickDelta();
+            float placementDelta = (player.getWorld().getTime() % 100) + context.tickDelta();
             alpha = (int) ((Math.sin(placementDelta / 4f) / 4f + 0.75f) * 255f + 0.5f);
         }
     }

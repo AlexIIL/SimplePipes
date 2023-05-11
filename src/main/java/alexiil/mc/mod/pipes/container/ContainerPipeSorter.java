@@ -14,7 +14,7 @@ public class ContainerPipeSorter extends ContainerTile<TilePipeItemDiamond> {
     public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerPipeSorter> FACTORY = (syncId, inv, buffer) -> {
         PlayerEntity player = inv.player;
         BlockPos pos = buffer.readBlockPos();
-        BlockEntity be = player.world.getBlockEntity(pos);
+        BlockEntity be = player.getWorld().getBlockEntity(pos);
         if (be instanceof TilePipeItemDiamond) {
             return new ContainerPipeSorter(syncId, player, (TilePipeItemDiamond) be);
         }

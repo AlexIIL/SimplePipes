@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.systems.VertexSorter;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
@@ -100,7 +101,7 @@ public final class ItemPlacementGhostRenderer {
         Matrix4f projBackup = RenderSystem.getProjectionMatrix();
         // Note: this doesn't write to the alpha channel or the depth buffer, which is exactly what we want.
         client.getFramebuffer().draw(framebuffer.textureWidth, framebuffer.textureHeight);
-        RenderSystem.setProjectionMatrix(projBackup);
+        RenderSystem.setProjectionMatrix(projBackup, RenderSystem.getVertexSorting());
     }
 
     public static void render(WorldRenderContext context) {
@@ -127,7 +128,7 @@ public final class ItemPlacementGhostRenderer {
         RenderSystem.enableBlend();
         framebuffer.draw(mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(), false);
         RenderSystem.disableBlend();
-        RenderSystem.setProjectionMatrix(projBackup);
+        RenderSystem.setProjectionMatrix(projBackup, RenderSystem.getVertexSorting());
     }
 
     private static void render0(

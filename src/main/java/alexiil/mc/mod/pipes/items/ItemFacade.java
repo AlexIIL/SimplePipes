@@ -121,9 +121,10 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
     }
      */
 
-    public void addSubItems(ItemGroup group, DefaultedList<ItemStack> subItems) {
+    public void addSubItems(ItemGroup.Entries subItems) {
         // Add a single phased facade as a default
         // check if the data is present as we only process in post-init
+        int count = 0;
         FacadeBlockStateInfo stone = FacadeStateManager.getInfoForBlock(Blocks.STONE);
         if (stone != null) {
             for (FacadeBlockStateInfo info : FacadeStateManager.getValidFacadeStates().values()) {
@@ -135,13 +136,14 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
                     continue;
                 }
                 for (FacadeShape shape : PREVIEW_SHAPES) {
+                    count++;
                     subItems.add(createItemStack(new FullFacade(info, shape)));
                 }
             }
         }
 
         if (FacadeStateManager.DEBUG) {
-            SimplePipes.LOGGER.info("[facades] " + subItems.size() + " sub facade items");
+            SimplePipes.LOGGER.info("[facades] " + count + " sub facade items");
         }
     }
 

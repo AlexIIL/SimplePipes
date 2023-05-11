@@ -10,9 +10,9 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
+import net.minecraft.class_8567;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.context.LootContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.util.DyeColor;
@@ -163,7 +163,7 @@ public class PipeSpFlowItem extends PipeSpFlow {
     }
 
     @Override
-    public void addDrops(ItemDropTarget target, LootContext context) {
+    public void addDrops(ItemDropTarget target, class_8567 context) {
         BlockPos pos = pipe.getPipePos();
         long tick = pipe.getWorldTime();
         for (Iterable<TravellingItem> list : this.items.getAllElements()) {

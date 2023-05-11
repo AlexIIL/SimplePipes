@@ -16,7 +16,7 @@ public class ContainerPipeDiamondItem extends ContainerPart<PartSpPipe> {
     public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerPipeDiamondItem> FACTORY = (syncId, inv, buffer) -> {
         PlayerEntity player = inv.player;
         BlockPos pos = buffer.readBlockPos();
-        MultipartContainer container = MultipartContainer.ATTRIBUTE.getFirstOrNull(player.world, pos);
+        MultipartContainer container = MultipartContainer.ATTRIBUTE.getFirstOrNull(player.getWorld(), pos);
 
         if (container == null) {
             throw new IllegalStateException("Attempted to open a diamond pipe screen where there is no diamond pipe!");

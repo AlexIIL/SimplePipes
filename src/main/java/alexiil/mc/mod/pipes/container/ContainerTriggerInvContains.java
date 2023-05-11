@@ -19,7 +19,7 @@ public class ContainerTriggerInvContains extends ContainerTile<TileTriggerInvCon
     public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerTriggerInvContains> FACTORY = (syncId, inv, buffer) -> {
         PlayerEntity player = inv.player;
         BlockPos pos = buffer.readBlockPos();
-        BlockEntity be = player.world.getBlockEntity(pos);
+        BlockEntity be = player.getWorld().getBlockEntity(pos);
         if (be instanceof TileTriggerInvContains) {
             return new ContainerTriggerInvContains(syncId, player, (TileTriggerInvContains) be);
         }

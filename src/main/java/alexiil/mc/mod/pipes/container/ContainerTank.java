@@ -19,7 +19,7 @@ public class ContainerTank extends ContainerPart<PartTank> {
     public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerTank> FACTORY = (syncId, inv, buffer) -> {
         PlayerEntity player = inv.player;
         BlockPos pos = buffer.readBlockPos();
-        MultipartContainer c = MultipartUtil.get(player.world, pos);
+        MultipartContainer c = MultipartUtil.get(player.getWorld(), pos);
         if (c == null) {
             throw new IllegalStateException("Attempted to open a tank screen where there is no tank!");
         }

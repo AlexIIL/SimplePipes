@@ -19,7 +19,7 @@ public class ContainerTriggerInvSpace extends ContainerTile<TileTriggerInvSpace>
     public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerTriggerInvSpace> FACTORY = (syncId, inv, buffer) -> {
         PlayerEntity player = inv.player;
         BlockPos pos = buffer.readBlockPos();
-        BlockEntity be = player.world.getBlockEntity(pos);
+        BlockEntity be = player.getWorld().getBlockEntity(pos);
         if (be instanceof TileTriggerInvSpace) {
             return new ContainerTriggerInvSpace(syncId, player, (TileTriggerInvSpace) be);
         }

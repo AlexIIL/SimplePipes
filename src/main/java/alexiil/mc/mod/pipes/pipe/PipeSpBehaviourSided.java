@@ -72,7 +72,7 @@ public abstract class PipeSpBehaviourSided extends PipeSpBehaviour {
         if (!player.getStackInHand(hand).isEmpty()) {
             return ActionResult.PASS;
         }
-        if (player.world.isClient) {
+        if (player.getWorld().isClient) {
             return ActionResult.SUCCESS;
         }
         return attemptRotation() ? ActionResult.SUCCESS : ActionResult.FAIL;

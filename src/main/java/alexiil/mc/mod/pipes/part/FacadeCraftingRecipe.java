@@ -3,6 +3,7 @@ package alexiil.mc.mod.pipes.part;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
+import net.minecraft.class_8566;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -23,16 +24,16 @@ public enum FacadeCraftingRecipe implements CraftingRecipe, RecipeSerializer<Fac
     public static final Identifier ID = SimplePipes.id("facade_crafting");
 
     @Override
-    public boolean matches(CraftingInventory inv, World world) {
+    public boolean matches(class_8566 inv, World world) {
         return !craft(inv).isEmpty();
     }
 
     @Override
-    public ItemStack craft(CraftingInventory inventory, DynamicRegistryManager registryManager) {
+    public ItemStack craft(class_8566 inventory, DynamicRegistryManager registryManager) {
         return craft(inventory);
     }
 
-    public ItemStack craft(CraftingInventory inv) {
+    public ItemStack craft(class_8566 inv) {
 
         FacadeBlockStateInfo state = null;
         int microVoxelCount = 0;

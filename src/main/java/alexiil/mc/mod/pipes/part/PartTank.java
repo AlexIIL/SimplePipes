@@ -160,7 +160,7 @@ public class PartTank extends AbstractPart {
     @Override
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (player.getStackInHand(hand).isEmpty()) {
-            if (!player.world.isClient) {
+            if (!player.getWorld().isClient) {
                 player.openHandledScreen(new SimplePipeContainerFactory(SimplePipeItems.TANK.getName(),
                         (syncId, inv, player1) -> new ContainerTank(syncId, player1, this),
                         (player1, buf) -> buf.writeBlockPos(holder.getContainer().getMultipartPos())));
@@ -168,7 +168,7 @@ public class PartTank extends AbstractPart {
             return ActionResult.SUCCESS;
         }
 
-        if (player.world.isClient) {
+        if (player.getWorld().isClient) {
             return ActionResult.SUCCESS;
         }
         try {

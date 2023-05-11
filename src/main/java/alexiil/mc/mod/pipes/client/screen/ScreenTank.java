@@ -6,10 +6,10 @@ import java.util.List;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -35,20 +35,17 @@ public class ScreenTank extends HandledScreen<ContainerTank> {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float partialTicks) {
-        renderBackground(matrices);
-        super.render(matrices, mouseX, mouseY, partialTicks);
-        drawMouseoverTooltip(matrices, mouseX, mouseY);
+    public void render(DrawContext context, int mouseX, int mouseY, float partialTicks) {
+        renderBackground(context);
+        super.render(context, mouseX, mouseY, partialTicks);
+        drawMouseoverTooltip(context, mouseX, mouseY);
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, TANK_GUI);
+    protected void drawBackground(DrawContext context, float partialTicks, int mouseX, int mouseY) {
         int x = (this.width - this.backgroundWidth) / 2;
         int y = (this.height - this.backgroundHeight) / 2;
-        drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        context.drawTexture(TANK_GUI, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         FluidStackInterp fluid = handler.part.getFluidForRender(partialTicks);
         if (fluid != null && !fluid.fluid.isEmpty() && fluid.amount > 0.1) {
             double x0 = x + 80 + 0;
@@ -56,28 +53,22 @@ public class ScreenTank extends HandledScreen<ContainerTank> {
             double x1 = x + 80 + 16;
             double y1 = y + 23 + 48;
             fluid.fluid.renderGuiRect(x0, y0, x1, y1);
-            RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0, TANK_GUI);
         }
-        drawTexture(matrices, x + 80, y + 23, 176, 0, 16, 48);
-    }
-
-    private static void bindTexture(Identifier tex) {
-        MinecraftClient.getInstance().getTextureManager().bindTexture(tex);
+        context.drawTexture(TANK_GUI, x + 80, y + 23, 176, 0, 16, 48);
     }
 
     @Override
-    protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
-        textRenderer.draw(matrices, title, 8.0F, 6.0F, 0x40_40_40);
-        textRenderer.draw(
-            matrices, handler.player.getInventory().getDisplayName(), 8.0F, backgroundHeight - 96 + 2, 0x40_40_40
+    protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
+        context.drawText(textRenderer, title, 8, 6, 0x40_40_40, false);
+        context.drawText(
+            textRenderer, handler.player.getInventory().getDisplayName(), 8, backgroundHeight - 96 + 2, 0x40_40_40,
+            false
         );
     }
 
     @Override
-    protected void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(matrices, mouseX, mouseY);
+    protected void drawMouseoverTooltip(DrawContext context, int mouseX, int mouseY) {
+        super.drawMouseoverTooltip(context, mouseX, mouseY);
         int x = (this.width - this.backgroundWidth) / 2;
         int y = (this.height - this.backgroundHeight) / 2;
         FluidAmount capacity = handler.part.fluidInv.tankCapacity_F;
@@ -86,10 +77,11 @@ public class ScreenTank extends HandledScreen<ContainerTank> {
             if (fluid == null || fluid.isEmpty()) {
                 List<Text> str = new ArrayList<>();
                 str.add(FluidUnit.BUCKET.getEmptyTank(capacity));
-                renderTooltip(matrices, str, mouseX, mouseY);
+                context.drawTooltip(textRenderer, str, mouseX, mouseY);
                 return;
             }
-            renderTooltip(matrices, fluid.getFullTooltip(capacity, FluidTooltipContext.USE_CONFIG), mouseX, mouseY);
+            context.drawTooltip(
+                textRenderer, fluid.getFullTooltip(capacity, FluidTooltipContext.USE_CONFIG), mouseX, mouseY);
         }
     }
 }
