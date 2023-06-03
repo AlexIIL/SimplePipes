@@ -7,14 +7,13 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 
 import net.minecraft.client.render.model.BakedQuad;
 
-import alexiil.mc.mod.pipes.blocks.TilePipe.PipeBlockModelState;
 import alexiil.mc.mod.pipes.client.model.PipeBaseModelGenStandard;
 import alexiil.mc.mod.pipes.client.model.SpriteSupplier;
 
 import alexiil.mc.lib.multipart.api.render.PartModelBaker;
 import alexiil.mc.lib.multipart.api.render.PartRenderContext;
 
-public class PipeSpPartBaker implements PartModelBaker<PipeBlockModelState> {
+public class PipeSpPartBaker implements PartModelBaker<PipeSpPartKey> {
 
     private final SpriteSupplier sprites;
 
@@ -23,7 +22,7 @@ public class PipeSpPartBaker implements PartModelBaker<PipeBlockModelState> {
     }
 
     @Override
-    public void emitQuads(PipeBlockModelState key, PartRenderContext ctx) {
+    public void emitQuads(PipeSpPartKey key, PartRenderContext ctx) {
         QuadEmitter emitter = ctx.getEmitter();
         RenderMaterial cutout = RendererAccess.INSTANCE.getRenderer().materialFinder()//
             .disableAo(0, true)//

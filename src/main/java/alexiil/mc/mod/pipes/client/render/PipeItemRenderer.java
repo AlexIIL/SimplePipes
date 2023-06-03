@@ -16,7 +16,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Quaternionf;
 
-public class PipeItemTileRenderer<T extends TilePipe> implements BlockEntityRenderer<T> {
+public class PipeItemRenderer {
 
     private static final Quaternionf[] ROTATIONS = new Quaternionf[6];
 
@@ -27,17 +27,6 @@ public class PipeItemTileRenderer<T extends TilePipe> implements BlockEntityRend
         ROTATIONS[Direction.WEST.ordinal()] = new Quaternionf().fromAxisAngleDeg(0, 1, 0, 270);
         ROTATIONS[Direction.UP.ordinal()] = new Quaternionf().fromAxisAngleDeg(1, 0, 0, 270);
         ROTATIONS[Direction.DOWN.ordinal()] = new Quaternionf().fromAxisAngleDeg(1, 0, 0, 90);
-    }
-
-    public PipeItemTileRenderer(BlockEntityRendererFactory.Context ctx) {
-
-    }
-
-    @Override
-    public void render(
-        T pipe, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay
-    ) {
-        render(tickDelta, matrices, vertexConsumers, light, overlay, (PipeSpFlowItem) pipe.getFlow());
     }
 
     public static void render(

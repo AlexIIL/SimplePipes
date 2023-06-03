@@ -11,14 +11,11 @@ import net.fabricmc.fabric.api.client.model.ModelProviderContext;
 import net.fabricmc.fabric.api.client.model.ModelResourceProvider;
 import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 
 import alexiil.mc.mod.pipes.SimplePipes;
-import alexiil.mc.mod.pipes.blocks.BlockPipe;
 import alexiil.mc.mod.pipes.client.model.DelayedBakedModel.IModelBaker;
 
 public class SimplePipeModels {
@@ -53,51 +50,14 @@ public class SimplePipeModels {
         ResourceManager manager, ModelIdentifier resourceId, ModelProviderContext context
     ) {
         if ("inventory".equals(resourceId.getVariant())) {
-            switch (resourceId.getNamespace()) {
-                case SimplePipes.MODID:
-                    switch (resourceId.getPath()) {
-                        case "facade":
-                            return ModelFacadeItem::new;
-                        default:
-                            return null;
-                    }
-                default: {
-                    return null;
+            if (resourceId.getNamespace().equals(SimplePipes.MODID)) {
+                if (resourceId.getPath().equals("facade")) {
+                    return ModelFacadeItem::new;
                 }
-            }
-        }
-        Block block = Registries.BLOCK.get(new Identifier(resourceId.getNamespace(), resourceId.getPath()));
-        if (block instanceof BlockPipe) {
-            return ctx -> new PipeBlockModel(ctx, (BlockPipe) block);
-        }
-        switch (resourceId.getNamespace()) {
-            // case SimplePipes.MODID: {
-            // switch (resourceId.getPath()) {
-            // case "pipe_wooden_item": return ctx -> new PipeBlockModel(ctx, SimplePipeBlocks.WOODEN_PIPE_ITEMS);
-            // case "pipe_stone_item": return ctx -> new PipeBlockModel(SimplePipeBlocks.STONE_PIPE_ITEMS);
-            // case "pipe_clay_item":return () -> new PipeBlockModel(SimplePipeBlocks.CLAY_PIPE_ITEMS);
-            // case "pipe_iron_item": return () -> new PipeBlockModel(SimplePipeBlocks.IRON_PIPE_ITEMS);
-            // case "pipe_gold_item":
-            // return () -> new PipeBlockModel(SimplePipeBlocks.GOLD_PIPE_ITEMS);
-            // case "pipe_diamond_item":
-            // return () -> new PipeBlockModel(SimplePipeBlocks.DIAMOND_PIPE_ITEMS);
-            //
-            // case "pipe_wooden_fluid":
-            // return () -> new PipeBlockModel(SimplePipeBlocks.WOODEN_PIPE_FLUIDS);
-            // case "pipe_stone_fluid":
-            // return () -> new PipeBlockModel(SimplePipeBlocks.STONE_PIPE_FLUIDS);
-            // case "pipe_clay_fluid":
-            // return () -> new PipeBlockModel(SimplePipeBlocks.CLAY_PIPE_FLUIDS);
-            // case "pipe_iron_fluid":
-            // return () -> new PipeBlockModel(SimplePipeBlocks.IRON_PIPE_FLUIDS);
-            //
-            // default:
-            // return null;
-            // }
-            // }
-            default: {
                 return null;
             }
+            return null;
         }
+        return null;
     }
 }

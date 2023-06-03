@@ -4,8 +4,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
-import alexiil.mc.mod.pipes.blocks.BlockPipe;
-
 import alexiil.mc.lib.net.IMsgReadCtx;
 import alexiil.mc.lib.net.InvalidInputDataException;
 import alexiil.mc.lib.net.NetByteBuf;
@@ -20,9 +18,6 @@ import alexiil.mc.lib.multipart.api.PartDefinition;
 public abstract class PipeSpDef extends PartDefinition {
 
     public final boolean isExtraction;
-
-    @Deprecated
-    public BlockPipe pipeBlock;
 
     private ItemStack pickStack = ItemStack.EMPTY;
 
@@ -61,16 +56,7 @@ public abstract class PipeSpDef extends PartDefinition {
     }
 
     public ItemStack getPickStack() {
-        if (this.pickStack.isEmpty()) {
-            // Handle addons that don't know about pickStack
-            if (pipeBlock == null) {
-                return ItemStack.EMPTY;
-            } else {
-                return new ItemStack(pipeBlock);
-            }
-        } else {
-            return this.pickStack.copy();
-        }
+        return this.pickStack.copy();
     }
 
     public static class PipeDefItem extends PipeSpDef {

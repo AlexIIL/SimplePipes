@@ -1,3 +1,4 @@
 Changes:
 
 * Updated to Minecraft 1.20
+* Removed deprecated pipe blocks, in favor of pipe parts.

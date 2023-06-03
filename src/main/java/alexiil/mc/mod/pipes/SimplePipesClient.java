@@ -6,29 +6,19 @@
 package alexiil.mc.mod.pipes;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.render.RenderLayer;
-
-import alexiil.mc.mod.pipes.blocks.SimplePipeBlocks;
-import alexiil.mc.mod.pipes.blocks.TilePipe;
-import alexiil.mc.mod.pipes.blocks.TilePipe.PipeBlockModelState;
 import alexiil.mc.mod.pipes.client.model.SimplePipeModels;
 import alexiil.mc.mod.pipes.client.model.part.FacadePartBaker;
 import alexiil.mc.mod.pipes.client.model.part.FacadePartKey;
 import alexiil.mc.mod.pipes.client.model.part.PipeSpPartBaker;
+import alexiil.mc.mod.pipes.client.model.part.PipeSpPartKey;
 import alexiil.mc.mod.pipes.client.model.part.TankPartBaker;
 import alexiil.mc.mod.pipes.client.model.part.TankPartModelKey;
 import alexiil.mc.mod.pipes.client.render.GhostVertexConsumer;
 import alexiil.mc.mod.pipes.client.render.ItemPlacementGhostRenderer;
-import alexiil.mc.mod.pipes.client.render.PipeFluidTileRenderer;
-import alexiil.mc.mod.pipes.client.render.PipeItemTileRenderer;
 import alexiil.mc.mod.pipes.client.render.PipePartRenderer;
 import alexiil.mc.mod.pipes.client.render.TankPartRenderer;
 import alexiil.mc.mod.pipes.client.screen.SimplePipeScreens;
@@ -47,36 +37,10 @@ public class SimplePipesClient implements ClientModInitializer {
         ModelLoadingRegistry.INSTANCE.registerAppender(SimplePipeModels::appendModels);
         //ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).register(this::registerSprites);
 
-        registerItemPipeRender(SimplePipeBlocks.WOODEN_PIPE_ITEM_TILE);
-        registerItemPipeRender(SimplePipeBlocks.STONE_PIPE_ITEM_TILE);
-        registerItemPipeRender(SimplePipeBlocks.CLAY_PIPE_ITEM_TILE);
-        registerItemPipeRender(SimplePipeBlocks.IRON_PIPE_ITEM_TILE);
-        registerItemPipeRender(SimplePipeBlocks.GOLD_PIPE_ITEM_TILE);
-        registerItemPipeRender(SimplePipeBlocks.DIAMOND_PIPE_ITEM_TILE);
-
-        registerFluidPipeRender(SimplePipeBlocks.WOODEN_PIPE_FLUID_TILE);
-        registerFluidPipeRender(SimplePipeBlocks.STONE_PIPE_FLUID_TILE);
-        registerFluidPipeRender(SimplePipeBlocks.CLAY_PIPE_FLUID_TILE);
-        registerFluidPipeRender(SimplePipeBlocks.IRON_PIPE_FLUID_TILE);
-        registerFluidPipeRender(SimplePipeBlocks.SPONGE_PIPE_FLUID_TILE);
-
-        setCutoutLayer(SimplePipeBlocks.WOODEN_PIPE_ITEMS);
-        setCutoutLayer(SimplePipeBlocks.STONE_PIPE_ITEMS);
-        setCutoutLayer(SimplePipeBlocks.CLAY_PIPE_ITEMS);
-        setCutoutLayer(SimplePipeBlocks.IRON_PIPE_ITEMS);
-        setCutoutLayer(SimplePipeBlocks.GOLD_PIPE_ITEMS);
-        setCutoutLayer(SimplePipeBlocks.DIAMOND_PIPE_ITEMS);
-
-        setCutoutLayer(SimplePipeBlocks.WOODEN_PIPE_FLUIDS);
-        setCutoutLayer(SimplePipeBlocks.STONE_PIPE_FLUIDS);
-        setCutoutLayer(SimplePipeBlocks.CLAY_PIPE_FLUIDS);
-        setCutoutLayer(SimplePipeBlocks.IRON_PIPE_FLUIDS);
-        setCutoutLayer(SimplePipeBlocks.SPONGE_PIPE_FLUIDS);
-
         PartStaticModelRegisterEvent.EVENT.register(model -> {
             model.register(TankPartModelKey.class, TankPartBaker.INSTANCE);
             model.register(FacadePartKey.class, FacadePartBaker.INSTANCE);
-            model.register(PipeBlockModelState.class, new PipeSpPartBaker(model::getSprite));
+            model.register(PipeSpPartKey.class, new PipeSpPartBaker(model::getSprite));
         });
         PartDynamicModelRegisterEvent.EVENT.register(renderer -> {
             renderer.register(PartTank.class, new TankPartRenderer());
@@ -88,18 +52,6 @@ public class SimplePipesClient implements ClientModInitializer {
 
         WorldRenderEvents.START.register(GhostVertexConsumer::renderStart);
         WorldRenderEvents.END.register(ItemPlacementGhostRenderer::render);
-    }
-
-    private static void setCutoutLayer(Block block) {
-        BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout());
-    }
-
-    private static <T extends TilePipe> void registerItemPipeRender(BlockEntityType<T> type) {
-        BlockEntityRendererRegistry.register(type, PipeItemTileRenderer::new);
-    }
-
-    private static <T extends TilePipe> void registerFluidPipeRender(BlockEntityType<T> type) {
-        BlockEntityRendererRegistry.register(type, PipeFluidTileRenderer::new);
     }
 
     /*

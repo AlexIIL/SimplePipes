@@ -8,11 +8,11 @@ import alexiil.mc.mod.pipes.pipe.PipeSpDef;
 
 import alexiil.mc.lib.multipart.api.render.PartModelKey;
 
-public class PipeBlockModelState extends PartModelKey {
+public class PipeSpPartKey extends PartModelKey {
     public final PipeSpDef def;
     final byte connections;
 
-    public PipeBlockModelState(PipeSpDef def, byte isConnected) {
+    public PipeSpPartKey(PipeSpDef def, byte isConnected) {
         this.def = def;
         this.connections = isConnected;
     }
@@ -36,7 +36,7 @@ public class PipeBlockModelState extends PartModelKey {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        PipeBlockModelState other = (PipeBlockModelState) obj;
+        PipeSpPartKey other = (PipeSpPartKey) obj;
         return connections == other.connections && Objects.equals(def, other.def);
     }
 }

@@ -14,12 +14,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Direction;
 
-import alexiil.mc.mod.pipes.blocks.TilePipeFluidIron;
-import alexiil.mc.mod.pipes.blocks.TilePipeFluidWood;
-import alexiil.mc.mod.pipes.blocks.TilePipeSided;
 import alexiil.mc.mod.pipes.part.PipeSpBehaviourIron;
-import alexiil.mc.mod.pipes.part.SimplePipeParts;
-import alexiil.mc.mod.pipes.pipe.PipeSpFlowFluid.SideSection;
+
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.FluidExtractable;
@@ -231,12 +227,6 @@ public class PipeSpFlowFluid extends PipeSpFlow {
             if (!pipe.isConnected(to)) {
                 return false;
             }
-            if (pipe instanceof TilePipeFluidIron) {
-                return to == ((TilePipeSided) pipe).currentDirection();
-            }
-            if (pipe instanceof TilePipeFluidWood) {
-                return to != ((TilePipeSided) pipe).currentDirection();
-            }
 
             if (pipe instanceof PartSpPipe) {
                 PartSpPipe part = (PartSpPipe) pipe;
@@ -260,12 +250,6 @@ public class PipeSpFlowFluid extends PipeSpFlow {
             return false;
         }
         // Can send to direction
-        if (pipe instanceof TilePipeFluidIron) {
-            return to == ((TilePipeSided) pipe).currentDirection();
-        }
-        if (pipe instanceof TilePipeFluidWood) {
-            return to != ((TilePipeSided) pipe).currentDirection();
-        }
         if (pipe instanceof PartSpPipe) {
             PartSpPipe part = (PartSpPipe) pipe;
             if (part.behaviour instanceof PipeSpBehaviourIron) {

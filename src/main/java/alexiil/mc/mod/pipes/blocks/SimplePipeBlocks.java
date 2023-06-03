@@ -34,56 +34,8 @@ public class SimplePipeBlocks {
     public static final BlockTriggerFluidSpace TRIGGER_FLUID_INV_SPACE;
     public static final BlockTriggerFluidContains TRIGGER_FLUID_INV_CONTAINS;
 
-    @Deprecated
-    public static final BlockPipeItemWooden WOODEN_PIPE_ITEMS;
-    @Deprecated
-    public static final BlockPipeItemStone STONE_PIPE_ITEMS;
-    @Deprecated
-    public static final BlockPipeItemClay CLAY_PIPE_ITEMS;
-    @Deprecated
-    public static final BlockPipeItemIron IRON_PIPE_ITEMS;
-    @Deprecated
-    public static final BlockPipeItemGold GOLD_PIPE_ITEMS;
-    @Deprecated
-    public static final BlockPipeItemDiamond DIAMOND_PIPE_ITEMS;
-
-    @Deprecated
-    public static final BlockPipeFluidWooden WOODEN_PIPE_FLUIDS;
-    @Deprecated
-    public static final BlockPipeFluidStone STONE_PIPE_FLUIDS;
-    @Deprecated
-    public static final BlockPipeFluidClay CLAY_PIPE_FLUIDS;
-    @Deprecated
-    public static final BlockPipeFluidIron IRON_PIPE_FLUIDS;
-    @Deprecated
-    public static final BlockPipeFluidSponge SPONGE_PIPE_FLUIDS;
-
     public static final BlockTank TANK;
     public static final BlockPump PUMP;
-
-    @Deprecated
-    public static final BlockEntityType<TilePipeItemWood> WOODEN_PIPE_ITEM_TILE;
-    @Deprecated
-    public static final BlockEntityType<TilePipeItemStone> STONE_PIPE_ITEM_TILE;
-    @Deprecated
-    public static final BlockEntityType<TilePipeItemClay> CLAY_PIPE_ITEM_TILE;
-    @Deprecated
-    public static final BlockEntityType<TilePipeItemIron> IRON_PIPE_ITEM_TILE;
-    @Deprecated
-    public static final BlockEntityType<TilePipeItemGold> GOLD_PIPE_ITEM_TILE;
-    @Deprecated
-    public static final BlockEntityType<TilePipeItemDiamond> DIAMOND_PIPE_ITEM_TILE;
-
-    @Deprecated
-    public static final BlockEntityType<TilePipeFluidWood> WOODEN_PIPE_FLUID_TILE;
-    @Deprecated
-    public static final BlockEntityType<TilePipeFluidStone> STONE_PIPE_FLUID_TILE;
-    @Deprecated
-    public static final BlockEntityType<TilePipeFluidClay> CLAY_PIPE_FLUID_TILE;
-    @Deprecated
-    public static final BlockEntityType<TilePipeFluidIron> IRON_PIPE_FLUID_TILE;
-    @Deprecated
-    public static final BlockEntityType<TilePipeFluidSponge> SPONGE_PIPE_FLUID_TILE;
 
     public static final BlockEntityType<TileTriggerInvEmpty> TRIGGER_ITEM_INV_EMPTY_TILE;
     public static final BlockEntityType<TileTriggerInvFull> TRIGGER_ITEM_INV_FULL_TILE;
@@ -99,23 +51,7 @@ public class SimplePipeBlocks {
     public static final BlockEntityType<TilePump> PUMP_TILE;
 
     static {
-        Block.Settings pipeSettings = FabricBlockSettings.of()//
-            .strength(0.5f, 1f);
-
-        WOODEN_PIPE_ITEMS = new BlockPipeItemWooden(pipeSettings);
-        STONE_PIPE_ITEMS = new BlockPipeItemStone(pipeSettings);
-        CLAY_PIPE_ITEMS = new BlockPipeItemClay(pipeSettings);
-        IRON_PIPE_ITEMS = new BlockPipeItemIron(pipeSettings);
-        GOLD_PIPE_ITEMS = new BlockPipeItemGold(pipeSettings);
-        DIAMOND_PIPE_ITEMS = new BlockPipeItemDiamond(pipeSettings);
-
-        WOODEN_PIPE_FLUIDS = new BlockPipeFluidWooden(pipeSettings);
-        STONE_PIPE_FLUIDS = new BlockPipeFluidStone(pipeSettings);
-        CLAY_PIPE_FLUIDS = new BlockPipeFluidClay(pipeSettings);
-        IRON_PIPE_FLUIDS = new BlockPipeFluidIron(pipeSettings);
-        SPONGE_PIPE_FLUIDS = new BlockPipeFluidSponge(pipeSettings);
-
-        Block.Settings triggerSettings = FabricBlockSettings.of()//
+        Block.Settings triggerSettings = FabricBlockSettings.create()//
             .mapColor(MapColor.STONE_GRAY)//
             .instrument(Instrument.BASEDRUM)//
             .strength(1.5F, 6.0F);
@@ -133,19 +69,6 @@ public class SimplePipeBlocks {
         TANK = new BlockTank(triggerSettings);
         PUMP = new BlockPump(triggerSettings);
 
-        WOODEN_PIPE_ITEM_TILE = create(TilePipeItemWood::new, WOODEN_PIPE_ITEMS);
-        STONE_PIPE_ITEM_TILE = create(TilePipeItemStone::new, STONE_PIPE_ITEMS);
-        CLAY_PIPE_ITEM_TILE = create(TilePipeItemClay::new, CLAY_PIPE_ITEMS);
-        IRON_PIPE_ITEM_TILE = create(TilePipeItemIron::new, IRON_PIPE_ITEMS);
-        GOLD_PIPE_ITEM_TILE = create(TilePipeItemGold::new, GOLD_PIPE_ITEMS);
-        DIAMOND_PIPE_ITEM_TILE = create(TilePipeItemDiamond::new, DIAMOND_PIPE_ITEMS);
-
-        WOODEN_PIPE_FLUID_TILE = create(TilePipeFluidWood::new, WOODEN_PIPE_FLUIDS);
-        STONE_PIPE_FLUID_TILE = create(TilePipeFluidStone::new, STONE_PIPE_FLUIDS);
-        CLAY_PIPE_FLUID_TILE = create(TilePipeFluidClay::new, CLAY_PIPE_FLUIDS);
-        IRON_PIPE_FLUID_TILE = create(TilePipeFluidIron::new, IRON_PIPE_FLUIDS);
-        SPONGE_PIPE_FLUID_TILE = create(TilePipeFluidSponge::new, SPONGE_PIPE_FLUIDS);
-
         TRIGGER_ITEM_INV_EMPTY_TILE = create(TileTriggerInvEmpty::new, TRIGGER_ITEM_INV_EMPTY);
         TRIGGER_ITEM_INV_FULL_TILE = create(TileTriggerInvFull::new, TRIGGER_ITEM_INV_FULL);
         TRIGGER_ITEM_INV_SPACE_TILE = create(TileTriggerInvSpace::new, TRIGGER_ITEM_INV_SPACE);
@@ -161,7 +84,7 @@ public class SimplePipeBlocks {
     }
 
     private static <T extends BlockEntity> BlockEntityType<T> create(IBeCreator<T> supplier, Block... blocks) {
-        return new BlockEntityType<T>(null, new HashSet<>(Arrays.asList(blocks)), null) {
+        return new BlockEntityType<>(null, new HashSet<>(Arrays.asList(blocks)), null) {
             @Override
             public T instantiate(BlockPos pos, BlockState state) {
                 return supplier.create(pos, state);
@@ -184,34 +107,8 @@ public class SimplePipeBlocks {
         registerBlock(TRIGGER_FLUID_INV_SPACE, "trigger_fluid_inv_space");
         registerBlock(TRIGGER_FLUID_INV_CONTAINS, "trigger_fluid_inv_contains");
 
-        registerBlock(WOODEN_PIPE_ITEMS, "pipe_wooden_item");
-        registerBlock(STONE_PIPE_ITEMS, "pipe_stone_item");
-        registerBlock(CLAY_PIPE_ITEMS, "pipe_clay_item");
-        registerBlock(IRON_PIPE_ITEMS, "pipe_iron_item");
-        registerBlock(GOLD_PIPE_ITEMS, "pipe_gold_item");
-        registerBlock(DIAMOND_PIPE_ITEMS, "pipe_diamond_item");
-
-        registerBlock(WOODEN_PIPE_FLUIDS, "pipe_wooden_fluid");
-        registerBlock(STONE_PIPE_FLUIDS, "pipe_stone_fluid");
-        registerBlock(CLAY_PIPE_FLUIDS, "pipe_clay_fluid");
-        registerBlock(IRON_PIPE_FLUIDS, "pipe_iron_fluid");
-        registerBlock(SPONGE_PIPE_FLUIDS, "pipe_sponge_fluid");
-
         registerBlock(TANK, "tank");
         registerBlock(PUMP, "pump");
-
-        registerTile(WOODEN_PIPE_ITEM_TILE, "pipe_wooden_item");
-        registerTile(STONE_PIPE_ITEM_TILE, "pipe_stone_item");
-        registerTile(CLAY_PIPE_ITEM_TILE, "pipe_clay_item");
-        registerTile(IRON_PIPE_ITEM_TILE, "pipe_iron_item");
-        registerTile(GOLD_PIPE_ITEM_TILE, "pipe_gold_item");
-        registerTile(DIAMOND_PIPE_ITEM_TILE, "pipe_diamond_item");
-
-        registerTile(WOODEN_PIPE_FLUID_TILE, "pipe_wooden_fluid");
-        registerTile(STONE_PIPE_FLUID_TILE, "pipe_stone_fluid");
-        registerTile(CLAY_PIPE_FLUID_TILE, "pipe_clay_fluid");
-        registerTile(IRON_PIPE_FLUID_TILE, "pipe_iron_fluid");
-        registerTile(SPONGE_PIPE_FLUID_TILE, "pipe_sponge_fluid");
 
         registerTile(TRIGGER_ITEM_INV_EMPTY_TILE, "trigger_item_inv_empty");
         registerTile(TRIGGER_ITEM_INV_FULL_TILE, "trigger_item_inv_full");

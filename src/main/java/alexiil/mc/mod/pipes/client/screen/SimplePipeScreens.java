@@ -13,7 +13,6 @@ public class SimplePipeScreens {
         register(SimplePipeContainers.TRIGGER_ITEM_INV_CONTAINS, ScreenTriggerItemInvContains.FACTORY);
         register(SimplePipeContainers.TRIGGER_FLUID_INV_SPACE, ScreenTriggerFluidInvSpace.FACTORY);
         register(SimplePipeContainers.TRIGGER_FLUID_INV_CONTAINS, ScreenTriggerFluidInvContains.FACTORY);
-        register(SimplePipeContainers.PIPE_DIAMOND_ITEM, ScreenPipeSorter.FACTORY);
         register(SimplePipeContainers.PIPE_PART_DIAMOND_ITEM, ScreenPipeDiamondItem.FACTORY);
 
         register(SimplePipeContainers.TANK, ScreenTank.FACTORY);

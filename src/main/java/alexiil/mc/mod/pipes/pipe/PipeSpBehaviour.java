@@ -9,8 +9,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.DirectionTransformation;
 
-import alexiil.mc.mod.pipes.blocks.TilePipe;
-import alexiil.mc.mod.pipes.blocks.TilePipe.PipeBlockModelState;
+import alexiil.mc.mod.pipes.client.model.part.PipeSpPartKey;
 
 import alexiil.mc.lib.multipart.api.AbstractPart.ItemDropTarget;
 
@@ -34,8 +33,8 @@ public class PipeSpBehaviour {
         return pipe.flow.canConnect(dir);
     }
 
-    protected PipeBlockModelState createModelState() {
-        return new PipeBlockModelState(pipe.definition, pipe.encodeConnectedSides());
+    protected PipeSpPartKey createModelState() {
+        return new PipeSpPartKey(pipe.definition, pipe.encodeConnectedSides());
     }
 
     public void tick() {
@@ -44,10 +43,6 @@ public class PipeSpBehaviour {
 
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         return ActionResult.PASS;
-    }
-
-    public void copyFrom(TilePipe oldTile) {
-
     }
 
     public void addDrops(ItemDropTarget target, LootContextParameterSet context) {

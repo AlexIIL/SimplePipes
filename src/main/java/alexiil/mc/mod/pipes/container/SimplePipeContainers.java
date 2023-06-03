@@ -23,8 +23,6 @@ public class SimplePipeContainers {
         = new ExtendedScreenHandlerType<>(ContainerTriggerFluidSpace.FACTORY);
     public static final ScreenHandlerType<ContainerTriggerFluidContains> TRIGGER_FLUID_INV_CONTAINS
         = new ExtendedScreenHandlerType<>(ContainerTriggerFluidContains.FACTORY);
-    public static final ScreenHandlerType<ContainerPipeSorter> PIPE_DIAMOND_ITEM
-        = new ExtendedScreenHandlerType<>(ContainerPipeSorter.FACTORY);
     public static final ScreenHandlerType<ContainerPipeDiamondItem> PIPE_PART_DIAMOND_ITEM
         = new ExtendedScreenHandlerType<>(ContainerPipeDiamondItem.FACTORY);
     public static final ScreenHandlerType<ContainerTank> TANK = new ExtendedScreenHandlerType<>(ContainerTank.FACTORY);
@@ -38,7 +36,6 @@ public class SimplePipeContainers {
         register(id("trigger_item_inv_contains"), TRIGGER_ITEM_INV_CONTAINS);
         register(id("trigger_fluid_inv_space"), TRIGGER_FLUID_INV_SPACE);
         register(id("trigger_fluid_inv_contains"), TRIGGER_FLUID_INV_CONTAINS);
-        register(id("pipe_diamond_item"), PIPE_DIAMOND_ITEM);
         register(id("pipe_part_diamond_item"), PIPE_PART_DIAMOND_ITEM);
         register(id("tank"), TANK);
     }

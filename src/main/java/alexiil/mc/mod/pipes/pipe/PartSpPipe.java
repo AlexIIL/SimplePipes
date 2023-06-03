@@ -2,6 +2,9 @@ package alexiil.mc.mod.pipes.pipe;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -20,6 +23,9 @@ import net.minecraft.util.math.DirectionTransformation;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
+
+import alexiil.mc.mod.pipes.client.model.PipeBaseModelGenStandard;
+import alexiil.mc.mod.pipes.client.model.SpriteSupplier;
 
 import alexiil.mc.lib.net.IMsgReadCtx;
 import alexiil.mc.lib.net.IMsgWriteCtx;
@@ -161,13 +167,21 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     protected void spawnBreakParticles() {
-        spawnBreakParticles(definition.pipeBlock.getDefaultState());
+        spawnBreakParticles(
+            Blocks.STONE.getDefaultState(),
+            PipeBaseModelGenStandard.getCenterSprite(SpriteSupplier.NO_CONTEXT_SUPPLIER, definition)
+        );
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public boolean spawnHitParticle(Direction side) {
-        spawnHitParticle(side, definition.pipeBlock.getDefaultState());
+        spawnHitParticle(
+            side, Blocks.STONE.getDefaultState(),
+            PipeBaseModelGenStandard.getCenterSprite(SpriteSupplier.NO_CONTEXT_SUPPLIER, definition)
+        );
         return true;
     }
 

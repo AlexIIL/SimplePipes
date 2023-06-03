@@ -15,8 +15,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.DirectionTransformation;
 
-import alexiil.mc.mod.pipes.blocks.TilePipe;
-import alexiil.mc.mod.pipes.blocks.TilePipeItemDiamond;
 import alexiil.mc.mod.pipes.container.ContainerPipeDiamondItem;
 import alexiil.mc.mod.pipes.container.SimplePipeContainerFactory;
 import alexiil.mc.mod.pipes.items.SimplePipeItems;
@@ -36,17 +34,6 @@ public class PipeSpBehaviourDiamond extends PipeSpBehaviour {
 
     public PipeSpBehaviourDiamond(PartSpPipe pipe) {
         super(pipe);
-    }
-
-    @Override
-    public void copyFrom(TilePipe oldTile) {
-        super.copyFrom(oldTile);
-
-        TilePipeItemDiamond from = (TilePipeItemDiamond) oldTile;
-
-        for (int i = 0; i < INV_SIZE; i++) {
-            filterInv.setStack(i, from.filterInv.removeStack(i));
-        }
     }
 
     @Override

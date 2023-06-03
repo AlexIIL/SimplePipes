@@ -5,14 +5,11 @@ import java.util.EnumSet;
 import java.util.List;
 
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3d;
 
-import alexiil.mc.mod.pipes.blocks.TilePipe;
 import alexiil.mc.mod.pipes.pipe.ISimplePipe;
 import alexiil.mc.mod.pipes.pipe.PipeSpFlowFluid;
 import alexiil.mc.mod.pipes.util.VecUtil;
@@ -21,19 +18,7 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 
-public class PipeFluidTileRenderer<T extends TilePipe> implements BlockEntityRenderer<T> {
-
-    public PipeFluidTileRenderer(BlockEntityRendererFactory.Context ctx) {
-
-    }
-
-    @Override
-    public void render(
-        T pipe, float tickDelta, MatrixStack matrices, VertexConsumerProvider vcp, int light, int overlay
-    ) {
-        render(matrices, vcp, (PipeSpFlowFluid) pipe.getFlow());
-    }
-
+public class PipeFluidRenderer {
     public static void render(MatrixStack matrices, VertexConsumerProvider vcp, PipeSpFlowFluid flow) {
         ISimplePipe pipe = flow.pipe;
 

@@ -6,11 +6,11 @@ import net.minecraft.util.math.Direction;
 
 import alexiil.mc.mod.pipes.pipe.PipeSpDef;
 
-public class PipeSPSidedPartKey extends PipeSpPartKey {
+public class PipeSpSidedPartKey extends PipeSpPartKey {
     @Nullable
     public final Direction mainSide;
 
-    public PipeSPSidedPartKey(PipeSpDef pipeDef, byte isConnected, Direction mainSide) {
+    public PipeSpSidedPartKey(PipeSpDef pipeDef, byte isConnected, Direction mainSide) {
         super(pipeDef, isConnected);
         this.mainSide = mainSide;
     }
@@ -28,7 +28,7 @@ public class PipeSPSidedPartKey extends PipeSpPartKey {
         if (this == obj) return true;
         if (!super.equals(obj)) return false;
         if (getClass() != obj.getClass()) return false;
-        PipeSPSidedPartKey other = (PipeSPSidedPartKey) obj;
+        PipeSpSidedPartKey other = (PipeSpSidedPartKey) obj;
         if (mainSide != other.mainSide) return false;
         return true;
     }
