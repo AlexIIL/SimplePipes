@@ -5,10 +5,9 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.class_8567;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -249,7 +248,7 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
     }
 
     @Override
-    public void addDrops(ItemDropTarget target, class_8567 context) {
+    public void addDrops(ItemDropTarget target, LootContextParameterSet context) {
         super.addDrops(target, context);
         flow.addDrops(target, context);
         behaviour.addDrops(target, context);

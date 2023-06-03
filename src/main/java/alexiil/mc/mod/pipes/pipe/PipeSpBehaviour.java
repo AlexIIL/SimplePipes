@@ -1,8 +1,7 @@
 package alexiil.mc.mod.pipes.pipe;
 
-import net.minecraft.class_8567;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -51,7 +50,7 @@ public class PipeSpBehaviour {
 
     }
 
-    public void addDrops(ItemDropTarget target, class_8567 context) {
+    public void addDrops(ItemDropTarget target, LootContextParameterSet context) {
 
     }
 
