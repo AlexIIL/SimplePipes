@@ -5,15 +5,17 @@
  */
 package alexiil.mc.mod.pipes.items;
 
-import alexiil.mc.lib.multipart.api.AbstractPart;
-import alexiil.mc.lib.multipart.api.MultipartContainer.PartOffer;
-import alexiil.mc.lib.multipart.api.MultipartHolder;
-import alexiil.mc.lib.multipart.api.MultipartUtil;
-import alexiil.mc.mod.pipes.SimplePipes;
-import alexiil.mc.mod.pipes.part.*;
-import alexiil.mc.mod.pipes.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.item.TooltipContext;
@@ -29,18 +31,29 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
+import alexiil.mc.mod.pipes.SimplePipes;
+import alexiil.mc.mod.pipes.part.FacadeBlockStateInfo;
+import alexiil.mc.mod.pipes.part.FacadePart;
+import alexiil.mc.mod.pipes.part.FacadeShape;
+import alexiil.mc.mod.pipes.part.FacadeSize;
+import alexiil.mc.mod.pipes.part.FacadeStateManager;
+import alexiil.mc.mod.pipes.part.FullFacade;
+import alexiil.mc.mod.pipes.part.SimplePipeParts;
+import alexiil.mc.mod.pipes.util.BlockUtil;
+import alexiil.mc.mod.pipes.util.EnumCuboidCorner;
+import alexiil.mc.mod.pipes.util.EnumCuboidEdge;
+import alexiil.mc.mod.pipes.util.SoundUtil;
+import alexiil.mc.mod.pipes.util.TagUtil;
+
+import alexiil.mc.lib.multipart.api.AbstractPart;
+import alexiil.mc.lib.multipart.api.MultipartContainer.PartOffer;
+import alexiil.mc.lib.multipart.api.MultipartHolder;
+import alexiil.mc.lib.multipart.api.MultipartUtil;
 
 public class ItemFacade extends Item implements IItemPlacmentGhost {
     public static final FacadeShape DEFAULT_SHAPE = FacadeShape.Sided.get(FacadeSize.THIN, Direction.WEST, false);
@@ -122,28 +135,35 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
      */
 
     public void addSubItems(ItemGroup.Entries subItems) {
-        // Add a single phased facade as a default
-        // check if the data is present as we only process in post-init
-        int count = 0;
-        FacadeBlockStateInfo stone = FacadeStateManager.getInfoForBlock(Blocks.STONE);
-        if (stone != null) {
-            for (FacadeBlockStateInfo info : FacadeStateManager.getValidFacadeStates().values()) {
-                if (Registries.BLOCK.getDefaultId().equals(Registries.BLOCK.getId(info.state.getBlock()))) {
-                    // Entries are removed from the registry(?) if the client has values that the server doesn't
-                    continue;
-                }
-                if (!info.isVisible) {
-                    continue;
-                }
-                for (FacadeShape shape : PREVIEW_SHAPES) {
-                    count++;
-                    subItems.add(createItemStack(new FullFacade(info, shape)));
+        try {
+            // this can be accessed from multiple threads, which may trample each other
+            FacadeStateManager.lock();
+
+            // Add a single phased facade as a default
+            // check if the data is present as we only process in post-init
+            int count = 0;
+            FacadeBlockStateInfo stone = FacadeStateManager.getInfoForBlock(Blocks.STONE);
+            if (stone != null) {
+                for (FacadeBlockStateInfo info : FacadeStateManager.getValidFacadeStates().values()) {
+                    if (Registries.BLOCK.getDefaultId().equals(Registries.BLOCK.getId(info.state.getBlock()))) {
+                        // Entries are removed from the registry(?) if the client has values that the server doesn't
+                        continue;
+                    }
+                    if (!info.isVisible) {
+                        continue;
+                    }
+                    for (FacadeShape shape : PREVIEW_SHAPES) {
+                        count++;
+                        subItems.add(createItemStack(new FullFacade(info, shape)));
+                    }
                 }
             }
-        }
 
-        if (FacadeStateManager.DEBUG) {
-            SimplePipes.LOGGER.info("[facades] " + count + " sub facade items");
+            if (FacadeStateManager.DEBUG) {
+                SimplePipes.LOGGER.info("[facades] " + count + " sub facade items");
+            }
+        } finally {
+            FacadeStateManager.unlock();
         }
     }
 

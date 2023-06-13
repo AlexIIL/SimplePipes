@@ -2,3 +2,4 @@ Changes:
 
 * Updated to Minecraft 1.20
 * Removed deprecated pipe blocks, in favor of pipe parts.
+* Fixed ConcurrentModificationException caused by EMI appending stacks from another thread.
