@@ -135,26 +135,33 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
     }
 
     private void addSubItems(ItemGroup group, DefaultedList<ItemStack> subItems) {
-        // Add a single phased facade as a default
-        // check if the data is present as we only process in post-init
-        FacadeBlockStateInfo stone = FacadeStateManager.getInfoForBlock(Blocks.STONE);
-        if (stone != null) {
-            for (FacadeBlockStateInfo info : FacadeStateManager.getValidFacadeStates().values()) {
-                if (Registry.BLOCK.getDefaultId().equals(Registry.BLOCK.getId(info.state.getBlock()))) {
-                    // Entries are removed from the registry(?) if the client has values that the server doesn't
-                    continue;
-                }
-                if (!info.isVisible) {
-                    continue;
-                }
-                for (FacadeShape shape : PREVIEW_SHAPES) {
-                    subItems.add(createItemStack(new FullFacade(info, shape)));
+        try {
+            // this can be accessed from multiple threads, which may trample each other
+            FacadeStateManager.lock();
+
+            // Add a single phased facade as a default
+            // check if the data is present as we only process in post-init
+            FacadeBlockStateInfo stone = FacadeStateManager.getInfoForBlock(Blocks.STONE);
+            if (stone != null) {
+                for (FacadeBlockStateInfo info : FacadeStateManager.getValidFacadeStates().values()) {
+                    if (Registry.BLOCK.getDefaultId().equals(Registry.BLOCK.getId(info.state.getBlock()))) {
+                        // Entries are removed from the registry(?) if the client has values that the server doesn't
+                        continue;
+                    }
+                    if (!info.isVisible) {
+                        continue;
+                    }
+                    for (FacadeShape shape : PREVIEW_SHAPES) {
+                        subItems.add(createItemStack(new FullFacade(info, shape)));
+                    }
                 }
             }
-        }
 
-        if (FacadeStateManager.DEBUG) {
-            SimplePipes.LOGGER.info("[facades] " + subItems.size() + " sub facade items");
+            if (FacadeStateManager.DEBUG) {
+                SimplePipes.LOGGER.info("[facades] " + subItems.size() + " sub facade items");
+            }
+        } finally {
+            FacadeStateManager.unlock();
         }
     }
 
