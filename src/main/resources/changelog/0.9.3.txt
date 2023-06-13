@@ -1,0 +1,3 @@
+Changes:
+
+* Fixed ConcurrentModificationException caused by EMI appending stacks from another thread.

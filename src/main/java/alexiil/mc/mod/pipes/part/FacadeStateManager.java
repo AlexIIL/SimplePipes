@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.Nonnull;
 
@@ -51,11 +52,13 @@ import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
-import alexiil.mc.lib.attributes.item.ItemStackCollections;
-import alexiil.mc.lib.net.NetByteBuf;
 import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.util.BlockUtil;
 import alexiil.mc.mod.pipes.util.SingleBlockView;
+
+import alexiil.mc.lib.net.NetByteBuf;
+
+import alexiil.mc.lib.attributes.item.ItemStackCollections;
 
 public final class FacadeStateManager {
     private static final FacadeStateManager INSTANCE;
@@ -73,47 +76,63 @@ public final class FacadeStateManager {
     private static boolean hasUpdates = false;
     private static final Set<Block> newBlocks = new HashSet<>();
 
+    private static final ReentrantLock LOCK = new ReentrantLock();
+
     /** An array containing all mods that fail the {@link #ensurePropertyConforms(Property)} check, and any others.
      * <p>
      * Note: Mods should ONLY be added to this list AFTER it has been reported to them, and taken off the list once a
      * version has been released with the fix. */
-    private static final List<String> KNOWN_INVALID_REPORTED_MODS = Arrays.asList(new String[] { //
+    private static final List<String> KNOWN_INVALID_REPORTED_MODS = Arrays.asList(new String[]{ //
     });
 
     static {
-        if (DEBUG) {
-            SimplePipes.LOGGER.info("Debugging enabled for facades. Prepare for log spam!");
-        } else {
-            SimplePipes.LOGGER
-                .debug("Debugging disabled for facades. (Add -Dsimplepipes.debug_facades=true to enable)");
+        try {
+            LOCK.lock();
+
+            if (DEBUG) {
+                SimplePipes.LOGGER.info("Debugging enabled for facades. Prepare for log spam!");
+            } else {
+                SimplePipes.LOGGER
+                    .debug("Debugging disabled for facades. (Add -Dsimplepipes.debug_facades=true to enable)");
+            }
+
+            limitedProperties.put(Properties.PERSISTENT, false);
+            limitedProperties.put(Properties.DISTANCE_0_7, 0);
+            limitedProperties.put(Properties.DISTANCE_1_7, 1);
+            limitedProperties.put(Properties.AGE_1, 0);
+            limitedProperties.put(Properties.AGE_2, 0);
+            limitedProperties.put(Properties.AGE_3, 0);
+            limitedProperties.put(Properties.AGE_5, 0);
+            limitedProperties.put(Properties.AGE_7, 0);
+            limitedProperties.put(Properties.AGE_15, 0);
+            limitedProperties.put(Properties.AGE_25, 0);
+            limitedProperties.put(Properties.POWERED, false);
+            limitedProperties.put(Properties.INSTRUMENT, Instrument.HARP);
+            limitedProperties.put(Properties.NOTE, 0);
+            limitedProperties.put(Properties.WATERLOGGED, false);
+
+            defaultState = new FacadeBlockStateInfo(Blocks.AIR.getDefaultState(), ItemStack.EMPTY, ImmutableSet.of());
+            validFacadeStates = new TreeMap<>(BlockUtil.blockStateComparator());
+            stackFacades = ItemStackCollections.map();
+
+            previewState = defaultState;
+
+            INSTANCE = new FacadeStateManager();
+        } finally {
+            LOCK.unlock();
         }
-
-        limitedProperties.put(Properties.PERSISTENT, false);
-        limitedProperties.put(Properties.DISTANCE_0_7, 0);
-        limitedProperties.put(Properties.DISTANCE_1_7, 1);
-        limitedProperties.put(Properties.AGE_1, 0);
-        limitedProperties.put(Properties.AGE_2, 0);
-        limitedProperties.put(Properties.AGE_3, 0);
-        limitedProperties.put(Properties.AGE_5, 0);
-        limitedProperties.put(Properties.AGE_7, 0);
-        limitedProperties.put(Properties.AGE_15, 0);
-        limitedProperties.put(Properties.AGE_25, 0);
-        limitedProperties.put(Properties.POWERED, false);
-        limitedProperties.put(Properties.INSTRUMENT, Instrument.HARP);
-        limitedProperties.put(Properties.NOTE, 0);
-        limitedProperties.put(Properties.WATERLOGGED, false);
-
-        defaultState = new FacadeBlockStateInfo(Blocks.AIR.getDefaultState(), ItemStack.EMPTY, ImmutableSet.of());
-        validFacadeStates = new TreeMap<>(BlockUtil.blockStateComparator());
-        stackFacades = ItemStackCollections.map();
-
-        previewState = defaultState;
-
-        INSTANCE = new FacadeStateManager();
     }
 
     public static FacadeStateManager getInstance() {
         return INSTANCE;
+    }
+
+    public static void lock() {
+        LOCK.lock();
+    }
+
+    public static void unlock() {
+        LOCK.unlock();
     }
 
     private FacadeStateManager() {
