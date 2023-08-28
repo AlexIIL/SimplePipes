@@ -29,12 +29,12 @@ configurations {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:1.20-rc1"
-    mappings "net.fabricmc:yarn:1.20-rc1+build.2:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.14.21"
+    minecraft "com.mojang:minecraft:1.20.1"
+    mappings "net.fabricmc:yarn:1.20.1+build.10:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.14.22"
 
     //Fabric api
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.83.0+1.20"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.87.0+1.20.1"
 
     // Silk API
     // modCompile "io.github.prospector.silk:SilkAPI:1.2.3-38"
@@ -57,9 +57,9 @@ dependencies {
     }
 
     // EMI
-    modCompileOnly "dev.emi:emi:$emi_version:api"
+    modCompileOnly "dev.emi:emi-fabric:$emi_version:api"
     if (runtime_recipe_viewer == "emi") {
-        modLocalRuntime "dev.emi:emi:$emi_version"
+        modLocalRuntime "dev.emi:emi-fabric:$emi_version"
     }
 
     // Misc
