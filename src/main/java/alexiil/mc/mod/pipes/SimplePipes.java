@@ -17,6 +17,7 @@ import alexiil.mc.mod.pipes.container.SimplePipeContainers;
 import alexiil.mc.mod.pipes.items.SimplePipeItems;
 import alexiil.mc.mod.pipes.part.FacadeStateManager;
 import alexiil.mc.mod.pipes.part.SimplePipeParts;
+import alexiil.mc.mod.pipes.pipe.PartSpPipe;
 
 public class SimplePipes implements ModInitializer {
 
@@ -32,6 +33,7 @@ public class SimplePipes implements ModInitializer {
         SimplePipeBlocks.load();
         SimplePipeItems.load();
         SimplePipeContainers.load();
+        PartSpPipe.load();
 
         LOGGER.info("[SimplePipes] Mod Initialized.");
     }

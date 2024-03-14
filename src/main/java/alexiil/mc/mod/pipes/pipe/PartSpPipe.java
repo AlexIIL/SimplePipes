@@ -90,6 +90,10 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
         ID_FLOW = NET_PARENT.idData("flow").toClientOnly();
         ID_FLOW.setReceiver(PartSpPipe::receiveFlow);
     }
+    
+    public static void load() {
+        // force the static initializer to run
+    }
 
     public final PipeSpDef definition;
     public final PipeSpFlow flow;
