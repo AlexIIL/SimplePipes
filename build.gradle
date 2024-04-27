@@ -1,11 +1,11 @@
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
 }
 
 apply plugin: 'maven-publish' // for uploading to a maven repo
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = JavaVersion.VERSION_21
+targetCompatibility = JavaVersion.VERSION_21
 
 repositories {
     mavenLocal()
@@ -15,7 +15,7 @@ repositories {
 }
 
 archivesBaseName = "SimplePipes"
-version = "0.11.0-pre.2"
+version = "0.12.0-pre.1"
 
 loom {
     accessWidenerPath = file("src/main/resources/simple_pipes.accesswidener")
@@ -29,12 +29,12 @@ configurations {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:1.20.1"
-    mappings "net.fabricmc:yarn:1.20.1+build.10:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.14.22"
+    minecraft "com.mojang:minecraft:1.20.5"
+    mappings "net.fabricmc:yarn:1.20.5+build.1:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.15.10"
 
     //Fabric api
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.87.0+1.20.1"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.97.7+1.20.5"
 
     // Silk API
     // modCompile "io.github.prospector.silk:SilkAPI:1.2.3-38"
@@ -73,7 +73,7 @@ dependencies {
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
 
-    it.options.release = 17
+    it.options.release = 21
 }
 
 java.withSourcesJar()
