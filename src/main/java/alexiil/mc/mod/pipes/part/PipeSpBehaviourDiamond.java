@@ -9,8 +9,8 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.DirectionTransformation;
@@ -23,6 +23,7 @@ import alexiil.mc.mod.pipes.pipe.PipeSpBehaviour;
 import alexiil.mc.mod.pipes.pipe.TravellingItem;
 
 import alexiil.mc.lib.attributes.item.ItemAttributes;
+import alexiil.mc.lib.attributes.item.ItemStackUtil;
 
 import alexiil.mc.lib.multipart.api.AbstractPart.ItemDropTarget;
 
@@ -96,32 +97,32 @@ public class PipeSpBehaviourDiamond extends PipeSpBehaviour {
     }
 
     @Override
-    public void fromNbt(NbtCompound nbt) {
-        super.fromNbt(nbt);
+    public void fromNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup lookup) {
+        super.fromNbt(nbt, lookup);
         for (int i = 0; i < INV_SIZE; i++) {
-            filterInv.setStack(i, ItemStack.fromNbt(nbt.getCompound("filterStack_" + i)));
+            filterInv.setStack(i, ItemStackUtil.fromNbt(nbt.getCompound("filterStack_" + i), lookup, false));
         }
     }
 
     @Override
-    public NbtCompound toNbt() {
-        NbtCompound nbt = super.toNbt();
+    public NbtCompound toNbt(RegistryWrapper.WrapperLookup lookup) {
+        NbtCompound nbt = super.toNbt(lookup);
         for (int i = 0; i < INV_SIZE; i++) {
             ItemStack stack = filterInv.getStack(i);
             if (!stack.isEmpty()) {
-                nbt.put("filterStack_" + i, stack.writeNbt(new NbtCompound()));
+                nbt.put("filterStack_" + i, ItemStackUtil.writeNbt(stack, lookup));
             }
         }
         return nbt;
     }
 
     @Override
-    public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(PlayerEntity player, BlockHitResult hit) {
         if (!player.getWorld().isClient) {
-            player.openHandledScreen(new SimplePipeContainerFactory(
+            player.openHandledScreen(new SimplePipeContainerFactory<>(
                 SimplePipeItems.DIAMOND_PIPE_ITEMS.getName(),
                 (syncId, inv, player1) -> new ContainerPipeDiamondItem(syncId, player1, this),
-                (player1, buf) -> buf.writeBlockPos(pipe.getPipePos())
+                (player1) -> pipe.getPipePos()
             ));
         }
         return ActionResult.SUCCESS;

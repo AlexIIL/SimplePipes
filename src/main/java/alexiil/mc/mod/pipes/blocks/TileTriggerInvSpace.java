@@ -4,12 +4,14 @@ import net.minecraft.block.BlockState;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 import alexiil.mc.lib.attributes.item.GroupedItemInvView;
 import alexiil.mc.lib.attributes.item.GroupedItemInvView.ItemInvStatistic;
+import alexiil.mc.lib.attributes.item.ItemStackUtil;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ExactItemStackFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
@@ -24,17 +26,17 @@ public class TileTriggerInvSpace extends TileTrigger {
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
-        filterInv.setStack(0, ItemStack.fromNbt(tag.getCompound("filterStack")));
+    public void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
+        super.readNbt(tag, lookup);
+        filterInv.setStack(0, ItemStackUtil.fromNbt(tag.getCompound("filterStack"), lookup));
     }
 
     @Override
-    public void writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
+    public void writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
+        super.writeNbt(tag, lookup);
         ItemStack stack = filterInv.getStack(0);
         if (!stack.isEmpty()) {
-            tag.put("filterStack", stack.writeNbt(new NbtCompound()));
+            tag.put("filterStack", ItemStackUtil.writeNbt(stack, lookup));
         }
     }
 

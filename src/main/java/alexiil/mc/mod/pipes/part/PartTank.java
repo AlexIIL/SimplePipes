@@ -8,8 +8,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -73,17 +75,17 @@ public class PartTank extends AbstractPart {
         );
     }
 
-    public PartTank(PartDefinition definition, MultipartHolder holder, NbtCompound tag) {
+    public PartTank(PartDefinition definition, MultipartHolder holder, NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
         this(definition, holder);
         if (tag.contains("fluidInv")) {
-            fluidInv.fromTag(tag.getCompound("fluidInv"));
+            fluidInv.fromTag(tag.getCompound("fluidInv"), lookup);
         }
     }
 
     @Override
-    public NbtCompound toTag() {
-        NbtCompound tag = super.toTag();
-        tag.put("fluidInv", fluidInv.toTag());
+    public NbtCompound toTag(RegistryWrapper.WrapperLookup lookup) {
+        NbtCompound tag = super.toTag(lookup);
+        tag.put("fluidInv", fluidInv.toTag(lookup));
         return tag;
     }
 
@@ -158,22 +160,23 @@ public class PartTank extends AbstractPart {
     }
 
     @Override
-    public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (player.getStackInHand(hand).isEmpty()) {
-            if (!player.getWorld().isClient) {
-                player.openHandledScreen(new SimplePipeContainerFactory(SimplePipeItems.TANK.getName(),
-                        (syncId, inv, player1) -> new ContainerTank(syncId, player1, this),
-                        (player1, buf) -> buf.writeBlockPos(holder.getContainer().getMultipartPos())));
-            }
-            return ActionResult.SUCCESS;
+    public ActionResult onUse(PlayerEntity player, BlockHitResult hit) {
+        if (!player.getWorld().isClient) {
+            player.openHandledScreen(new SimplePipeContainerFactory(SimplePipeItems.TANK.getName(),
+                (syncId, inv, player1) -> new ContainerTank(syncId, player1, this),
+                (player1) -> holder.getContainer().getMultipartPos()));
         }
+        return ActionResult.SUCCESS;
+    }
 
+    @Override
+    public ItemActionResult onUseWithItem(ItemStack stack, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (player.getWorld().isClient) {
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         }
         try {
             isPlayerInteracting = true;
-            return FluidInvUtil.interactHandWithTank((FixedFluidInv) fluidInv, player, hand).asActionResult();
+            return FluidInvUtil.interactHandWithTank((FixedFluidInv) fluidInv, player, hand).asItemActionResult();
         } finally {
             isPlayerInteracting = false;
         }

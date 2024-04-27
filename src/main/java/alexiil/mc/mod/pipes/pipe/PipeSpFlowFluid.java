@@ -12,6 +12,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.Direction;
 
 import alexiil.mc.mod.pipes.part.PipeSpBehaviourIron;
@@ -91,7 +92,7 @@ public class PipeSpFlowFluid extends PipeSpFlow {
     }
 
     @Override
-    public void fromTag(NbtCompound tag) {
+    public void fromTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
         NbtCompound inner = tag.getCompound("sides");
         centerSection.fluid = FluidVolume.fromTag(inner.getCompound("c"));
         for (Direction dir : Direction.values()) {
@@ -100,7 +101,7 @@ public class PipeSpFlowFluid extends PipeSpFlow {
     }
 
     @Override
-    public NbtCompound toTag() {
+    public NbtCompound toTag(RegistryWrapper.WrapperLookup lookup) {
         NbtCompound tag = new NbtCompound();
         toTag0(tag);
         return tag;
@@ -116,18 +117,18 @@ public class PipeSpFlowFluid extends PipeSpFlow {
     }
 
     @Override
-    public void fromInitialClientTag(NbtCompound tag) {
-        fromTag(tag);
+    public void fromInitialClientTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
+        fromTag(tag, lookup);
     }
 
     @Override
-    public void toInitialClientTag(NbtCompound tag) {
+    public void toInitialClientTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
         toTag0(tag);
     }
 
     @Override
-    public void fromClientTag(NbtCompound tag) {
-        fromInitialClientTag(tag);
+    public void fromClientTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
+        fromInitialClientTag(tag, lookup);
     }
 
     @Override
@@ -162,7 +163,7 @@ public class PipeSpFlowFluid extends PipeSpFlow {
         updateAmounts();
 
         if (Math.random() < 0.1) {
-            pipe.sendFlowPacket(toTag());
+            pipe.sendFlowPacket(toTag(world().getRegistryManager()));
         }
     }
 

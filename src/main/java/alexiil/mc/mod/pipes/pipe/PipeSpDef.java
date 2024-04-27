@@ -2,6 +2,7 @@ package alexiil.mc.mod.pipes.pipe;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 
 import alexiil.mc.lib.net.IMsgReadCtx;
@@ -27,9 +28,9 @@ public abstract class PipeSpDef extends PartDefinition {
     }
 
     @Override
-    public AbstractPart readFromNbt(MultipartHolder holder, NbtCompound nbt) {
+    public AbstractPart readFromNbt(MultipartHolder holder, NbtCompound nbt, RegistryWrapper.WrapperLookup lookup) {
         PartSpPipe pipe = new PartSpPipe(this, holder);
-        pipe.fromNbt(nbt);
+        pipe.fromNbt(nbt, lookup);
         return pipe;
     }
 
@@ -37,7 +38,7 @@ public abstract class PipeSpDef extends PartDefinition {
     public AbstractPart loadFromBuffer(MultipartHolder holder, NetByteBuf buffer, IMsgReadCtx ctx)
         throws InvalidInputDataException {
         PartSpPipe pipe = new PartSpPipe(this, holder);
-        pipe.fromNbt(buffer.readNbt());
+        pipe.fromNbt(buffer.readNbt(), ctx.getConnection().getPlayer().getRegistryManager());
         return pipe;
     }
 

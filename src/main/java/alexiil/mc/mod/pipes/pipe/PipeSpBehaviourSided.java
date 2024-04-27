@@ -6,8 +6,8 @@ import java.util.List;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.DirectionTransformation;
@@ -23,8 +23,8 @@ public abstract class PipeSpBehaviourSided extends PipeSpBehaviour {
     }
 
     @Override
-    public void fromNbt(NbtCompound nbt) {
-        super.fromNbt(nbt);
+    public void fromNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup lookup) {
+        super.fromNbt(nbt, lookup);
 
         byte b = nbt.getByte("dir");
         if (b >= 0 && b < 6) {
@@ -35,8 +35,8 @@ public abstract class PipeSpBehaviourSided extends PipeSpBehaviour {
     }
 
     @Override
-    public NbtCompound toNbt() {
-        NbtCompound nbt = super.toNbt();
+    public NbtCompound toNbt(RegistryWrapper.WrapperLookup lookup) {
+        NbtCompound nbt = super.toNbt(lookup);
         nbt.putByte("dir", (byte) (currentDirection == null ? 0xFF : currentDirection.getId()));
         return nbt;
     }
@@ -60,10 +60,7 @@ public abstract class PipeSpBehaviourSided extends PipeSpBehaviour {
     protected abstract boolean canFaceDirection(Direction dir);
 
     @Override
-    public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!player.getStackInHand(hand).isEmpty()) {
-            return ActionResult.PASS;
-        }
+    public ActionResult onUse(PlayerEntity player, BlockHitResult hit) {
         if (player.getWorld().isClient) {
             return ActionResult.SUCCESS;
         }

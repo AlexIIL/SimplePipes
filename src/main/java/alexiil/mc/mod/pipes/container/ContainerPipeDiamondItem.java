@@ -13,9 +13,8 @@ import alexiil.mc.lib.multipart.api.MultipartContainer;
 
 public class ContainerPipeDiamondItem extends ContainerPart<PartSpPipe> {
 
-    public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerPipeDiamondItem> FACTORY = (syncId, inv, buffer) -> {
+    public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerPipeDiamondItem, BlockPos> FACTORY = (syncId, inv, pos) -> {
         PlayerEntity player = inv.player;
-        BlockPos pos = buffer.readBlockPos();
         MultipartContainer container = MultipartContainer.ATTRIBUTE.getFirstOrNull(player.getWorld(), pos);
 
         if (container == null) {

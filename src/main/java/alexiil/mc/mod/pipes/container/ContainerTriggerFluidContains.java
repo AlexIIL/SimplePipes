@@ -15,9 +15,8 @@ import alexiil.mc.mod.pipes.blocks.TileTriggerFluidContains;
 
 public class ContainerTriggerFluidContains extends ContainerTile<TileTriggerFluidContains> {
 
-    public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerTriggerFluidContains> FACTORY = (syncId, inv, buffer) -> {
+    public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerTriggerFluidContains, BlockPos> FACTORY = (syncId, inv, pos) -> {
         PlayerEntity player = inv.player;
-        BlockPos pos = buffer.readBlockPos();
         BlockEntity be = player.getWorld().getBlockEntity(pos);
         if (be instanceof TileTriggerFluidContains) {
             return new ContainerTriggerFluidContains(syncId, player, (TileTriggerFluidContains) be);

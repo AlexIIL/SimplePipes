@@ -26,19 +26,19 @@ public class BlockTriggerFluidSpace extends BlockTriggerFluidInv {
 
     @Override
     public ActionResult onUse(
-        BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit
+        BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit
     ) {
         BlockEntity be = world.getBlockEntity(pos);
 
         if (be instanceof TileTriggerFluidSpace tile) {
             if (!world.isClient) {
-                player.openHandledScreen(new SimplePipeContainerFactory(getName(),
+                player.openHandledScreen(new SimplePipeContainerFactory<>(getName(),
                         (syncId, inv, player1) -> new ContainerTriggerFluidSpace(syncId, player1, tile),
-                        (player1, buf) -> buf.writeBlockPos(pos)));
+                        (player1) -> pos));
             }
             return ActionResult.SUCCESS;
         }
 
-        return super.onUse(state, world, pos, player, hand, hit);
+        return super.onUse(state, world, pos, player, hit);
     }
 }

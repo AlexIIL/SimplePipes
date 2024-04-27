@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -30,6 +31,7 @@ import alexiil.mc.mod.pipes.util.TagUtil;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.ItemInsertable;
+import alexiil.mc.lib.attributes.item.ItemStackUtil;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable;
@@ -66,10 +68,10 @@ public class PipeSpFlowItem extends PipeSpFlow {
     }
 
     @Override
-    public void fromTag(NbtCompound tag) {
+    public void fromTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
         NbtList list = tag.getList("items", new NbtCompound().getType());
         for (int i = 0; i < list.size(); i++) {
-            TravellingItem item = new TravellingItem(list.getCompound(i), 0);
+            TravellingItem item = new TravellingItem(list.getCompound(i), lookup, 0);
             if (!item.stack.isEmpty()) {
                 items.add(item.getCurrentDelay(0), item);
             }
@@ -77,7 +79,7 @@ public class PipeSpFlowItem extends PipeSpFlow {
     }
 
     @Override
-    public NbtCompound toTag() {
+    public NbtCompound toTag(RegistryWrapper.WrapperLookup lookup) {
         NbtCompound nbt = new NbtCompound();
         Iterable<? extends Iterable<TravellingItem>> allItems = items.getAllElements();
         NbtList list = new NbtList();
@@ -86,7 +88,7 @@ public class PipeSpFlowItem extends PipeSpFlow {
         for (Iterable<TravellingItem> l : allItems) {
             if (l != null) {
                 for (TravellingItem item : l) {
-                    list.add(item.writeToNbt(tickNow));
+                    list.add(item.writeToNbt(lookup, tickNow));
                 }
             }
         }
@@ -95,7 +97,7 @@ public class PipeSpFlowItem extends PipeSpFlow {
     }
 
     @Override
-    public void fromClientTag(NbtCompound tag) {
+    public void fromClientTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
 
         // tag.put("item", item.stack.toTag(new CompoundTag()));
         // tag.putBoolean("to_center", item.toCenter);
@@ -103,7 +105,7 @@ public class PipeSpFlowItem extends PipeSpFlow {
         // tag.put("colour", TagUtil.writeEnum(item.colour));
         // tag.putShort("time", item.timeToDest > Short.MAX_VALUE ? Short.MAX_VALUE :(short) item.timeToDest);
 
-        TravellingItem item = new TravellingItem(ItemStack.fromNbt(tag.getCompound("item")));
+        TravellingItem item = new TravellingItem(ItemStackUtil.fromNbt(tag.getCompound("item"), lookup));
         item.toCenter = tag.getBoolean("to_center");
         item.side = TagUtil.readEnum(tag.get("side"), Direction.class);
         item.colour = TagUtil.readEnum(tag.get("colour"), DyeColor.class);
@@ -216,7 +218,7 @@ public class PipeSpFlowItem extends PipeSpFlow {
         // System.out.println(getPos() + " - " + item.stack + " - " + item.side);
         NbtCompound tag = new NbtCompound();
 
-        tag.put("item", item.stack.writeNbt(new NbtCompound()));
+        tag.put("item", ItemStackUtil.writeNbt(item.stack, world().getRegistryManager()));
         tag.putBoolean("to_center", item.toCenter);
         tag.put("side", TagUtil.writeEnum(item.side));
         tag.put("colour", TagUtil.writeEnum(item.colour));

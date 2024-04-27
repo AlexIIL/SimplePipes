@@ -15,9 +15,8 @@ import alexiil.mc.mod.pipes.blocks.TileTriggerFluidSpace;
 
 public class ContainerTriggerFluidSpace extends ContainerTile<TileTriggerFluidSpace> {
 
-    public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerTriggerFluidSpace> FACTORY = (syncId, inv, buffer) -> {
+    public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerTriggerFluidSpace, BlockPos> FACTORY = (syncId, inv, pos) -> {
         PlayerEntity player = inv.player;
-        BlockPos pos = buffer.readBlockPos();
         BlockEntity be = player.getWorld().getBlockEntity(pos);
         if (be instanceof TileTriggerFluidSpace) {
             return new ContainerTriggerFluidSpace(syncId, player, (TileTriggerFluidSpace) be);

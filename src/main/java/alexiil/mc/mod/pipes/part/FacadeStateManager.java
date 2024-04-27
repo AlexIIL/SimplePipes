@@ -35,9 +35,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ConnectingBlock;
 import net.minecraft.block.FluidBlock;
-import net.minecraft.block.GlassBlock;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.StainedGlassBlock;
+import net.minecraft.block.TransparentBlock;
 import net.minecraft.block.enums.Instrument;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -360,7 +360,7 @@ public final class FacadeStateManager {
         if (block instanceof FluidBlock) {
             return new TypedActionResult<>(ActionResult.FAIL, "it is a fluid block");
         }
-        if (block instanceof GlassBlock || block instanceof StainedGlassBlock) {
+        if (block instanceof TransparentBlock || block instanceof StainedGlassBlock) {
             return new TypedActionResult<>(ActionResult.SUCCESS, "");
         }
         if (block instanceof SlabBlock) {

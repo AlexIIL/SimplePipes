@@ -2,6 +2,7 @@ package alexiil.mc.mod.pipes.blocks;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -23,14 +24,14 @@ public class TilePump extends TileBase {
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
+        super.readNbt(tag, lookup);
         stored = FluidVolume.fromTag(tag.getCompound("fluid"));
     }
 
     @Override
-    public void writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
+    public void writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
+        super.writeNbt(tag, lookup);
         tag.put("fluid", stored.toTag());
     }
 

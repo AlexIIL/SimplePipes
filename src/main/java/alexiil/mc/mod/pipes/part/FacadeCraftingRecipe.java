@@ -1,15 +1,15 @@
 package alexiil.mc.mod.pipes.part;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
+import com.mojang.serialization.MapCodec;
 
 import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
-import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
@@ -21,6 +21,8 @@ public enum FacadeCraftingRecipe implements CraftingRecipe, RecipeSerializer<Fac
     INSTANCE;
 
     public static final Identifier ID = SimplePipes.id("facade_crafting");
+    public static final MapCodec<FacadeCraftingRecipe> CODEC = MapCodec.unit(INSTANCE);
+    public static final PacketCodec<RegistryByteBuf, FacadeCraftingRecipe> PACKET_CODEC = PacketCodec.unit(INSTANCE);
 
     @Override
     public boolean matches(RecipeInputInventory inv, World world) {
@@ -28,7 +30,7 @@ public enum FacadeCraftingRecipe implements CraftingRecipe, RecipeSerializer<Fac
     }
 
     @Override
-    public ItemStack craft(RecipeInputInventory inventory, DynamicRegistryManager registryManager) {
+    public ItemStack craft(RecipeInputInventory inventory, RegistryWrapper.WrapperLookup registryManager) {
         return craft(inventory);
     }
 
@@ -83,7 +85,7 @@ public enum FacadeCraftingRecipe implements CraftingRecipe, RecipeSerializer<Fac
     }
 
     @Override
-    public ItemStack getOutput(DynamicRegistryManager registryManager) {
+    public ItemStack getResult(RegistryWrapper.WrapperLookup registryManager) {
         return ItemStack.EMPTY;
     }
 
@@ -93,35 +95,22 @@ public enum FacadeCraftingRecipe implements CraftingRecipe, RecipeSerializer<Fac
     }
 
     @Override
-    public Identifier getId() {
-        return ID;
-    }
-
-    @Override
     public RecipeSerializer<?> getSerializer() {
         return this;
     }
 
     @Override
-    public FacadeCraftingRecipe read(Identifier id, JsonObject json) {
-        if (id.equals(ID)) {
-            return INSTANCE;
-        }
-        throw new JsonSyntaxException("Invalid ID '" + id + "': it must be " + ID + "!");
-    }
-
-    @Override
-    public FacadeCraftingRecipe read(Identifier id, PacketByteBuf var2) {
-        return INSTANCE;
-    }
-
-    @Override
-    public void write(PacketByteBuf buffer, FacadeCraftingRecipe recipe) {
-        // NO-OP
-    }
-
-    @Override
     public CraftingRecipeCategory getCategory() {
         return CraftingRecipeCategory.BUILDING;
+    }
+
+    @Override
+    public MapCodec<FacadeCraftingRecipe> codec() {
+        return CODEC;
+    }
+
+    @Override
+    public PacketCodec<RegistryByteBuf, FacadeCraftingRecipe> packetCodec() {
+        return PACKET_CODEC;
     }
 }

@@ -12,8 +12,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -108,36 +110,36 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
         this.behaviour = definition.createBehaviour(this);
     }
 
-    public void fromNbt(NbtCompound nbt) {
+    public void fromNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup lookup) {
         connections = (byte) (nbt.getByte("c") & 0b111_111);
-        flow.fromTag(nbt.getCompound("f"));
-        behaviour.fromNbt(nbt.getCompound("b"));
+        flow.fromTag(nbt.getCompound("f"), lookup);
+        behaviour.fromNbt(nbt.getCompound("b"), lookup);
     }
 
     @Override
-    public NbtCompound toTag() {
-        NbtCompound nbt = super.toTag();
+    public NbtCompound toTag(RegistryWrapper.WrapperLookup lookup) {
+        NbtCompound nbt = super.toTag(lookup);
         nbt.putByte("c", connections);
-        nbt.put("f", flow.toTag());
-        nbt.put("b", behaviour.toNbt());
+        nbt.put("f", flow.toTag(lookup));
+        nbt.put("b", behaviour.toNbt(lookup));
         return nbt;
     }
 
     @Override
     public void writeCreationData(NetByteBuf buffer, IMsgWriteCtx ctx) {
-        buffer.writeNbt(toTag());
+        buffer.writeNbt(toTag(ctx.getConnection().getPlayer().getRegistryManager()));
     }
 
     @Override
     public void readRenderData(NetByteBuf buffer, IMsgReadCtx ctx) throws InvalidInputDataException {
-        fromNbt(buffer.readNbt());
+        fromNbt(buffer.readNbt(), ctx.getConnection().getPlayer().getRegistryManager());
 
         refreshModel();
     }
 
     @Override
     public void writeRenderData(NetByteBuf buffer, IMsgWriteCtx ctx) {
-        buffer.writeNbt(toTag());
+        buffer.writeNbt(toTag(ctx.getConnection().getPlayer().getRegistryManager()));
     }
 
     @Override
@@ -261,8 +263,13 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
     }
 
     @Override
-    public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
-        return behaviour.onUse(player, hand, hit);
+    public ActionResult onUse(PlayerEntity player, BlockHitResult hit) {
+        return behaviour.onUse(player, hit);
+    }
+
+    @Override
+    public ItemActionResult onUseWithItem(ItemStack stack, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        return behaviour.onUseWithItem(stack, player, hand, hit);
     }
 
     @Override
@@ -397,6 +404,6 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
     }
 
     private void receiveFlow(NetByteBuf buffer, IMsgReadCtx ctx) {
-        flow.fromClientTag(buffer.readNbt());
+        flow.fromClientTag(buffer.readNbt(), ctx.getConnection().getPlayer().getRegistryManager());
     }
 }

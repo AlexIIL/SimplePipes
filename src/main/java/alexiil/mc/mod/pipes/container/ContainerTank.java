@@ -16,9 +16,8 @@ import alexiil.mc.mod.pipes.part.PartTank;
 
 public class ContainerTank extends ContainerPart<PartTank> {
 
-    public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerTank> FACTORY = (syncId, inv, buffer) -> {
+    public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerTank, BlockPos> FACTORY = (syncId, inv, pos) -> {
         PlayerEntity player = inv.player;
-        BlockPos pos = buffer.readBlockPos();
         MultipartContainer c = MultipartUtil.get(player.getWorld(), pos);
         if (c == null) {
             throw new IllegalStateException("Attempted to open a tank screen where there is no tank!");

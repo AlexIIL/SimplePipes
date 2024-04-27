@@ -39,11 +39,6 @@ public abstract class BlockTrigger extends BlockBase implements BlockEntityProvi
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView view, BlockPos pos, NavigationType env) {
-        return super.canPathfindThrough(state, view, pos, env);
-    }
-
-    @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return getDefaultState().with(FACING, ctx.getPlayerLookDirection());
     }

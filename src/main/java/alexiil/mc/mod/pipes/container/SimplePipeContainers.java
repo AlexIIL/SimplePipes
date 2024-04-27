@@ -6,26 +6,35 @@
 package alexiil.mc.mod.pipes.container;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
+
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 
 import alexiil.mc.mod.pipes.SimplePipes;
 
 public class SimplePipeContainers {
+    @SuppressWarnings("unchecked")
+    private static final PacketCodec<RegistryByteBuf, BlockPos> BLOCK_POS_CODEC =
+        (PacketCodec<RegistryByteBuf, BlockPos>) (Object) BlockPos.PACKET_CODEC;
+
     public static final ScreenHandlerType<ContainerTriggerInvSpace> TRIGGER_ITEM_INV_SPACE
-        = new ExtendedScreenHandlerType<>(ContainerTriggerInvSpace.FACTORY);
+        = new ExtendedScreenHandlerType<>(ContainerTriggerInvSpace.FACTORY, BLOCK_POS_CODEC);
     public static final ScreenHandlerType<ContainerTriggerInvContains> TRIGGER_ITEM_INV_CONTAINS
-        = new ExtendedScreenHandlerType<>(ContainerTriggerInvContains.FACTORY);
+        = new ExtendedScreenHandlerType<>(ContainerTriggerInvContains.FACTORY, BLOCK_POS_CODEC);
     public static final ScreenHandlerType<ContainerTriggerFluidSpace> TRIGGER_FLUID_INV_SPACE
-        = new ExtendedScreenHandlerType<>(ContainerTriggerFluidSpace.FACTORY);
+        = new ExtendedScreenHandlerType<>(ContainerTriggerFluidSpace.FACTORY, BLOCK_POS_CODEC);
     public static final ScreenHandlerType<ContainerTriggerFluidContains> TRIGGER_FLUID_INV_CONTAINS
-        = new ExtendedScreenHandlerType<>(ContainerTriggerFluidContains.FACTORY);
+        = new ExtendedScreenHandlerType<>(ContainerTriggerFluidContains.FACTORY, BLOCK_POS_CODEC);
     public static final ScreenHandlerType<ContainerPipeDiamondItem> PIPE_PART_DIAMOND_ITEM
-        = new ExtendedScreenHandlerType<>(ContainerPipeDiamondItem.FACTORY);
-    public static final ScreenHandlerType<ContainerTank> TANK = new ExtendedScreenHandlerType<>(ContainerTank.FACTORY);
+        = new ExtendedScreenHandlerType<>(ContainerPipeDiamondItem.FACTORY, BLOCK_POS_CODEC);
+    public static final ScreenHandlerType<ContainerTank> TANK =
+        new ExtendedScreenHandlerType<>(ContainerTank.FACTORY, BLOCK_POS_CODEC);
 
     private static Identifier id(String name) {
         return new Identifier(SimplePipes.MODID, name);

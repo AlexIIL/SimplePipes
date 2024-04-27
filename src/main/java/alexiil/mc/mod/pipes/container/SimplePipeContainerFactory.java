@@ -9,20 +9,20 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
-public class SimplePipeContainerFactory implements ExtendedScreenHandlerFactory {
-    private final OpeningDataWriter writer;
+public class SimplePipeContainerFactory<T> implements ExtendedScreenHandlerFactory<T> {
+    private final OpeningDataGetter<T> getter;
     private final Text displayName;
     private final ContainerCreator creator;
 
-    public SimplePipeContainerFactory(Text displayName, ContainerCreator creator, OpeningDataWriter writer) {
-        this.writer = writer;
+    public SimplePipeContainerFactory(Text displayName, ContainerCreator creator, OpeningDataGetter<T> getter) {
+        this.getter = getter;
         this.displayName = displayName;
         this.creator = creator;
     }
 
     @Override
-    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-        writer.writeScreenOpeningData(player, buf);
+    public T getScreenOpeningData(ServerPlayerEntity player) {
+        return getter.getScreenOpeningData(player);
     }
 
     @Override
@@ -37,8 +37,8 @@ public class SimplePipeContainerFactory implements ExtendedScreenHandlerFactory 
     }
 
     @FunctionalInterface
-    public interface OpeningDataWriter {
-        void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf);
+    public interface OpeningDataGetter<T> {
+        T getScreenOpeningData(ServerPlayerEntity player);
     }
 
     @FunctionalInterface

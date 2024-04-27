@@ -9,9 +9,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -58,8 +58,8 @@ public abstract class TileBase extends BlockEntity {
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return toClientTag(super.toInitialChunkDataNbt());
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup lookup) {
+        return toClientTag(super.toInitialChunkDataNbt(lookup));
     }
 
     private void receiveData(NetByteBuf buffer, IMsgReadCtx ctx) {
@@ -74,7 +74,7 @@ public abstract class TileBase extends BlockEntity {
 
     public void onPlacedBy(LivingEntity placer, ItemStack stack) {}
 
-    public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(PlayerEntity player, BlockHitResult hit) {
         return ActionResult.PASS;
     }
 }

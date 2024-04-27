@@ -37,7 +37,7 @@ public class FacadeDisplayGenerator implements DynamicDisplayGenerator<DefaultSt
             List<DefaultStoneCuttingDisplay> list = new ArrayList<>();
             BiConsumer<ItemStack, ItemStack> gen = (input, output) -> {
                 Ingredient ing = IngredientHelper.fromStacks(input.copy());
-                list.add(new DefaultStoneCuttingDisplay(new StonecuttingRecipe(RECIPE_ID, "", ing, output.copy())));
+                list.add(new DefaultStoneCuttingDisplay(new StonecuttingRecipe("", ing, output.copy())));
             };
             ItemStack blockStack = facade.state.requiredStack.copy();
             blockStack.setCount(1);
@@ -93,7 +93,7 @@ public class FacadeDisplayGenerator implements DynamicDisplayGenerator<DefaultSt
             List<DefaultStoneCuttingDisplay> list = new ArrayList<>();
             BiConsumer<ItemStack, ItemStack> gen = (input, output) -> {
                 Ingredient ing = IngredientHelper.fromStacks(input.copy());
-                list.add(new DefaultStoneCuttingDisplay(new StonecuttingRecipe(RECIPE_ID, "", ing, output.copy())));
+                list.add(new DefaultStoneCuttingDisplay(new StonecuttingRecipe("", ing, output.copy())));
             };
             ItemStack blockStack = facade.state.requiredStack.copy();
             blockStack.setCount(1);

@@ -18,7 +18,7 @@ import net.fabricmc.api.Environment;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -195,11 +195,10 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
         return Text.translatable(state.getBlock().getTranslationKey());
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
-    public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext flag) {
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         FullFacade states = getStates(stack);
-        if (flag.isAdvanced()) {
+        if (type.isAdvanced()) {
             Identifier blockId = Registries.BLOCK.getId(states.state.state.getBlock());
             tooltip.add(Text.of(blockId.toString()));
         }

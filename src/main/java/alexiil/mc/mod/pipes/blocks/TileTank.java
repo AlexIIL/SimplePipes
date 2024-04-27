@@ -2,6 +2,7 @@ package alexiil.mc.mod.pipes.blocks;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
 
 import alexiil.mc.lib.attributes.Simulation;
@@ -21,8 +22,8 @@ public class TileTank extends TileBase {
     }
 
     @Override
-    public void writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
+    public void writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
+        super.writeNbt(tag, lookup);
         FluidVolume invFluid = fluidInv.getInvFluid(0);
         if (!invFluid.isEmpty()) {
             tag.put("fluid", invFluid.toTag());
@@ -30,8 +31,8 @@ public class TileTank extends TileBase {
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
+        super.readNbt(tag, lookup);
         if (tag.contains("fluid")) {
             FluidVolume fluid = FluidVolume.fromTag(tag.getCompound("fluid"));
             fluidInv.setInvFluid(0, fluid, Simulation.ACTION);

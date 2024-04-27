@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.StonecuttingRecipe;
 import net.minecraft.registry.Registries;
@@ -214,7 +215,7 @@ public final class SimplePipeParts {
     }
 
     private static void generateBlockToFacadeCuttingRecipes(
-        Consumer<Recipe<?>> recipeAdder, FacadeStateManager facades, ItemStack stack, FacadeBlockStateInfo state
+        Consumer<RecipeEntry<Recipe<?>>> recipeAdder, FacadeStateManager facades, ItemStack stack, FacadeBlockStateInfo state
     ) {
         Identifier id = new Identifier("buildcraftsilicon:facade_generated");
         Ingredient ingredient = createIngredient(stack);
@@ -224,7 +225,7 @@ public final class SimplePipeParts {
                 FacadeShape.Sided shape = FacadeShape.Sided.get(size, Direction.WEST, hollow);
                 ItemStack output = SimplePipeItems.FACADE.createItemStack(new FullFacade(state, shape));
                 output.setCount(16 / size.microVoxelSize);
-                recipeAdder.accept(new StonecuttingRecipe(id, "", ingredient, output));
+                recipeAdder.accept(new RecipeEntry<>(id, new StonecuttingRecipe("", ingredient, output)));
             }
         }
 
@@ -234,19 +235,19 @@ public final class SimplePipeParts {
             FacadeShape.Strip shape = FacadeShape.Strip.get(size, EnumCuboidEdge.Z_NN);
             ItemStack output = SimplePipeItems.FACADE.createItemStack(new FullFacade(state, shape));
             output.setCount(stripAmounts[i]);
-            recipeAdder.accept(new StonecuttingRecipe(id, "", ingredient, output));
+            recipeAdder.accept(new RecipeEntry<>(id, new StonecuttingRecipe("", ingredient, output)));
         }
         {
             FacadeShape.Corner shape = FacadeShape.Corner.get(FacadeSize.SLAB, EnumCuboidCorner.NNN);
             ItemStack output = SimplePipeItems.FACADE.createItemStack(new FullFacade(state, shape));
             output.setCount(8);
-            recipeAdder.accept(new StonecuttingRecipe(id, "", ingredient, output));
+            recipeAdder.accept(new RecipeEntry<>(id, new StonecuttingRecipe("", ingredient, output)));
         }
         {
             FacadeShape.Corner shape = FacadeShape.Corner.get(FacadeSize.THICK, EnumCuboidCorner.NNN);
             ItemStack output = SimplePipeItems.FACADE.createItemStack(new FullFacade(state, shape));
             output.setCount(64);
-            recipeAdder.accept(new StonecuttingRecipe(id, "", ingredient, output));
+            recipeAdder.accept(new RecipeEntry<>(id, new StonecuttingRecipe("", ingredient, output)));
         }
     }
 
@@ -281,7 +282,7 @@ public final class SimplePipeParts {
             FullFacade newFacade = new FullFacade(state, oShape);
             ItemStack output = facadeItem.createItemStack(newFacade);
             output.setCount(ratio);
-            context.consumer.accept(new StonecuttingRecipe(id, "", ingredient, output));
+            context.consumer.accept(new RecipeEntry<>(id, new StonecuttingRecipe("", ingredient, output)));
         }
     }
 

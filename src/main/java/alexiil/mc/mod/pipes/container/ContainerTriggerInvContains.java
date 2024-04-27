@@ -16,9 +16,8 @@ import alexiil.mc.mod.pipes.blocks.TileTriggerInvContains;
 
 public class ContainerTriggerInvContains extends ContainerTile<TileTriggerInvContains> {
 
-    public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerTriggerInvContains> FACTORY = (syncId, inv, buffer) -> {
+    public static final ExtendedScreenHandlerType.ExtendedFactory<ContainerTriggerInvContains, BlockPos> FACTORY = (syncId, inv, pos) -> {
         PlayerEntity player = inv.player;
-        BlockPos pos = buffer.readBlockPos();
         BlockEntity be = player.getWorld().getBlockEntity(pos);
         if (be instanceof TileTriggerInvContains) {
             return new ContainerTriggerInvContains(syncId, player, (TileTriggerInvContains) be);

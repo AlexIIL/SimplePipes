@@ -25,7 +25,7 @@ public class ScreenTriggerFluidInvContains extends HandledScreen<ContainerTrigge
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float partialTicks) {
-        renderBackground(context);
+        renderBackground(context, mouseX, mouseY, partialTicks);
         super.render(context, mouseX, mouseY, partialTicks);
         drawMouseoverTooltip(context, mouseX, mouseY);
     }

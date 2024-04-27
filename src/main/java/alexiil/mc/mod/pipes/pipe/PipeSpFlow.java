@@ -3,6 +3,7 @@ package alexiil.mc.mod.pipes.pipe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.DirectionTransformation;
@@ -21,17 +22,17 @@ public abstract class PipeSpFlow {
         return pipe.getPipeWorld();
     }
 
-    public abstract void fromTag(NbtCompound tag);
+    public abstract void fromTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookup);
 
-    public abstract NbtCompound toTag();
+    public abstract NbtCompound toTag(RegistryWrapper.WrapperLookup lookup);
 
-    public abstract void fromClientTag(NbtCompound tag);
+    public abstract void fromClientTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookup);
 
-    public void fromInitialClientTag(NbtCompound tag) {
+    public void fromInitialClientTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
         // nothing by default
     }
 
-    public void toInitialClientTag(NbtCompound tag) {
+    public void toInitialClientTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
         // nothing by default
     }
 

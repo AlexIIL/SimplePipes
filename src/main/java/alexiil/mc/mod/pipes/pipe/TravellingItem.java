@@ -17,6 +17,7 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -79,8 +80,8 @@ public class TravellingItem {
 //        this.stack = clientStack;
 //    }
 
-    public TravellingItem(NbtCompound nbt, long tickNow) {
-        stack = ItemStack.fromNbt(nbt.getCompound("stack"));
+    public TravellingItem(NbtCompound nbt, RegistryWrapper.WrapperLookup lookup, long tickNow) {
+        stack = ItemStackUtil.fromNbt(nbt.getCompound("stack"), lookup);
         int c = nbt.getByte("colour");
         this.colour = c == 0 ? null : DyeColor.byId(c - 1);
         this.toCenter = nbt.getBoolean("toCenter");
@@ -102,9 +103,9 @@ public class TravellingItem {
         isPhantom = nbt.getBoolean("isPhantom");
     }
 
-    public NbtCompound writeToNbt(long tickNow) {
+    public NbtCompound writeToNbt(RegistryWrapper.WrapperLookup lookup, long tickNow) {
         NbtCompound nbt = new NbtCompound();
-        nbt.put("stack", stack.writeNbt(new NbtCompound()));
+        nbt.put("stack", ItemStackUtil.writeNbt(stack, lookup));
         nbt.putByte("colour", (byte) (colour == null ? 0 : colour.getId() + 1));
         nbt.putBoolean("toCenter", toCenter);
         nbt.putDouble("speed", speed);

@@ -3,6 +3,7 @@ package alexiil.mc.mod.pipes.part;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
@@ -35,15 +36,15 @@ public class FacadePart extends AbstractPart {
         this.shape = shape;
     }
 
-    public FacadePart(PartDefinition definition, MultipartHolder holder, NbtCompound tag) {
+    public FacadePart(PartDefinition definition, MultipartHolder holder, NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
         super(definition, holder);
         this.state = FacadeBlockStateInfo.fromTag(tag.getCompound("states"));
         shape = FacadeShape.fromTag(tag.getCompound("shape"));
     }
 
     @Override
-    public NbtCompound toTag() {
-        NbtCompound tag = super.toTag();
+    public NbtCompound toTag(RegistryWrapper.WrapperLookup lookup) {
+        NbtCompound tag = super.toTag(lookup);
         tag.put("states", state.toTag());
         tag.put("shape", shape.toTag());
         return tag;
