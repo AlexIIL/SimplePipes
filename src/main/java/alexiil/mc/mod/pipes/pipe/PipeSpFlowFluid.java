@@ -1,5 +1,6 @@
 package alexiil.mc.mod.pipes.pipe;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -16,6 +17,11 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.Direction;
 
 import alexiil.mc.mod.pipes.part.PipeSpBehaviourIron;
+
+import alexiil.mc.lib.net.IMsgReadCtx;
+import alexiil.mc.lib.net.IMsgWriteCtx;
+import alexiil.mc.lib.net.InvalidInputDataException;
+import alexiil.mc.lib.net.NetByteBuf;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
@@ -113,6 +119,26 @@ public class PipeSpFlowFluid extends PipeSpFlow {
         inner.put("c", centerSection.fluid.toTag());
         for (Direction dir : Direction.values()) {
             inner.put(dir.getName(), sideSections.get(dir).fluid.toTag());
+        }
+    }
+
+    @Override
+    public void fromBuffer(NetByteBuf buffer, IMsgReadCtx ctx) throws InvalidInputDataException {
+        try {
+            centerSection.fluid = FluidVolume.fromMcBuffer(buffer);
+            for (Direction dir : Direction.values()) {
+                sideSections.get(dir).fluid = FluidVolume.fromMcBuffer(buffer);
+            }
+        } catch (IOException e) {
+            throw new InvalidInputDataException("Error reading fluid flow", e);
+        }
+    }
+
+    @Override
+    public void writeToBuffer(NetByteBuf buffer, IMsgWriteCtx ctx) {
+        centerSection.fluid.toMcBuffer(buffer);
+        for (Direction dir : Direction.values()) {
+            sideSections.get(dir).fluid.toMcBuffer(buffer);
         }
     }
 

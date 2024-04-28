@@ -38,7 +38,7 @@ public abstract class PipeSpDef extends PartDefinition {
     public AbstractPart loadFromBuffer(MultipartHolder holder, NetByteBuf buffer, IMsgReadCtx ctx)
         throws InvalidInputDataException {
         PartSpPipe pipe = new PartSpPipe(this, holder);
-        pipe.fromNbt(buffer.readNbt(), ctx.getConnection().getPlayer().getRegistryManager());
+        pipe.fromBuffer(buffer, ctx);
         return pipe;
     }
 

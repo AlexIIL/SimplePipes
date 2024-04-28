@@ -9,6 +9,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.DirectionTransformation;
 import net.minecraft.world.World;
 
+import alexiil.mc.lib.net.IMsgReadCtx;
+import alexiil.mc.lib.net.IMsgWriteCtx;
+import alexiil.mc.lib.net.InvalidInputDataException;
+import alexiil.mc.lib.net.NetByteBuf;
+
 import alexiil.mc.lib.multipart.api.AbstractPart.ItemDropTarget;
 
 public abstract class PipeSpFlow {
@@ -25,6 +30,10 @@ public abstract class PipeSpFlow {
     public abstract void fromTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookup);
 
     public abstract NbtCompound toTag(RegistryWrapper.WrapperLookup lookup);
+    
+    public abstract void fromBuffer(NetByteBuf buffer, IMsgReadCtx ctx) throws InvalidInputDataException;
+    
+    public abstract void writeToBuffer(NetByteBuf buffer, IMsgWriteCtx ctx);
 
     public abstract void fromClientTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookup);
 

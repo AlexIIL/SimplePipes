@@ -17,6 +17,7 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
@@ -26,6 +27,10 @@ import net.minecraft.util.math.Vec3d;
 import alexiil.mc.lib.attributes.item.ItemStackUtil;
 
 import alexiil.mc.mod.pipes.util.TagUtil;
+
+import alexiil.mc.lib.net.IMsgReadCtx;
+import alexiil.mc.lib.net.IMsgWriteCtx;
+import alexiil.mc.lib.net.NetByteBuf;
 
 public class TravellingItem {
     // Client fields - public for rendering
@@ -103,6 +108,28 @@ public class TravellingItem {
         isPhantom = nbt.getBoolean("isPhantom");
     }
 
+    public TravellingItem(NetByteBuf buf, IMsgReadCtx ctx, long tickNow) {
+        if (buf.readBoolean()) {
+            stack = ItemStack.PACKET_CODEC.decode(new RegistryByteBuf(buf, ctx.getConnection().getPlayer().getRegistryManager()));
+        } else {
+            stack = ItemStack.EMPTY;
+        }
+        int c = buf.readByte();
+        this.colour = c == 0 ? null : DyeColor.byId(c - 1);
+        this.toCenter = buf.readBoolean();
+        this.speed = buf.readDouble();
+        if (speed < 0.001) {
+            speed = 0.001;
+        }
+        tickStarted = buf.readVarUnsignedInt() + tickNow;
+        tickFinished = buf.readVarUnsignedInt() + tickNow;
+        timeToDest = buf.readVarUnsignedInt();
+
+        side = buf.readEnumConstant(Direction.class);
+        tried = buf.readEnumSet(Direction.class);
+        isPhantom = buf.readBoolean();
+    }
+
     public NbtCompound writeToNbt(RegistryWrapper.WrapperLookup lookup, long tickNow) {
         NbtCompound nbt = new NbtCompound();
         nbt.put("stack", ItemStackUtil.writeNbt(stack, lookup));
@@ -118,6 +145,25 @@ public class TravellingItem {
             nbt.putBoolean("isPhantom", true);
         }
         return nbt;
+    }
+
+    public void writeToBuffer(NetByteBuf buf, IMsgWriteCtx ctx, long tickNow) {
+        if (stack.isEmpty()) {
+            buf.writeBoolean(false);
+        } else {
+            buf.writeBoolean(true);
+            ItemStack.PACKET_CODEC.encode(new RegistryByteBuf(buf, ctx.getConnection().getPlayer().getRegistryManager()), stack);
+        }
+        buf.writeByte((byte) (colour == null ? 0 : colour.getId() + 1));
+        buf.writeBoolean(toCenter);
+        buf.writeDouble(speed);
+        buf.writeVarUnsignedInt((int) (tickStarted - tickNow));
+        buf.writeVarUnsignedInt((int) (tickFinished - tickNow));
+        buf.writeVarUnsignedInt(timeToDest);
+        
+        buf.writeEnumConstant(side);
+        buf.writeEnumSet(tried, Direction.class);
+        buf.writeBoolean(isPhantom);
     }
 
     public int getCurrentDelay(long tickNow) {

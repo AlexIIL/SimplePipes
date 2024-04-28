@@ -14,6 +14,10 @@ import net.minecraft.util.math.DirectionTransformation;
 
 import alexiil.mc.mod.pipes.client.model.part.PipeSpPartKey;
 
+import alexiil.mc.lib.net.IMsgReadCtx;
+import alexiil.mc.lib.net.IMsgWriteCtx;
+import alexiil.mc.lib.net.NetByteBuf;
+
 import alexiil.mc.lib.multipart.api.AbstractPart.ItemDropTarget;
 
 public class PipeSpBehaviour {
@@ -30,6 +34,14 @@ public class PipeSpBehaviour {
 
     public NbtCompound toNbt(RegistryWrapper.WrapperLookup lookup) {
         return new NbtCompound();
+    }
+
+    public void fromBuffer(NetByteBuf buf, IMsgReadCtx ctx) {
+
+    }
+
+    public void writeToBuffer(NetByteBuf buf, IMsgWriteCtx ctx) {
+
     }
 
     public boolean canConnect(Direction dir) {

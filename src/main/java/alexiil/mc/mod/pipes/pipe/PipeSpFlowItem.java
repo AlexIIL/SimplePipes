@@ -10,6 +10,8 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
+import org.apache.commons.compress.utils.Lists;
+
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContextParameterSet;
@@ -29,6 +31,11 @@ import alexiil.mc.mod.pipes.pipe.PipeSpDef.PipeDefItem;
 import alexiil.mc.mod.pipes.util.DelayedList;
 import alexiil.mc.mod.pipes.util.TagUtil;
 
+import alexiil.mc.lib.net.IMsgReadCtx;
+import alexiil.mc.lib.net.IMsgWriteCtx;
+import alexiil.mc.lib.net.InvalidInputDataException;
+import alexiil.mc.lib.net.NetByteBuf;
+
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.ItemInsertable;
 import alexiil.mc.lib.attributes.item.ItemStackUtil;
@@ -40,6 +47,8 @@ import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable;
 import alexiil.mc.lib.multipart.api.AbstractPart.ItemDropTarget;
 
 public class PipeSpFlowItem extends PipeSpFlow {
+    
+    private static final int MAX_ITEMS_SENT_TO_CLIENT = 64;
 
     final ItemInsertable[] insertables;
 
@@ -94,6 +103,33 @@ public class PipeSpFlowItem extends PipeSpFlow {
         }
         nbt.put("items", list);
         return nbt;
+    }
+
+    @Override
+    public void fromBuffer(NetByteBuf buffer, IMsgReadCtx ctx) throws InvalidInputDataException {
+        items.clear();
+        int itemCount = buffer.readVarUnsignedInt();
+        for (int i = 0; i < itemCount; i++) {
+            TravellingItem item = new TravellingItem(buffer, ctx, 0);
+            if (!item.stack.isEmpty()) {
+                items.add(item.getCurrentDelay(0), item);
+            }
+        }
+    }
+
+    @Override
+    public void writeToBuffer(NetByteBuf buffer, IMsgWriteCtx ctx) {
+        List<TravellingItem> allItems = items.getAllElements().stream().reduce(Lists.newArrayList(), (result, element) -> {
+            if (element != null) result.addAll(element);
+            return result;
+        });
+
+        long tickNow = pipe.getWorldTime();
+        int itemCount = Math.min(allItems.size(), MAX_ITEMS_SENT_TO_CLIENT);
+        buffer.writeVarUnsignedInt(itemCount);
+        for (int i = 0; i < itemCount; i++) {
+            allItems.get(i).writeToBuffer(buffer, ctx, tickNow);
+        }
     }
 
     @Override

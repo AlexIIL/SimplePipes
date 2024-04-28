@@ -125,21 +125,33 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
         return nbt;
     }
 
+    public void fromBuffer(NetByteBuf buffer, IMsgReadCtx ctx) throws InvalidInputDataException {
+        connections = (byte) (buffer.readFixedBits(6) & 0b111_111);
+        flow.fromBuffer(buffer, ctx);
+        behaviour.fromBuffer(buffer, ctx);
+    }
+
+    private void writeToBuffer(NetByteBuf buffer, IMsgWriteCtx ctx) {
+        buffer.writeFixedBits(connections, 6);
+        flow.writeToBuffer(buffer, ctx);
+        behaviour.writeToBuffer(buffer, ctx);
+    }
+
     @Override
     public void writeCreationData(NetByteBuf buffer, IMsgWriteCtx ctx) {
-        buffer.writeNbt(toTag(ctx.getConnection().getPlayer().getRegistryManager()));
+        writeToBuffer(buffer, ctx);
     }
 
     @Override
     public void readRenderData(NetByteBuf buffer, IMsgReadCtx ctx) throws InvalidInputDataException {
-        fromNbt(buffer.readNbt(), ctx.getConnection().getPlayer().getRegistryManager());
+        fromBuffer(buffer, ctx);
 
         refreshModel();
     }
 
     @Override
     public void writeRenderData(NetByteBuf buffer, IMsgWriteCtx ctx) {
-        buffer.writeNbt(toTag(ctx.getConnection().getPlayer().getRegistryManager()));
+        writeToBuffer(buffer, ctx);
     }
 
     @Override
