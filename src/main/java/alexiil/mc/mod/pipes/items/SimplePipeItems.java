@@ -59,7 +59,7 @@ public class SimplePipeItems {
     static {
         Item.Settings pipes = new Item.Settings();
 
-        FACADE = new ItemFacade(new Item.Settings());
+        FACADE = new ItemFacade(new Item.Settings().component(FullFacade.TYPE, FullFacade.DEFAULT));
 
         DefaultedList<ItemStack> subItems = DefaultedList.of();
 
