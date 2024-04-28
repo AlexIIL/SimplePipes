@@ -107,14 +107,18 @@ public final class ItemPlacementGhostRenderer {
     public static void render(WorldRenderContext context) {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if (player != null) {
-            render(context.matrixStack(), context.camera(), player, context.tickDelta());
+            render(context.matrixStack(), context.projectionMatrix(), context.positionMatrix(), context.camera(), player, context.tickDelta());
         }
     }
 
-    public static void render(MatrixStack matrices, Camera camera, PlayerEntity player, float partialTicks) {
+    public static void render(MatrixStack matrices, Matrix4f projectionMatrix, Matrix4f positionMatrix, Camera camera, PlayerEntity player, float partialTicks) {
         ensureFramebuffer();
 
+        Matrix4f projBackup = RenderSystem.getProjectionMatrix();
+        RenderSystem.setProjectionMatrix(projectionMatrix, VertexSorter.BY_DISTANCE);
+
         matrices.push();
+        matrices.multiplyPositionMatrix(positionMatrix);
         matrices.translate(-camera.getPos().x, -camera.getPos().y, -camera.getPos().z);
         render0(matrices, VCPS, player, partialTicks);
         VCPS.draw();
@@ -124,7 +128,6 @@ public final class ItemPlacementGhostRenderer {
         mc.getFramebuffer().beginWrite(false);
 
         // Framebuffer.draw() messes with the projection matrix, so we're keeping a backup.
-        Matrix4f projBackup = RenderSystem.getProjectionMatrix();
         RenderSystem.enableBlend();
         framebuffer.draw(mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(), false);
         RenderSystem.disableBlend();
