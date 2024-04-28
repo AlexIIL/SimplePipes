@@ -282,8 +282,11 @@ public class PipeSpFlowFluid extends PipeSpFlow {
         }
 
         FluidAmount getMoveable(Section other, FluidAmount max) {
-            FluidAmount inOther = other.lastTickAmount/*.sub(AMOUNT_OVERFLOW)*/.max(FluidAmount.ZERO);
-            FluidAmount space = lastTickAmount.sub(inOther).min(SECTION_CAPACITY);
+            FluidAmount inOther = other.lastTickAmount.max(FluidAmount.ZERO);
+            // multiple sections could be moving into this one this tick,
+            // so we need to cap the maximum amount *right now*
+            FluidAmount realSpace = SECTION_CAPACITY.sub(other.fluid.amount());
+            FluidAmount space = lastTickAmount.sub(inOther).min(realSpace);
             if (max != null) {
                 return space.min(max);
             } else {
