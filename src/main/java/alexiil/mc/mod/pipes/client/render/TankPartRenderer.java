@@ -53,10 +53,7 @@ public class TankPartRenderer implements PartRenderer<PartTank> {
         }
 
         EnumSet<Direction> sides = EnumSet.allOf(Direction.class);
-        FluidRenderFace.appendCuboid(x0, y0, z0, x1, y1, z1, 1, sides, faces);
-        for (FluidRenderFace face : faces) {
-            face.light = light;
-        }
+        FluidRenderFace.appendCuboid(x0, y0, z0, x1, y1, z1, 1, sides, faces, light);
         forRender.fluid.getRenderer().render(forRender.fluid, faces, vertexConsumers, matrices);
     }
 }

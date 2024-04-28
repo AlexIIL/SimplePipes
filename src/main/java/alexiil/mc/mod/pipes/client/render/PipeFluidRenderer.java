@@ -19,7 +19,7 @@ import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 
 public class PipeFluidRenderer {
-    public static void render(MatrixStack matrices, VertexConsumerProvider vcp, PipeSpFlowFluid flow) {
+    public static void render(MatrixStack matrices, VertexConsumerProvider vcp, PipeSpFlowFluid flow, int light) {
         ISimplePipe pipe = flow.pipe;
 
         boolean gas = false;// TODO!
@@ -56,11 +56,11 @@ public class PipeFluidRenderer {
 
             if (side.getAxis() == Axis.Y) {
                 EnumSet<Direction> sides = EnumSet.allOf(Direction.class);
-                FluidRenderFace.appendCuboid(min.x, min.y, min.z, max.x, max.y, max.z, 1, sides, faces);
+                FluidRenderFace.appendCuboid(min.x, min.y, min.z, max.x, max.y, max.z, 1, sides, faces, light);
             } else {
                 EnumSet<Direction> sides = EnumSet.allOf(Direction.class);
                 double max_y = (max.y - min.y) * perc + min.y;
-                FluidRenderFace.appendCuboid(min.x, min.y, min.z, max.x, max_y, max.z, 1, sides, faces);
+                FluidRenderFace.appendCuboid(min.x, min.y, min.z, max.x, max_y, max.z, 1, sides, faces, light);
             }
             fluid.render(faces, vcp, matrices);
         }
@@ -78,7 +78,7 @@ public class PipeFluidRenderer {
 
                 EnumSet<Direction> sides = EnumSet.allOf(Direction.class);
                 double max_y = (max.y - min.y) * perc + min.y;
-                FluidRenderFace.appendCuboid(min.x, min.y, min.z, max.x, max_y, max.z, 1, sides, faces);
+                FluidRenderFace.appendCuboid(min.x, min.y, min.z, max.x, max_y, max.z, 1, sides, faces, light);
 
                 horizPos += (max.y - min.y) * perc;
             }
@@ -95,7 +95,7 @@ public class PipeFluidRenderer {
                 Vec3d max = new Vec3d(maxXZ, yMax, maxXZ);
 
                 EnumSet<Direction> sides = EnumSet.allOf(Direction.class);
-                FluidRenderFace.appendCuboid(min.x, min.y, min.z, max.x, max.y, max.z, 1, sides, faces);
+                FluidRenderFace.appendCuboid(min.x, min.y, min.z, max.x, max.y, max.z, 1, sides, faces, light);
             }
             center.render(faces, vcp, matrices);
         }

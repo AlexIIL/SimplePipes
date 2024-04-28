@@ -18,7 +18,7 @@ public class PipePartRenderer implements PartRenderer<PartSpPipe> {
         if (part.flow instanceof PipeSpFlowItem) {
             PipeItemRenderer.render(tickDelta, matrices, vc, light, overlay, (PipeSpFlowItem) part.flow);
         } else if (part.flow instanceof PipeSpFlowFluid) {
-            PipeFluidRenderer.render(matrices, vc, (PipeSpFlowFluid) part.flow);
+            PipeFluidRenderer.render(matrices, vc, (PipeSpFlowFluid) part.flow, light);
         }
     }
 }
