@@ -14,6 +14,10 @@ import net.minecraft.util.math.DirectionTransformation;
 
 import alexiil.mc.mod.pipes.client.model.part.PipeSpSidedPartKey;
 
+import alexiil.mc.lib.net.IMsgReadCtx;
+import alexiil.mc.lib.net.IMsgWriteCtx;
+import alexiil.mc.lib.net.NetByteBuf;
+
 public abstract class PipeSpBehaviourSided extends PipeSpBehaviour {
 
     private Direction currentDirection = null;
@@ -39,6 +43,23 @@ public abstract class PipeSpBehaviourSided extends PipeSpBehaviour {
         NbtCompound nbt = super.toNbt(lookup);
         nbt.putByte("dir", (byte) (currentDirection == null ? 0xFF : currentDirection.getId()));
         return nbt;
+    }
+
+    @Override
+    public void fromBuffer(NetByteBuf buf, IMsgReadCtx ctx) {
+        super.fromBuffer(buf, ctx);
+        byte b = buf.readByte();
+        if (b >= 0 && b < 6) {
+            currentDirection = Direction.byId(b);
+        } else {
+            currentDirection = null;
+        }
+    }
+
+    @Override
+    public void writeToBuffer(NetByteBuf buf, IMsgWriteCtx ctx) {
+        super.writeToBuffer(buf, ctx);
+        buf.writeByte(currentDirection == null ? 0xFF : currentDirection.getId());
     }
 
     public Direction currentDirection() {

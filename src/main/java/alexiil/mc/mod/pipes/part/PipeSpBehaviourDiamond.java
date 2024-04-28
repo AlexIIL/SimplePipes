@@ -9,6 +9,7 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
@@ -21,6 +22,10 @@ import alexiil.mc.mod.pipes.items.SimplePipeItems;
 import alexiil.mc.mod.pipes.pipe.PartSpPipe;
 import alexiil.mc.mod.pipes.pipe.PipeSpBehaviour;
 import alexiil.mc.mod.pipes.pipe.TravellingItem;
+
+import alexiil.mc.lib.net.IMsgReadCtx;
+import alexiil.mc.lib.net.IMsgWriteCtx;
+import alexiil.mc.lib.net.NetByteBuf;
 
 import alexiil.mc.lib.attributes.item.ItemAttributes;
 import alexiil.mc.lib.attributes.item.ItemStackUtil;
@@ -114,6 +119,30 @@ public class PipeSpBehaviourDiamond extends PipeSpBehaviour {
             }
         }
         return nbt;
+    }
+
+    @Override
+    public void fromBuffer(NetByteBuf buf, IMsgReadCtx ctx) {
+        super.fromBuffer(buf, ctx);
+        for (int i = 0; i < INV_SIZE; i++) {
+            if (buf.readBoolean()) {
+                filterInv.setStack(i, ItemStack.PACKET_CODEC.decode(new RegistryByteBuf(buf, ctx.getConnection().getPlayer().getRegistryManager())));
+            }
+        }
+    }
+
+    @Override
+    public void writeToBuffer(NetByteBuf buf, IMsgWriteCtx ctx) {
+        super.writeToBuffer(buf, ctx);
+        for (int i = 0; i < INV_SIZE; i++) {
+            ItemStack stack = filterInv.getStack(i);
+            if (stack.isEmpty()) {
+                buf.writeBoolean(true);
+                ItemStack.PACKET_CODEC.encode(new RegistryByteBuf(buf, ctx.getConnection().getPlayer().getRegistryManager()), stack);
+            } else {
+                buf.writeBoolean(false);
+            }
+        }
     }
 
     @Override
