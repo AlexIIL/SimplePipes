@@ -1,7 +1,7 @@
 {
     "type": "crafting_shaped",
     "result": {
-        "item": "simple_pipes:pipe_iron_item",
+        "id": "simple_pipes:pipe_iron_item",
         "count": 8
     },
     "pattern": [ "WGW" ],

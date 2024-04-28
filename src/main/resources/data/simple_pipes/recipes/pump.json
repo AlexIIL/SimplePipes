@@ -1,7 +1,7 @@
 {
     "type": "crafting_shaped",
     "result": {
-        "item": "simple_pipes:pump"
+        "id": "simple_pipes:pump"
     },
     "pattern": [
         "ISI",

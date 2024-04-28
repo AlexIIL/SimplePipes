@@ -1,7 +1,7 @@
 {
     "type": "crafting_shaped",
     "result": {
-        "item": "simple_pipes:trigger_fluid_inv_contains",
+        "id": "simple_pipes:trigger_fluid_inv_contains",
         "count": 4
     },
     "pattern": [

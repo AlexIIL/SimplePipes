@@ -1,7 +1,7 @@
 {
     "type": "crafting_shaped",
     "result": {
-        "item": "simple_pipes:tank"
+        "id": "simple_pipes:tank"
     },
     "pattern": [
         " G ",

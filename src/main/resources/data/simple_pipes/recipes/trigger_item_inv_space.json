@@ -1,7 +1,7 @@
 {
     "type": "crafting_shaped",
     "result": {
-        "item": "simple_pipes:trigger_item_inv_space",
+        "id": "simple_pipes:trigger_item_inv_space",
         "count": 4
     },
     "pattern": [

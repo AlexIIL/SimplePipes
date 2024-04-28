@@ -1,7 +1,7 @@
 {
     "type": "crafting_shaped",
     "result": {
-        "item": "simple_pipes:pipe_stone_fluid",
+        "id": "simple_pipes:pipe_stone_fluid",
         "count": 1
     },
     "pattern": [ "PD" ],

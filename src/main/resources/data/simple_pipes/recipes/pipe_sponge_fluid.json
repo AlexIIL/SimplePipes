@@ -1,7 +1,7 @@
 {
     "type": "crafting_shaped",
     "result": {
-        "item": "simple_pipes:pipe_sponge_fluid",
+        "id": "simple_pipes:pipe_sponge_fluid",
         "count": 8
     },
     "pattern": [ "dOd", "SGS", "d d" ],
