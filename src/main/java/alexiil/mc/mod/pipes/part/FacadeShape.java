@@ -2,7 +2,13 @@ package alexiil.mc.mod.pipes.part;
 
 import java.util.Arrays;
 import java.util.Locale;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -21,7 +27,7 @@ import alexiil.mc.mod.pipes.util.ShapeUtil;
 import alexiil.mc.mod.pipes.util.TagUtil;
 import alexiil.mc.mod.pipes.util.VecUtil;
 
-public abstract class FacadeShape {
+public abstract sealed class FacadeShape {
 
     private static final String NBT_KEY_CORNER = "corner";
     private static final String NBT_KEY_EDGE = "edge";
@@ -42,6 +48,9 @@ public abstract class FacadeShape {
 
         ITEM_SHAPES = new FacadeShape[3 * (1 + 1 + 2)];
     }
+
+    public static final Codec<FacadeShape> CODEC = Type.CODEC.dispatch("type", FacadeShape::getType, Type::getNbtCodec);
+    public static final Codec<FacadeShape> ITEM_CODEC = Type.CODEC.dispatch("type", FacadeShape::getType, Type::getItemCodec);
 
     public final int shapeOrdinal;
     public final VoxelShape shape;
@@ -116,6 +125,8 @@ public abstract class FacadeShape {
     public abstract FacadeSize getSize();
 
     public abstract FacadeShape transform(DirectionTransformation transformation);
+    
+    public abstract Type getType();
 
     public VoxelShape getVoxelShape() {
         return shape;
@@ -128,8 +139,49 @@ public abstract class FacadeShape {
     public int getRecipeMicroVoxelVolume() {
         return recipeMicroVoxelVolume;
     }
+    
+    public enum Type implements StringIdentifiable {
+        SIDED(NBT_TYPE_SIDED, Sided.CODEC, Sided.ITEM_CODEC),
+        STRIP(NBT_TYPE_STRIP, Strip.CODEC, Strip.ITEM_CODEC),
+        CORNER(NBT_TYPE_CORNER, Corner.CODEC, Corner.ITEM_CODEC);
+
+        public static final Codec<Type> CODEC = StringIdentifiable.createCodec(Type::values);
+
+        private final String nbtName;
+        private final MapCodec<? extends FacadeShape> nbtCodec;
+        private final MapCodec<? extends FacadeShape> itemCodec;
+
+        Type(String nbtName, MapCodec<? extends FacadeShape> nbtCodec, MapCodec<? extends FacadeShape> itemCodec) {
+            this.nbtName = nbtName;
+            this.nbtCodec = nbtCodec;
+            this.itemCodec = itemCodec;
+        }
+
+        @Override
+        public String asString() {
+            return nbtName;
+        }
+
+        public MapCodec<? extends FacadeShape> getNbtCodec() {
+            return nbtCodec;
+        }
+
+        public MapCodec<? extends FacadeShape> getItemCodec() {
+            return itemCodec;
+        }
+    }
 
     public static final class Sided extends FacadeShape {
+
+        public static final MapCodec<Sided> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            FacadeSize.CODEC.fieldOf("size").forGetter(Sided::getSize),
+            Direction.CODEC.fieldOf(NBT_KEY_SIDE).forGetter(Sided::getSide),
+            Codec.BOOL.fieldOf("hollow").forGetter(Sided::isHollow)
+        ).apply(instance, Sided::get));
+        public static final MapCodec<Sided> ITEM_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            FacadeSize.CODEC.fieldOf("size").forGetter(Sided::getSize),
+            Codec.BOOL.fieldOf("hollow").forGetter(Sided::isHollow)
+        ).apply(instance, (size, hollow) -> Sided.get(size, Direction.WEST, hollow)));
 
         private static final Sided[] values;
 
@@ -238,6 +290,11 @@ public abstract class FacadeShape {
             return get(size, transformation.map(side), hollow);
         }
 
+        @Override
+        public Type getType() {
+            return Type.SIDED;
+        }
+
         public Sided withSize(FacadeSize newSize) {
             return get(newSize, side, hollow);
         }
@@ -258,6 +315,14 @@ public abstract class FacadeShape {
 
     public static final class Strip extends FacadeShape {
         private static final int CUBOID_EDGES = EnumCuboidEdge.values().length;
+
+        public static final MapCodec<Strip> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            FacadeSize.CODEC.fieldOf("size").forGetter(Strip::getSize),
+            EnumCuboidEdge.CODEC.fieldOf(NBT_KEY_EDGE).forGetter(Strip::getEdge)
+        ).apply(instance, Strip::get));
+        public static final MapCodec<Strip> ITEM_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            FacadeSize.CODEC.fieldOf("size").forGetter(Strip::getSize)
+        ).apply(instance, size -> Strip.get(size, EnumCuboidEdge.Z_NN)));
 
         private static final Strip[] values;
 
@@ -344,6 +409,11 @@ public abstract class FacadeShape {
             return get(size, edge.transform(transformation));
         }
 
+        @Override
+        public Type getType() {
+            return Type.STRIP;
+        }
+
         public Strip withSize(FacadeSize newSize) {
             return get(newSize, edge);
         }
@@ -360,6 +430,14 @@ public abstract class FacadeShape {
 
     public static final class Corner extends FacadeShape {
         private static final int CUBOID_CORNERS = EnumCuboidCorner.values().length;
+
+        public static final MapCodec<Corner> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            FacadeSize.CODEC.fieldOf("size").forGetter(Corner::getSize),
+            EnumCuboidCorner.CODEC.fieldOf(NBT_KEY_CORNER).forGetter(Corner::getCorner)
+        ).apply(instance, Corner::get));
+        public static final MapCodec<Corner> ITEM_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            FacadeSize.CODEC.fieldOf("size").forGetter(Corner::getSize)
+        ).apply(instance, size -> Corner.get(size, EnumCuboidCorner.NNN)));
 
         private static final Corner[] values;
 
@@ -448,6 +526,11 @@ public abstract class FacadeShape {
         @Override
         public FacadeShape transform(DirectionTransformation transformation) {
             return get(size, corner.transform(transformation));
+        }
+
+        @Override
+        public Type getType() {
+            return Type.CORNER;
         }
 
         public Corner withSize(FacadeSize newSize) {

@@ -177,6 +177,7 @@ public final class SimplePipeParts {
 
         FindMatchingRecipesEvent.EVENT.register(SimplePipeParts::addFacadeRecipes);
         Registry.register(Registries.RECIPE_SERIALIZER, FacadeCraftingRecipe.ID, FacadeCraftingRecipe.INSTANCE);
+        Registry.register(Registries.DATA_COMPONENT_TYPE, FullFacade.TYPE_ID, FullFacade.TYPE);
     }
 
     private static void addFacadeRecipes(RecipeMatchFinder context) {

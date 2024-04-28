@@ -9,6 +9,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
 import net.minecraft.state.State;
 import net.minecraft.state.StateManager;
@@ -20,7 +23,20 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedMap;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+
 public class FacadeBlockStateInfo {
+    public static final Codec<FacadeBlockStateInfo> CODEC = BlockState.CODEC.comapFlatMap(state -> {
+        SortedMap<BlockState, FacadeBlockStateInfo> map = FacadeStateManager.getValidFacadeStates();
+        FacadeBlockStateInfo info = map.get(state);
+        if (info == null) {
+            return DataResult.error(() -> "No facade state associated with block state " + state);
+        }
+        return DataResult.success(info);
+    }, info -> info.state);
+    public static final PacketCodec<RegistryByteBuf, FacadeBlockStateInfo> PACKET_CODEC = PacketCodecs.registryCodec(CODEC);
+    
     public final BlockState state;
     public final ItemStack requiredStack;
     public final ImmutableSet<Property<?>> varyingProperties;
@@ -97,6 +113,7 @@ public class FacadeBlockStateInfo {
         }
     }
 
+    @Deprecated
     public NbtCompound toTag() {
         try {
             return NbtHelper.fromBlockState(state);

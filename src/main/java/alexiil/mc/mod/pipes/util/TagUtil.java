@@ -8,6 +8,8 @@ package alexiil.mc.mod.pipes.util;
 import java.util.BitSet;
 import java.util.EnumSet;
 
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtByte;
 import net.minecraft.nbt.NbtByteArray;
@@ -100,14 +102,11 @@ public final class TagUtil {
     }
 
     public static NbtCompound getItemData(ItemStack stack) {
+        // used in 1.20.1 -> 1.20.5+ migration
         if (stack.isEmpty()) {
             return new NbtCompound();
         }
-        NbtCompound nbt = stack.getNbt();
-        if (nbt == null) {
-            nbt = new NbtCompound();
-            stack.setNbt(nbt);
-        }
-        return nbt;
+        NbtComponent component = stack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT);
+        return component.copyNbt();
     }
 }

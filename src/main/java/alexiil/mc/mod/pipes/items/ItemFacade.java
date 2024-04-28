@@ -19,6 +19,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.item.TooltipType;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -80,12 +81,17 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
     @Nonnull
     public ItemStack createItemStack(FullFacade state) {
         ItemStack item = new ItemStack(this);
-        NbtCompound nbt = TagUtil.getItemData(item);
-        nbt.put("facade", state.toTag());
+        item.set(FullFacade.TYPE, state);
         return item;
     }
 
     public static FullFacade getStates(ItemStack item) {
+        FullFacade facadeComponent = item.get(FullFacade.TYPE);
+        if (facadeComponent != null) {
+            return facadeComponent;
+        }
+
+        // begin 1.20.5 migration
         NbtCompound nbt = TagUtil.getItemData(item);
 
         String strPreview = nbt.getString("preview");
@@ -93,6 +99,7 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
             return new FullFacade(FacadeStateManager.getPreviewState(), DEFAULT_SHAPE);
         }
 
+        // older migration code
         if (!nbt.contains("facade") && nbt.contains("states")) {
             NbtList states = nbt.getList("states", new NbtCompound().getType());
             if (states.size() > 0) {
@@ -111,6 +118,14 @@ public class ItemFacade extends Item implements IItemPlacmentGhost {
         }
         if (full.shape instanceof FacadeShape.Strip) {
             full = new FullFacade(full.state, ((FacadeShape.Strip) full.shape).withEdge(EnumCuboidEdge.Z_NN));
+        }
+
+        // actually convert the item
+        item.set(FullFacade.TYPE, full);
+        if ((nbt.getSize() == 1 && nbt.contains("facade")) ||
+            (nbt.getSize() == 2 && nbt.contains("facade") && nbt.contains("states"))) {
+            // this means the only tags left are ours
+            item.remove(DataComponentTypes.CUSTOM_DATA);
         }
         return full;
     }

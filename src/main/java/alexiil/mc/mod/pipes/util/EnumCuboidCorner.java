@@ -2,6 +2,9 @@ package alexiil.mc.mod.pipes.util;
 
 import org.joml.Vector3f;
 
+import com.mojang.serialization.Codec;
+
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Direction.AxisDirection;
@@ -9,7 +12,7 @@ import net.minecraft.util.math.DirectionTransformation;
 
 /** The 8 corners of a cuboid. The field name is in the form "X,Y,Z", for x is positive, y is positive, z is
  * positive. */
-public enum EnumCuboidCorner {
+public enum EnumCuboidCorner implements StringIdentifiable {
     NNN,
     NNP,
     NPN,
@@ -18,6 +21,8 @@ public enum EnumCuboidCorner {
     PNP,
     PPN,
     PPP;
+    
+    public static final Codec<EnumCuboidCorner> CODEC = StringIdentifiable.createCodec(EnumCuboidCorner::values);
 
     public final AxisDirection x, y, z;
     public final Direction xSide, ySide, zSide;
@@ -56,5 +61,10 @@ public enum EnumCuboidCorner {
         Vector3f vec = new Vector3f(x.offset(), y.offset(), z.offset());
         transformation.getMatrix().transform(vec);
         return get(vec.x > 0, vec.y > 0, vec.z > 0);
+    }
+
+    @Override
+    public String asString() {
+        return name();
     }
 }

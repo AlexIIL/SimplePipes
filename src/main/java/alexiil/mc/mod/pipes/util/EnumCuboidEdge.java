@@ -4,13 +4,16 @@ import java.util.EnumMap;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.mojang.serialization.Codec;
+
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Direction.AxisDirection;
 import net.minecraft.util.math.DirectionTransformation;
 
-public enum EnumCuboidEdge {
+public enum EnumCuboidEdge implements StringIdentifiable {
     X_NN(Axis.X, false, false),
     X_NP(Axis.X, false, true),
     X_PN(Axis.X, true, false),
@@ -25,6 +28,8 @@ public enum EnumCuboidEdge {
     Z_NP(Axis.Z, false, true),
     Z_PN(Axis.Z, true, false),
     Z_PP(Axis.Z, true, true);
+    
+    public static final Codec<EnumCuboidEdge> CODEC = StringIdentifiable.createCodec(EnumCuboidEdge::values);
 
     /** Used to look up an edge based on the two sides it sits between. */
     private static final EnumCuboidEdge[] TOUCHING_SIDES = new EnumCuboidEdge[36];
@@ -116,5 +121,10 @@ public enum EnumCuboidEdge {
         EnumCuboidEdge transformed = get(transformation.map(touchingSide1), transformation.map(touchingSide2));
         assert transformed != null;
         return transformed;
+    }
+
+    @Override
+    public String asString() {
+        return name();
     }
 }
