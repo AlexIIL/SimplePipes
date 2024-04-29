@@ -1,0 +1,7 @@
+Changes:
+
+* Updated to Minecraft 1.20.5.
+* Fixed fluids overflowing in fluid pipes.
+* Fixed fluids in fluid pipes looking like they're glowing.
+* Fixed item pipes with lots of items disconnecting clients due to trying to send packets that were too large.
+* Removed the facades creative tab because it was causing crashes for some people.
