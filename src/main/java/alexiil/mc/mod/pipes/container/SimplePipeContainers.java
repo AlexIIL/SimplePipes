@@ -19,22 +19,18 @@ import net.minecraft.util.math.BlockPos;
 import alexiil.mc.mod.pipes.SimplePipes;
 
 public class SimplePipeContainers {
-    @SuppressWarnings("unchecked")
-    private static final PacketCodec<RegistryByteBuf, BlockPos> BLOCK_POS_CODEC =
-        (PacketCodec<RegistryByteBuf, BlockPos>) (Object) BlockPos.PACKET_CODEC;
-
     public static final ScreenHandlerType<ContainerTriggerInvSpace> TRIGGER_ITEM_INV_SPACE
-        = new ExtendedScreenHandlerType<>(ContainerTriggerInvSpace.FACTORY, BLOCK_POS_CODEC);
+        = new ExtendedScreenHandlerType<>(ContainerTriggerInvSpace.FACTORY, BlockPos.PACKET_CODEC.cast());
     public static final ScreenHandlerType<ContainerTriggerInvContains> TRIGGER_ITEM_INV_CONTAINS
-        = new ExtendedScreenHandlerType<>(ContainerTriggerInvContains.FACTORY, BLOCK_POS_CODEC);
+        = new ExtendedScreenHandlerType<>(ContainerTriggerInvContains.FACTORY, BlockPos.PACKET_CODEC.cast());
     public static final ScreenHandlerType<ContainerTriggerFluidSpace> TRIGGER_FLUID_INV_SPACE
-        = new ExtendedScreenHandlerType<>(ContainerTriggerFluidSpace.FACTORY, BLOCK_POS_CODEC);
+        = new ExtendedScreenHandlerType<>(ContainerTriggerFluidSpace.FACTORY, BlockPos.PACKET_CODEC.cast());
     public static final ScreenHandlerType<ContainerTriggerFluidContains> TRIGGER_FLUID_INV_CONTAINS
-        = new ExtendedScreenHandlerType<>(ContainerTriggerFluidContains.FACTORY, BLOCK_POS_CODEC);
+        = new ExtendedScreenHandlerType<>(ContainerTriggerFluidContains.FACTORY, BlockPos.PACKET_CODEC.cast());
     public static final ScreenHandlerType<ContainerPipeDiamondItem> PIPE_PART_DIAMOND_ITEM
-        = new ExtendedScreenHandlerType<>(ContainerPipeDiamondItem.FACTORY, BLOCK_POS_CODEC);
+        = new ExtendedScreenHandlerType<>(ContainerPipeDiamondItem.FACTORY, BlockPos.PACKET_CODEC.cast());
     public static final ScreenHandlerType<ContainerTank> TANK =
-        new ExtendedScreenHandlerType<>(ContainerTank.FACTORY, BLOCK_POS_CODEC);
+        new ExtendedScreenHandlerType<>(ContainerTank.FACTORY, BlockPos.PACKET_CODEC.cast());
 
     private static Identifier id(String name) {
         return new Identifier(SimplePipes.MODID, name);
