@@ -54,14 +54,11 @@ public class SimplePipeItems {
     public static final BlockItem TRIGGER_FLUID_INV_CONTAINS;
 
     public static final ItemGroup MAIN_GROUP;
-    public static final ItemGroup FACADE_GROUP;
 
     static {
         Item.Settings pipes = new Item.Settings();
 
         FACADE = new ItemFacade(new Item.Settings().component(FullFacade.TYPE, FullFacade.DEFAULT));
-
-        DefaultedList<ItemStack> subItems = DefaultedList.of();
 
         WOODEN_PIPE_ITEMS = new ItemPipePart(pipes, SimplePipeParts.WOODEN_PIPE_ITEMS);
         STONE_PIPE_ITEMS = new ItemPipePart(pipes, SimplePipeParts.STONE_PIPE_ITEMS);
@@ -119,12 +116,6 @@ public class SimplePipeItems {
                 entries.add(TRIGGER_FLUID_INV_SPACE);
                 entries.add(TRIGGER_FLUID_INV_CONTAINS);
             }).build();
-
-        FACADE_GROUP = FabricItemGroup.builder().displayName(Text.translatable("itemGroup.simple_pipes.facades"))
-            .icon(SimplePipeItems::getFacadeGroupStack)
-            .entries((displayContext, entries) -> FACADE.addSubItems(entries)).build();
-
-
     }
 
     private static ItemStack getMainGroupStack() {
@@ -165,7 +156,6 @@ public class SimplePipeItems {
         registerItem(TRIGGER_FLUID_INV_CONTAINS, "trigger_fluid_inv_contains");
 
         Registry.register(Registries.ITEM_GROUP, SimplePipes.id("main"), MAIN_GROUP);
-        Registry.register(Registries.ITEM_GROUP, SimplePipes.id("facades"), FACADE_GROUP);
     }
 
     private static void registerItem(Item item, String name) {
