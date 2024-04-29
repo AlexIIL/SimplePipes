@@ -33,6 +33,7 @@ import alexiil.mc.lib.net.IMsgReadCtx;
 import alexiil.mc.lib.net.IMsgWriteCtx;
 import alexiil.mc.lib.net.InvalidInputDataException;
 import alexiil.mc.lib.net.NetByteBuf;
+import alexiil.mc.lib.net.NetIdData;
 import alexiil.mc.lib.net.NetIdDataK;
 import alexiil.mc.lib.net.ParentNetIdSingle;
 
@@ -409,13 +410,13 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
     }
 
     @Override
-    public void sendFlowPacket(NbtCompound nbt) {
+    public void sendFlowPacket(NetIdData.IMsgDataWriter writer) {
         this.sendNetworkUpdate(this, ID_FLOW, (obj, buf, ctx) -> {
-            buf.writeNbt(nbt);
+            writer.write(buf, ctx);
         });
     }
 
-    private void receiveFlow(NetByteBuf buffer, IMsgReadCtx ctx) {
-        flow.fromClientTag(buffer.readNbt(), ctx.getConnection().getPlayer().getRegistryManager());
+    private void receiveFlow(NetByteBuf buffer, IMsgReadCtx ctx) throws InvalidInputDataException {
+        flow.fromClientTag(buffer, ctx);
     }
 }

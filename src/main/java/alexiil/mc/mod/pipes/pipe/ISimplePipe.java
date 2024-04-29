@@ -7,6 +7,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
+import alexiil.mc.lib.net.NetIdData;
+
 import alexiil.mc.lib.attributes.CombinableAttribute;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.FluidExtractable;
@@ -59,5 +61,5 @@ public interface ISimplePipe {
 
     double getPipeLength(Direction side);
 
-    void sendFlowPacket(NbtCompound tag);
+    void sendFlowPacket(NetIdData.IMsgDataWriter writer);
 }

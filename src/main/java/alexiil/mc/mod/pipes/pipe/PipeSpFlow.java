@@ -35,7 +35,7 @@ public abstract class PipeSpFlow {
     
     public abstract void writeToBuffer(NetByteBuf buffer, IMsgWriteCtx ctx);
 
-    public abstract void fromClientTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookup);
+    public abstract void fromClientTag(NetByteBuf buffer, IMsgReadCtx ctx) throws InvalidInputDataException;
 
     public void fromInitialClientTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
         // nothing by default

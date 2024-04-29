@@ -153,8 +153,8 @@ public class PipeSpFlowFluid extends PipeSpFlow {
     }
 
     @Override
-    public void fromClientTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
-        fromInitialClientTag(tag, lookup);
+    public void fromClientTag(NetByteBuf buffer, IMsgReadCtx ctx) throws InvalidInputDataException {
+        fromBuffer(buffer, ctx);
     }
 
     @Override
@@ -189,7 +189,7 @@ public class PipeSpFlowFluid extends PipeSpFlow {
         updateAmounts();
 
         if (Math.random() < 0.1) {
-            pipe.sendFlowPacket(toTag(world().getRegistryManager()));
+            pipe.sendFlowPacket(this::writeToBuffer);
         }
     }
 

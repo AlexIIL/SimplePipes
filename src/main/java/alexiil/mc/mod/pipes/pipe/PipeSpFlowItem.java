@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.collection.DefaultedList;
@@ -133,7 +134,7 @@ public class PipeSpFlowItem extends PipeSpFlow {
     }
 
     @Override
-    public void fromClientTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookup) {
+    public void fromClientTag(NetByteBuf buffer, IMsgReadCtx ctx) {
 
         // tag.put("item", item.stack.toTag(new CompoundTag()));
         // tag.putBoolean("to_center", item.toCenter);
@@ -141,15 +142,34 @@ public class PipeSpFlowItem extends PipeSpFlow {
         // tag.put("colour", TagUtil.writeEnum(item.colour));
         // tag.putShort("time", item.timeToDest > Short.MAX_VALUE ? Short.MAX_VALUE :(short) item.timeToDest);
 
-        TravellingItem item = new TravellingItem(ItemStackUtil.fromNbt(tag.getCompound("item"), lookup));
-        item.toCenter = tag.getBoolean("to_center");
-        item.side = TagUtil.readEnum(tag.get("side"), Direction.class);
-        item.colour = TagUtil.readEnum(tag.get("colour"), DyeColor.class);
-        item.timeToDest = Short.toUnsignedInt(tag.getShort("time"));
+        TravellingItem item = new TravellingItem(ItemStack.PACKET_CODEC.decode(new RegistryByteBuf(buffer, ctx.getConnection().getPlayer().getRegistryManager())));
+        item.toCenter = buffer.readBoolean();
+        item.side = buffer.readEnumConstant(Direction.class);
+        item.colour = buffer.readBoolean() ? buffer.readEnumConstant(DyeColor.class) : null;
+        item.timeToDest = Short.toUnsignedInt(buffer.readShort());
         item.tickStarted = pipe.getWorldTime() + 1;
         item.tickFinished = item.tickStarted + item.timeToDest;
         item.speed *= getSpeedModifier();
         items.add(item.timeToDest + 1, item);
+    }
+
+    void sendItemDataToClient(TravellingItem item) {
+        // TODO :p
+        // System.out.println(getPos() + " - " + item.stack + " - " + item.side);
+        if (item.stack.isEmpty()) return;
+
+        pipe.sendFlowPacket((buf, ctx) -> {
+            ItemStack.PACKET_CODEC.encode(new RegistryByteBuf(buf, world().getRegistryManager()), item.stack);
+            buf.writeBoolean(item.toCenter);
+            buf.writeEnumConstant(item.side);
+            if (item.colour != null) {
+                buf.writeBoolean(true);
+                buf.writeEnumConstant(item.colour);
+            } else {
+                buf.writeBoolean(false);
+            }
+            buf.writeShort(item.timeToDest > Short.MAX_VALUE ? Short.MAX_VALUE : (short) item.timeToDest);
+        });
     }
 
     @Override
@@ -247,20 +267,6 @@ public class PipeSpFlowItem extends PipeSpFlow {
                 }
             }
         }
-    }
-
-    void sendItemDataToClient(TravellingItem item) {
-        // TODO :p
-        // System.out.println(getPos() + " - " + item.stack + " - " + item.side);
-        NbtCompound tag = new NbtCompound();
-
-        tag.put("item", ItemStackUtil.writeNbt(item.stack, world().getRegistryManager()));
-        tag.putBoolean("to_center", item.toCenter);
-        tag.put("side", TagUtil.writeEnum(item.side));
-        tag.put("colour", TagUtil.writeEnum(item.colour));
-        tag.putShort("time", item.timeToDest > Short.MAX_VALUE ? Short.MAX_VALUE : (short) item.timeToDest);
-
-        pipe.sendFlowPacket(tag);
     }
 
     protected List<EnumSet<Direction>> getOrderForItem(TravellingItem item, EnumSet<Direction> validDirections) {

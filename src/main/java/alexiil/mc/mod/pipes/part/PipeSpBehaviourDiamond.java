@@ -136,7 +136,7 @@ public class PipeSpBehaviourDiamond extends PipeSpBehaviour {
         super.writeToBuffer(buf, ctx);
         for (int i = 0; i < INV_SIZE; i++) {
             ItemStack stack = filterInv.getStack(i);
-            if (stack.isEmpty()) {
+            if (!stack.isEmpty()) {
                 buf.writeBoolean(true);
                 ItemStack.PACKET_CODEC.encode(new RegistryByteBuf(buf, ctx.getConnection().getPlayer().getRegistryManager()), stack);
             } else {
