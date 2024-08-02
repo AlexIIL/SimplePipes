@@ -185,30 +185,30 @@ public class MutableVertex {
     public void fromBakedFormat(int[] data, VertexFormat format, int offset) {
         int o = offset;
         for (VertexFormatElement elem : format.getElements()) {
-            switch (elem.getType()) {
+            switch (elem.usage()) {
                 case POSITION: {
-                    assert elem.getComponentType() == ComponentType.FLOAT;
+                    assert elem.type() == ComponentType.FLOAT;
                     position_x = Float.intBitsToFloat(data[o++]);
                     position_y = Float.intBitsToFloat(data[o++]);
                     position_z = Float.intBitsToFloat(data[o++]);
                     break;
                 }
                 case COLOR: {
-                    assert elem.getComponentType() == ComponentType.UBYTE;
+                    assert elem.type() == ComponentType.UBYTE;
                     colouri(data[o++]);
                     break;
                 }
                 case NORMAL: {
-                    assert elem.getComponentType() == ComponentType.BYTE;
+                    assert elem.type() == ComponentType.BYTE;
                     normali(data[o++]);
                     break;
                 }
                 case UV: {
-                    if (elem.getUvIndex() == 0) {
+                    if (elem.uvIndex() == 0) {
                         tex_u = Float.intBitsToFloat(data[o++]);
                         tex_v = Float.intBitsToFloat(data[o++]);
                         break;
-                    } else if (elem.getUvIndex() == 1) {
+                    } else if (elem.uvIndex() == 1) {
                         lighti(data[o++]);
                         break;
                     }
@@ -234,7 +234,7 @@ public class MutableVertex {
             renderAsBlock(bb);
         } else {
             for (VertexFormatElement vfe : vf.getElements()) {
-                switch (vfe.getType()) {
+                switch (vfe.usage()) {
                     case POSITION:
                         renderPosition(bb);
                         break;
@@ -245,14 +245,13 @@ public class MutableVertex {
                         renderColour(bb);
                         break;
                     case UV:
-                        if (vfe.getUvIndex() == 0) renderTex(bb);
-                        else if (vfe.getUvIndex() == 1) renderLightMap(bb);
+                        if (vfe.uvIndex() == 0) renderTex(bb);
+                        else if (vfe.uvIndex() == 1) renderLightMap(bb);
                         break;
                     default:
                         break;
                 }
             }
-            bb.next();
         }
     }
 
@@ -265,7 +264,6 @@ public class MutableVertex {
         renderColour(bb);
         renderTex(bb);
         renderLightMap(bb);
-        bb.next();
     }
 
     public void renderPosition(BufferBuilder bb) {

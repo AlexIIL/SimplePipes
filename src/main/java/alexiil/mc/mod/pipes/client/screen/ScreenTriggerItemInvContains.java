@@ -16,7 +16,7 @@ public class ScreenTriggerItemInvContains extends HandledScreen<ContainerTrigger
         = ScreenTriggerItemInvContains::new;
 
     private static final Identifier TRIGGER_GUI
-        = new Identifier(SimplePipes.MODID, "textures/gui/trigger_item_inv.png");
+        = Identifier.of(SimplePipes.MODID, "textures/gui/trigger_item_inv.png");
 
     public ScreenTriggerItemInvContains(ContainerTriggerInvContains container, PlayerInventory inv, Text title) {
         super(container, inv, title);

@@ -33,7 +33,7 @@ public class SimplePipeContainers {
         new ExtendedScreenHandlerType<>(ContainerTank.FACTORY, BlockPos.PACKET_CODEC.cast());
 
     private static Identifier id(String name) {
-        return new Identifier(SimplePipes.MODID, name);
+        return Identifier.of(SimplePipes.MODID, name);
     }
 
     public static void load() {

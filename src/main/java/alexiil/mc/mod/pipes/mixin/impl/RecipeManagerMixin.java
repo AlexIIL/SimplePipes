@@ -15,6 +15,7 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.world.World;
 
 import alexiil.mc.mod.pipes.mixin.api.FindMatchingRecipesEvent;
@@ -28,34 +29,34 @@ public class RecipeManagerMixin {
 
     @Inject(
         at = @At("HEAD"),
-        method = "getFirstMatch(Lnet/minecraft/recipe/RecipeType;"
-            + "Lnet/minecraft/inventory/Inventory;Lnet/minecraft/world/World;)Ljava/util/Optional;",
+        method = "getFirstMatch(Lnet/minecraft/recipe/RecipeType;Lnet/minecraft/recipe/input/RecipeInput;" +
+            "Lnet/minecraft/world/World;Lnet/minecraft/recipe/RecipeEntry;)Ljava/util/Optional;",
         cancellable = true)
-    public <C extends Inventory, R extends Recipe<C>> void findFirst(RecipeType<R> type, C inv, World world,
-        CallbackInfoReturnable<Optional<RecipeEntry<R>>> ci) {
+    public <I extends RecipeInput, T extends Recipe<I>> void findFirst(RecipeType<T> type, I input, World world,
+                                                                       RecipeEntry<T> recipe,
+                                                                       CallbackInfoReturnable<Optional<RecipeEntry<T>>> cir) {
 
-        List<RecipeEntry<R>> list = new ArrayList<>(1);
-        invoke(new RecipeMatchFinder(type, inv, world, val -> list.add((RecipeEntry<R>) val), true));
+        List<RecipeEntry<T>> list = new ArrayList<>(1);
+        invoke(new RecipeMatchFinder(type, input, world, val -> list.add((RecipeEntry<T>) val), true));
         if (!list.isEmpty()) {
-            ci.setReturnValue(Optional.of(list.get(0)));
+            cir.setReturnValue(Optional.of(list.getFirst()));
         }
     }
 
     @Inject(
         at = @At("HEAD"),
-        method = "getAllMatches(Lnet/minecraft/recipe/RecipeType;"
-            + "Lnet/minecraft/inventory/Inventory;Lnet/minecraft/world/World;)Ljava/util/List;",
+        method = "getAllMatches",
         cancellable = true)
-    public <C extends Inventory, R extends Recipe<C>> void getAllMatches(RecipeType<R> type, C inv, World world,
-        CallbackInfoReturnable<List<RecipeEntry<R>>> ci) {
+    public <I extends RecipeInput, T extends Recipe<I>> void getAllMatches(RecipeType<T> type, I input, World world,
+                                                                         CallbackInfoReturnable<List<RecipeEntry<T>>> cir) {
 
         if (!isHandlingAllMatches) {
             try {
                 isHandlingAllMatches = true;
-                List<RecipeEntry<R>> list = new ArrayList<>();
-                invoke(new RecipeMatchFinder(type, inv, world, val -> list.add((RecipeEntry<R>) val), false));
-                list.addAll(((RecipeManager) (Object) this).getAllMatches(type, inv, world));
-                ci.setReturnValue(list);
+                List<RecipeEntry<T>> list = new ArrayList<>();
+                invoke(new RecipeMatchFinder(type, input, world, val -> list.add((RecipeEntry<T>) val), false));
+                list.addAll(((RecipeManager) (Object) this).getAllMatches(type, input, world));
+                cir.setReturnValue(list);
                 return;
             } finally {
                 isHandlingAllMatches = false;

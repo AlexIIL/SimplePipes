@@ -27,7 +27,7 @@ public class ScreenTank extends HandledScreen<ContainerTank> {
 
     public static final HandledScreens.Provider<ContainerTank, ScreenTank> FACTORY = ScreenTank::new;
 
-    private static final Identifier TANK_GUI = new Identifier(SimplePipes.MODID, "textures/gui/tank.png");
+    private static final Identifier TANK_GUI = Identifier.of(SimplePipes.MODID, "textures/gui/tank.png");
 
     public ScreenTank(ContainerTank container, PlayerInventory inv, Text title) {
         super(container, inv, title);

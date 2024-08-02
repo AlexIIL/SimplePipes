@@ -15,7 +15,7 @@ public class ScreenPipeDiamondItem extends HandledScreen<ContainerPipeDiamondIte
     public static final HandledScreens.Provider<ContainerPipeDiamondItem, ScreenPipeDiamondItem> FACTORY
         = ScreenPipeDiamondItem::new;
 
-    private static final Identifier GUI = new Identifier(SimplePipes.MODID, "textures/gui/filter.png");
+    private static final Identifier GUI = Identifier.of(SimplePipes.MODID, "textures/gui/filter.png");
 
     public ScreenPipeDiamondItem(ContainerPipeDiamondItem container, PlayerInventory inv, Text title) {
         super(container, inv, title);

@@ -16,7 +16,7 @@ public class ScreenTriggerFluidInvSpace extends HandledScreen<ContainerTriggerFl
         = ScreenTriggerFluidInvSpace::new;
 
     private static final Identifier TRIGGER_GUI
-        = new Identifier(SimplePipes.MODID, "textures/gui/trigger_fluid_inv.png");
+        = Identifier.of(SimplePipes.MODID, "textures/gui/trigger_fluid_inv.png");
 
     public ScreenTriggerFluidInvSpace(ContainerTriggerFluidSpace container, PlayerInventory inv, Text title) {
         super(container, inv, title);

@@ -69,7 +69,7 @@ public class FacadeBlockStateInfo {
         if (!compound.contains("Name", 8)) {
             return Blocks.AIR.getDefaultState();
         } else {
-            Block block = Registries.BLOCK.get(new Identifier(compound.getString("Name")));
+            Block block = Registries.BLOCK.get(Identifier.of(compound.getString("Name")));
             BlockState blockState = block.getDefaultState();
             if (compound.contains("Properties", 10)) {
                 NbtCompound nbtCompound = compound.getCompound("Properties");

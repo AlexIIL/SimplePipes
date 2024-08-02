@@ -12,7 +12,7 @@ public class GhostVertexConsumer implements VertexConsumer {
     public static void renderStart(WorldRenderContext context) {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if (player != null) {
-            float placementDelta = (player.getWorld().getTime() % 100) + context.tickDelta();
+            float placementDelta = (player.getWorld().getTime() % 100) + context.tickCounter().getTickDelta(true);
             alpha = (int) ((Math.sin(placementDelta / 4f) / 4f + 0.75f) * 255f + 0.5f);
         }
     }
@@ -22,7 +22,7 @@ public class GhostVertexConsumer implements VertexConsumer {
     public GhostVertexConsumer(VertexConsumer delegate) {this.delegate = delegate;}
 
     @Override
-    public VertexConsumer vertex(double x, double y, double z) {
+    public VertexConsumer vertex(float x, float y, float z) {
         delegate.vertex(x, y, z);
         return this;
     }
@@ -55,20 +55,5 @@ public class GhostVertexConsumer implements VertexConsumer {
     public VertexConsumer normal(float x, float y, float z) {
         delegate.normal(x, y, z);
         return null;
-    }
-
-    @Override
-    public void next() {
-        delegate.next();
-    }
-
-    @Override
-    public void fixedColor(int red, int green, int blue, int alpha) {
-        delegate.fixedColor(red, green, blue, GhostVertexConsumer.alpha);
-    }
-
-    @Override
-    public void unfixColor() {
-        delegate.unfixColor();
     }
 }

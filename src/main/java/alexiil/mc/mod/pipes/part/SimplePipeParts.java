@@ -186,8 +186,8 @@ public final class SimplePipeParts {
             FacadeStateManager facades = FacadeStateManager.getInstance();
             Set<ItemStack> seen = ItemStackCollections.set();
 
-            for (int i = 0; i < context.inventory.size(); i++) {
-                ItemStack stack = context.inventory.getStack(i);
+            for (int i = 0; i < context.inventory.getSize(); i++) {
+                ItemStack stack = context.inventory.getStackInSlot(i);
                 if (stack.isEmpty()) {
                     continue;
                 }
@@ -218,7 +218,7 @@ public final class SimplePipeParts {
     private static void generateBlockToFacadeCuttingRecipes(
         Consumer<RecipeEntry<Recipe<?>>> recipeAdder, FacadeStateManager facades, ItemStack stack, FacadeBlockStateInfo state
     ) {
-        Identifier id = new Identifier("buildcraftsilicon:facade_generated");
+        Identifier id = Identifier.of("buildcraftsilicon:facade_generated");
         Ingredient ingredient = createIngredient(stack);
 
         for (FacadeSize size : FacadeSize.values()) {
@@ -263,7 +263,7 @@ public final class SimplePipeParts {
             return;
         }
 
-        Identifier id = new Identifier("buildcraftsilicon:facade_generated");
+        Identifier id = Identifier.of("buildcraftsilicon:facade_generated");
         Ingredient ingredient = createIngredient(stack);
 
         FacadeShape shape = facade.shape;

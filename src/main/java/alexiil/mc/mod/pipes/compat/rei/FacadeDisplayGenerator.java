@@ -12,6 +12,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.StonecuttingRecipe;
 import net.minecraft.util.Identifier;
 
@@ -22,7 +23,7 @@ import java.util.function.BiConsumer;
 
 
 public class FacadeDisplayGenerator implements DynamicDisplayGenerator<DefaultStoneCuttingDisplay> {
-    private static final Identifier RECIPE_ID = new Identifier("buildcraftsilicon:facade_generated");
+    private static final Identifier RECIPE_ID = Identifier.of("buildcraftsilicon:facade_generated");
 
     @Override
     public Optional<List<DefaultStoneCuttingDisplay>> getRecipeFor(EntryStack<?> entry) {
@@ -37,7 +38,7 @@ public class FacadeDisplayGenerator implements DynamicDisplayGenerator<DefaultSt
             List<DefaultStoneCuttingDisplay> list = new ArrayList<>();
             BiConsumer<ItemStack, ItemStack> gen = (input, output) -> {
                 Ingredient ing = IngredientHelper.fromStacks(input.copy());
-                list.add(new DefaultStoneCuttingDisplay(new StonecuttingRecipe("", ing, output.copy())));
+                list.add(new DefaultStoneCuttingDisplay(new RecipeEntry<>(Identifier.of("buildcraftsilicon:facade_generated"), new StonecuttingRecipe("", ing, output.copy()))));
             };
             ItemStack blockStack = facade.state.requiredStack.copy();
             blockStack.setCount(1);
@@ -93,7 +94,7 @@ public class FacadeDisplayGenerator implements DynamicDisplayGenerator<DefaultSt
             List<DefaultStoneCuttingDisplay> list = new ArrayList<>();
             BiConsumer<ItemStack, ItemStack> gen = (input, output) -> {
                 Ingredient ing = IngredientHelper.fromStacks(input.copy());
-                list.add(new DefaultStoneCuttingDisplay(new StonecuttingRecipe("", ing, output.copy())));
+                list.add(new DefaultStoneCuttingDisplay(new RecipeEntry<>(Identifier.of("buildcraftsilicon:facade_generated"), new StonecuttingRecipe("", ing, output.copy()))));
             };
             ItemStack blockStack = facade.state.requiredStack.copy();
             blockStack.setCount(1);

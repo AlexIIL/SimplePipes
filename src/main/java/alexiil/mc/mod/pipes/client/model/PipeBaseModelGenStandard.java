@@ -197,7 +197,7 @@ public class PipeBaseModelGenStandard {
         } else if (def == SimplePipeParts.SPONGE_PIPE_FLUIDS) {
             return getPipeSprite(sprites, "sponge_fluid");
         } else {
-            Identifier spriteId = new Identifier(def.identifier.getNamespace(), "block/" + def.identifier.getPath());
+            Identifier spriteId = Identifier.of(def.identifier.getNamespace(), "block/" + def.identifier.getPath());
             return sprites.getBlockSprite(spriteId);
         }
     }

@@ -38,7 +38,7 @@ import net.minecraft.block.FluidBlock;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.StainedGlassBlock;
 import net.minecraft.block.TransparentBlock;
-import net.minecraft.block.enums.Instrument;
+import net.minecraft.block.enums.NoteBlockInstrument;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
@@ -107,7 +107,7 @@ public final class FacadeStateManager {
             limitedProperties.put(Properties.AGE_15, 0);
             limitedProperties.put(Properties.AGE_25, 0);
             limitedProperties.put(Properties.POWERED, false);
-            limitedProperties.put(Properties.INSTRUMENT, Instrument.HARP);
+            limitedProperties.put(Properties.INSTRUMENT, NoteBlockInstrument.HARP);
             limitedProperties.put(Properties.NOTE, 0);
             limitedProperties.put(Properties.WATERLOGGED, false);
 

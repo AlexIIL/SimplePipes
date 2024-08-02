@@ -7,8 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.CraftingRecipe;
+import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
@@ -17,7 +20,7 @@ import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.items.ItemFacade;
 import alexiil.mc.mod.pipes.items.SimplePipeItems;
 
-public enum FacadeCraftingRecipe implements CraftingRecipe, RecipeSerializer<FacadeCraftingRecipe> {
+public enum FacadeCraftingRecipe implements Recipe<RecipeInput>, RecipeSerializer<FacadeCraftingRecipe> {
     INSTANCE;
 
     public static final Identifier ID = SimplePipes.id("facade_crafting");
@@ -25,23 +28,23 @@ public enum FacadeCraftingRecipe implements CraftingRecipe, RecipeSerializer<Fac
     public static final PacketCodec<RegistryByteBuf, FacadeCraftingRecipe> PACKET_CODEC = PacketCodec.unit(INSTANCE);
 
     @Override
-    public boolean matches(RecipeInputInventory inv, World world) {
+    public boolean matches(RecipeInput inv, World world) {
         return !craft(inv).isEmpty();
     }
 
     @Override
-    public ItemStack craft(RecipeInputInventory inventory, RegistryWrapper.WrapperLookup registryManager) {
+    public ItemStack craft(RecipeInput inventory, RegistryWrapper.WrapperLookup registryManager) {
         return craft(inventory);
     }
 
-    public ItemStack craft(RecipeInputInventory inv) {
+    public ItemStack craft(RecipeInput inv) {
 
         FacadeBlockStateInfo state = null;
         int microVoxelCount = 0;
         int seenFacades = 0;
 
-        for (int i = 0; i < inv.size(); i++) {
-            ItemStack stack = inv.getStack(i);
+        for (int i = 0; i < inv.getSize(); i++) {
+            ItemStack stack = inv.getStackInSlot(i);
             if (stack.isEmpty()) {
                 continue;
             }
@@ -100,8 +103,8 @@ public enum FacadeCraftingRecipe implements CraftingRecipe, RecipeSerializer<Fac
     }
 
     @Override
-    public CraftingRecipeCategory getCategory() {
-        return CraftingRecipeCategory.BUILDING;
+    public RecipeType<?> getType() {
+        return RecipeType.STONECUTTING;
     }
 
     @Override

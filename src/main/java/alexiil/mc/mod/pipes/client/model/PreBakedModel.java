@@ -36,7 +36,7 @@ public final class PreBakedModel implements UnbakedModel {
     }
 
     @Override
-    public BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    public BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         return baked;
     }
 }

@@ -20,6 +20,7 @@ import net.minecraft.client.render.RenderPhase;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.util.BufferAllocator;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,7 +39,7 @@ import alexiil.mc.mod.pipes.mixin.impl.RenderLayerAccessor;
 public final class ItemPlacementGhostRenderer {
     private ItemPlacementGhostRenderer() {}
 
-    private static final Object2ObjectLinkedOpenHashMap<RenderLayer, BufferBuilder> LAYERS;
+    private static final Object2ObjectLinkedOpenHashMap<RenderLayer, BufferAllocator> LAYERS;
     private static final VertexConsumerProvider.Immediate VCPS;
     private static GhostPlacement currentPlacementGhost;
     private static Framebuffer framebuffer;
@@ -72,8 +73,8 @@ public final class ItemPlacementGhostRenderer {
         }
     }
 
-    private static BufferBuilder buffer() {
-        return new BufferBuilder(1 << 12);
+    private static BufferAllocator buffer() {
+        return new BufferAllocator(1 << 12);
     }
 
     private static void ensureFramebuffer() {
@@ -107,7 +108,7 @@ public final class ItemPlacementGhostRenderer {
     public static void render(WorldRenderContext context) {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if (player != null) {
-            render(context.matrixStack(), context.projectionMatrix(), context.positionMatrix(), context.camera(), player, context.tickDelta());
+            render(context.matrixStack(), context.projectionMatrix(), context.positionMatrix(), context.camera(), player, context.tickCounter().getTickDelta(true));
         }
     }
 

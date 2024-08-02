@@ -8,14 +8,13 @@ package alexiil.mc.mod.pipes.blocks;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.MapColor;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.enums.Instrument;
+import net.minecraft.block.enums.NoteBlockInstrument;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.math.BlockPos;
@@ -51,9 +50,9 @@ public class SimplePipeBlocks {
     public static final BlockEntityType<TilePump> PUMP_TILE;
 
     static {
-        Block.Settings triggerSettings = FabricBlockSettings.create()//
+        Block.Settings triggerSettings = AbstractBlock.Settings.create()//
             .mapColor(MapColor.STONE_GRAY)//
-            .instrument(Instrument.BASEDRUM)//
+            .instrument(NoteBlockInstrument.BASEDRUM)//
             .strength(1.5F, 6.0F);
 
         TRIGGER_ITEM_INV_EMPTY = new BlockTriggerInvEmpty(triggerSettings);

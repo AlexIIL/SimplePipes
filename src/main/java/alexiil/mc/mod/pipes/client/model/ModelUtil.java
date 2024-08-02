@@ -16,6 +16,7 @@ import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -34,7 +35,7 @@ public class ModelUtil {
 
     private static final double FACE_INSET = 0.001;
 
-    public static BakedModel getModel(ModelIdentifier modelLocation) {
+    public static BakedModel getModel(Identifier modelLocation) {
         return MinecraftClient.getInstance().getBakedModelManager().getModel(modelLocation);
     }
 

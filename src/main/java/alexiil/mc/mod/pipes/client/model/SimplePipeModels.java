@@ -5,14 +5,10 @@
  */
 package alexiil.mc.mod.pipes.client.model;
 
-import java.util.function.Consumer;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelResolver;
 
-import net.fabricmc.fabric.api.client.model.ModelProviderContext;
-import net.fabricmc.fabric.api.client.model.ModelResourceProvider;
-import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
-
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.resource.ResourceManager;
+import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.util.Identifier;
 
 import alexiil.mc.mod.pipes.SimplePipes;
@@ -20,41 +16,25 @@ import alexiil.mc.mod.pipes.client.model.DelayedBakedModel.IModelBaker;
 
 public class SimplePipeModels {
 
-    public static final ModelIdentifier TANK_BLOCK_ID;
+    public static final Identifier TANK_BLOCK_ID = Identifier.of("simple_pipes", "block/tank");
 
-    static {
-        TANK_BLOCK_ID = new ModelIdentifier("simple_pipes", "tank", "");
+    public static void modelLoadingPlugin(ModelLoadingPlugin.Context context) {
+        context.addModels(TANK_BLOCK_ID);
+        context.resolveModel().register(SimplePipeModels::modelResolver);
     }
 
-    public static ModelResourceProvider createResourceProvider(ResourceManager manager) {
-        return (Identifier resourceId, ModelProviderContext context) -> {
-            return null;
-        };
+    private static UnbakedModel modelResolver(ModelResolver.Context context) {
+        IModelBaker supplier = getModelBaker(context.id());
+        if (supplier != null) {
+            return new DelayedBakedModel(supplier);
+        }
+        return null;
     }
 
-    public static ModelVariantProvider createVariantProvider(ResourceManager manager) {
-        return (ModelIdentifier resourceId, ModelProviderContext context) -> {
-            IModelBaker supplier = getModelBaker(manager, resourceId, context);
-            if (supplier != null) {
-                return new DelayedBakedModel(supplier);
-            }
-            return null;
-        };
-    }
-
-    public static void appendModels(ResourceManager manager, Consumer<ModelIdentifier> out) {
-        out.accept(TANK_BLOCK_ID);
-    }
-
-    private static IModelBaker getModelBaker(
-        ResourceManager manager, ModelIdentifier resourceId, ModelProviderContext context
-    ) {
-        if ("inventory".equals(resourceId.getVariant())) {
-            if (resourceId.getNamespace().equals(SimplePipes.MODID)) {
-                if (resourceId.getPath().equals("facade")) {
-                    return ModelFacadeItem::new;
-                }
-                return null;
+    private static IModelBaker getModelBaker(Identifier resourceId) {
+        if (resourceId.getNamespace().equals(SimplePipes.MODID)) {
+            if (resourceId.getPath().equals("item/facade")) {
+                return ModelFacadeItem::new;
             }
             return null;
         }

@@ -25,7 +25,7 @@ public final class SpriteUtil {
 
     @Deprecated
     public static Sprite getSprite(String string) {
-        return getSprite(new Identifier(string));
+        return getSprite(Identifier.of(string));
     }
 
     @Deprecated

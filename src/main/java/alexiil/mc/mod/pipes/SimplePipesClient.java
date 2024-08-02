@@ -7,7 +7,7 @@ package alexiil.mc.mod.pipes;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 
 import alexiil.mc.mod.pipes.client.model.SimplePipeModels;
@@ -32,10 +32,7 @@ public class SimplePipesClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        ModelLoadingRegistry.INSTANCE.registerVariantProvider(SimplePipeModels::createVariantProvider);
-        ModelLoadingRegistry.INSTANCE.registerResourceProvider(SimplePipeModels::createResourceProvider);
-        ModelLoadingRegistry.INSTANCE.registerAppender(SimplePipeModels::appendModels);
-        //ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).register(this::registerSprites);
+        ModelLoadingPlugin.register(SimplePipeModels::modelLoadingPlugin);
 
         PartStaticModelRegisterEvent.EVENT.register(model -> {
             model.register(TankPartModelKey.class, TankPartBaker.INSTANCE);
@@ -53,29 +50,4 @@ public class SimplePipesClient implements ClientModInitializer {
         WorldRenderEvents.START.register(GhostVertexConsumer::renderStart);
         WorldRenderEvents.END.register(ItemPlacementGhostRenderer::render);
     }
-
-    /*
-    private void registerSprites(SpriteAtlasTexture atlasTexture, ClientSpriteRegistryCallback.Registry registry) {
-        registry.register(SimplePipes.id("pipe_wooden_item_clear"));
-        registry.register(SimplePipes.id("pipe_wooden_item_filled"));
-        registry.register(SimplePipes.id("pipe_wooden_fluid_clear"));
-        registry.register(SimplePipes.id("pipe_wooden_fluid_filled"));
-        registry.register(SimplePipes.id("pipe_stone_item"));
-        registry.register(SimplePipes.id("pipe_stone_fluid"));
-        registry.register(SimplePipes.id("pipe_iron_fluid_clear"));
-        registry.register(SimplePipes.id("pipe_iron_fluid_filled"));
-        registry.register(SimplePipes.id("pipe_iron_item_clear"));
-        registry.register(SimplePipes.id("pipe_iron_item_filled"));
-        registry.register(SimplePipes.id("pipe_gold_item"));
-        registry.register(SimplePipes.id("pipe_diamond_item"));
-        registry.register(SimplePipes.id("pipe_diamond_item_down"));
-        registry.register(SimplePipes.id("pipe_diamond_item_up"));
-        registry.register(SimplePipes.id("pipe_diamond_item_north"));
-        registry.register(SimplePipes.id("pipe_diamond_item_south"));
-        registry.register(SimplePipes.id("pipe_diamond_item_west"));
-        registry.register(SimplePipes.id("pipe_diamond_item_east"));
-        registry.register(SimplePipes.id("pipe_sponge_fluid"));
-    }
-
-     */
 }

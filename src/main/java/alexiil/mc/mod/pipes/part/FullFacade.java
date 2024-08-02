@@ -6,7 +6,7 @@ import io.netty.handler.codec.DecoderException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import net.minecraft.component.DataComponentType;
+import net.minecraft.component.ComponentType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.codec.PacketCodec;
@@ -44,7 +44,7 @@ public final class FullFacade {
     public static final FullFacade DEFAULT = new FullFacade(FacadeStateManager.getDefaultState(),
         FacadeShape.Sided.get(FacadeSize.SLAB, Direction.WEST, false));
     public static final Identifier TYPE_ID = SimplePipes.id("full_facade");
-    public static final DataComponentType<FullFacade> TYPE = DataComponentType.<FullFacade>builder().codec(CODEC).packetCodec(PACKET_CODEC).build();
+    public static final ComponentType<FullFacade> TYPE = ComponentType.<FullFacade>builder().codec(CODEC).packetCodec(PACKET_CODEC).build();
 
     public final FacadeBlockStateInfo state;
     public final FacadeShape shape;

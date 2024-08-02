@@ -13,7 +13,7 @@
   },
   "depends": {
     "fabric": "*",
-    "minecraft": ">=1.20.5- <1.21-",
+    "minecraft": ">=1.21- <1.22-",
     "libblockattributes": "*",
     "libnetworkstack": "*",
     "libmultipart": "*"
