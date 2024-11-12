@@ -1,0 +1,5 @@
+Changes:
+
+* Updated to 1.21.1.
+* Fixed `BlockEntity` crash.
+* Fixed server-side crash due to using wrong `Lists` implementation.
