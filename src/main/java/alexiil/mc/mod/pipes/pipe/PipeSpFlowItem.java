@@ -9,8 +9,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
-
-import org.apache.commons.compress.utils.Lists;
+import com.google.common.collect.Lists;
 
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
