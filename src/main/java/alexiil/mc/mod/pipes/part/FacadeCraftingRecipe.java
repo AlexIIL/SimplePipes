@@ -2,15 +2,14 @@ package alexiil.mc.mod.pipes.part;
 
 import com.mojang.serialization.MapCodec;
 
-import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.CraftingRecipe;
-import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.recipe.input.CraftingRecipeInput;
 import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
@@ -20,7 +19,7 @@ import alexiil.mc.mod.pipes.SimplePipes;
 import alexiil.mc.mod.pipes.items.ItemFacade;
 import alexiil.mc.mod.pipes.items.SimplePipeItems;
 
-public enum FacadeCraftingRecipe implements Recipe<RecipeInput>, RecipeSerializer<FacadeCraftingRecipe> {
+public enum FacadeCraftingRecipe implements CraftingRecipe, RecipeSerializer<FacadeCraftingRecipe> {
     INSTANCE;
 
     public static final Identifier ID = SimplePipes.id("facade_crafting");
@@ -28,12 +27,12 @@ public enum FacadeCraftingRecipe implements Recipe<RecipeInput>, RecipeSerialize
     public static final PacketCodec<RegistryByteBuf, FacadeCraftingRecipe> PACKET_CODEC = PacketCodec.unit(INSTANCE);
 
     @Override
-    public boolean matches(RecipeInput inv, World world) {
+    public boolean matches(CraftingRecipeInput inv, World world) {
         return !craft(inv).isEmpty();
     }
 
     @Override
-    public ItemStack craft(RecipeInput inventory, RegistryWrapper.WrapperLookup registryManager) {
+    public ItemStack craft(CraftingRecipeInput inventory, RegistryWrapper.WrapperLookup registryManager) {
         return craft(inventory);
     }
 
@@ -103,8 +102,8 @@ public enum FacadeCraftingRecipe implements Recipe<RecipeInput>, RecipeSerialize
     }
 
     @Override
-    public RecipeType<?> getType() {
-        return RecipeType.STONECUTTING;
+    public CraftingRecipeCategory getCategory() {
+        return CraftingRecipeCategory.MISC;
     }
 
     @Override
