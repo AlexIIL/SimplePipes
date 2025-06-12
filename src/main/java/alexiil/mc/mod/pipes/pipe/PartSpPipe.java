@@ -90,7 +90,7 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
         ID_FLOW = NET_PARENT.idData("flow").toClientOnly();
         ID_FLOW.setReceiver(PartSpPipe::receiveFlow);
     }
-    
+
     public static void load() {
         // force the static initializer to run
     }
@@ -174,18 +174,16 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
     @Environment(EnvType.CLIENT)
     protected void spawnBreakParticles() {
         spawnBreakParticles(
-            Blocks.STONE.getDefaultState(),
-            PipeBaseModelGenStandard.getCenterSprite(SpriteSupplier.NO_CONTEXT_SUPPLIER, definition)
-        );
+                Blocks.STONE.getDefaultState(),
+                PipeBaseModelGenStandard.getCenterSprite(SpriteSupplier.NO_CONTEXT_SUPPLIER, definition));
     }
 
     @Override
     @Environment(EnvType.CLIENT)
     public boolean spawnHitParticle(Direction side) {
         spawnHitParticle(
-            side, Blocks.STONE.getDefaultState(),
-            PipeBaseModelGenStandard.getCenterSprite(SpriteSupplier.NO_CONTEXT_SUPPLIER, definition)
-        );
+                side, Blocks.STONE.getDefaultState(),
+                PipeBaseModelGenStandard.getCenterSprite(SpriteSupplier.NO_CONTEXT_SUPPLIER, definition));
         return true;
     }
 
@@ -200,10 +198,8 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
         }
         VoxelShape pipeShape = isConnected(pipeSide) ? FACE_CENTER_SHAPES[pipeSide.ordinal()] : CENTER_SHAPE;
 
-        if (
-            definition.isExtraction && behaviour instanceof PipeSpBehaviourSided
-                && ((PipeSpBehaviourSided) behaviour).currentDirection() == pipeSide
-        ) {
+        if (definition.isExtraction && behaviour instanceof PipeSpBehaviourSided
+                && ((PipeSpBehaviourSided) behaviour).currentDirection() == pipeSide) {
             list.offer(getFlow().getInsertable(list.getSearchDirection()), pipeShape);
         } else {
             list.offer(definition.getEmptyExtractable(), pipeShape);
@@ -241,7 +237,10 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
             if (definition.isExtraction && oPipe != null && oPipe.getDefinition().isExtraction) {
                 disconnect(dir);
             } else if (oPipe != null) {
-                if ((getFlow() instanceof PipeSpFlowItem) == (oPipe.getFlow() instanceof PipeSpFlowItem)) {
+                if ((getFlow() instanceof PipeSpFlowItem) == (oPipe.getFlow() instanceof PipeSpFlowItem) &&
+                        canConnect(dir) &&
+                        (!(oPipe instanceof PartSpPipe)
+                                || ((PartSpPipe) oPipe).canConnect(dir.getOpposite()))) {
                     connect(dir);
                 } else {
                     disconnect(dir);
@@ -361,7 +360,8 @@ public class PartSpPipe extends AbstractPart implements ISimplePipe {
 
     public void refreshModel() {
         if (holder.getContainer().isClientWorld()) {
-            // This can be called on the server too, but this way everything's done with a single packet
+            // This can be called on the server too, but this way everything's done with a
+            // single packet
             redrawIfChanged();
         } else {
             sendNetworkUpdate(this, NET_RENDER_DATA);
